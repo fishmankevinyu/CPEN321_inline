@@ -1,13 +1,26 @@
-var express = require('express');
-var app = express();
-app.get('/', function (req, res){
-  res.send('Hello World');
-})
+require('rootpath')();
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const jwt = require('./_helpers/jwt');
+const errorHandler = require('./_helpers/error-handler');
 
-var server = app.listen(8081, function(){
-  var host = server.address().address
-  var port = server.address().port
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
 
-  console.log("Example app listening at http://%s:%s", host, port);
+// use JWT auth to secure the api
+app.use(jwt());
 
-})
+// api routes
+app.use('/users', require('./users/users.controller'));
+
+// global error handler
+app.use(errorHandler);
+
+// start server
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+const server = app.listen(port, function () {
+    console.log('Server listening on port ' + port);
+});

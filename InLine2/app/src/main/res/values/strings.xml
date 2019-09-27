@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">InLine</string>
+    <string name="Login">Login</string>
+    <string name="username">User Name</string>
+</resources>
