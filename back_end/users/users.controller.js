@@ -21,7 +21,9 @@ function authenticate(req, res, next) {
 
 function register(req, res, next) {
     userService.create(req.body)
-        .then(() => res.json({}))
+        .then(() => res.json({
+          'confirmation':req.body.username + ' successful'
+        }))
         .catch(err => next(err));
 }
 
@@ -45,7 +47,7 @@ function getById(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(() => res.json({}))
+        .then(() => res.json({"update":"sent"}))
         .catch(err => next(err));
 }
 

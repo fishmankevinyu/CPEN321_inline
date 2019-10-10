@@ -1,4 +1,4 @@
 {
-    "connectionString": "mongodb://localhost/node-mongo-registration-login-api",
+    "connectionString": "mongodb://localhost/IN_line",
     "secret": "INLINE"
 }
