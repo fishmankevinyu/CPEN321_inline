@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         username = (EditText)findViewById(R.id.editText1);
         password = (EditText)findViewById(R.id.editText2);
     }
+
+
 
     public void login(View view) {
 
@@ -72,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navRegisterUser(View view) {
-
         Intent intent = new Intent(this, RegistrationScreen.class);
         startActivity(intent);
         // Do something in response to button

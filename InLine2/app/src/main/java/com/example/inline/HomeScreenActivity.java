@@ -1,6 +1,9 @@
 package com.example.inline;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,10 +30,19 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     public JSONArray classList;
 
+    private ActionBar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+
+        toolbar = getSupportActionBar();
+        BottomNavigationView navigation = findViewById(R.id.nav_view);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        toolbar.setTitle("CourseList");
+        loadFragment(new course_list_fragment());
 
         /*Dummy data*/
 
@@ -99,5 +113,31 @@ public class HomeScreenActivity extends AppCompatActivity {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = (item) -> {
+        switch (item.getItemId()) {
+            case R.id.navigation_course_list:
+                toolbar.setTitle("CourseList");
+                loadFragment (new course_list_fragment());
+                return true;
+            case R.id.navigation_map:
+                toolbar.setTitle("Map");
+                loadFragment (new map_fragment());
+                return true;
+            case R.id.navigation_user:
+                toolbar.setTitle("User");
+                loadFragment (new user_fragment());
+                return true;
+        }
+        return false;
+    };
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
