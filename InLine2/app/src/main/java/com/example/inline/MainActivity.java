@@ -38,30 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view) {
 
-        /*
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        String url ="http://www.google.com"; //Our endpoint
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //textView.setText("Response is: "+ response.substring(0,500));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //textView.setText("That didn't work!");
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);*/
-
         if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")) {
             Toast.makeText(getApplicationContext(),
                     "Redirecting...", Toast.LENGTH_SHORT).show();
