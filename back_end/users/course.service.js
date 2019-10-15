@@ -6,28 +6,55 @@ const Course = db.Course;
 const mongoose = require("mongoose");
 // routes
 router.post('/new', new_course);
-router.post('/add/:id', add_course);
-router.get('/:id', get_course);
+router.post('/add/:userid&:courseid', add_course);
+router.get('/:id', get_courseById);
+router.get('/', get_all);
 router.put('/:id', update_course)
 router.delete('/:id', delete_course);
-var acourse = {course: "CPEN291"};
+router.get('/students/:id', get_students);
+
+//var acourse = {course: "CPEN291"};
 module.exports = router;
 
 async function add_course(req, res, next){
-  var user = await User.findById(mongoose.Types.ObjectId(req.params.id))
-  user.updateOne({$push: {"courses": {course:req.body.course}}})
-  .then(res.json({"username":user.username}))
-  .catch(err =>{
-    console.log(err);
-  });
-  console.log(user.username);
+  var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));
+    //var user = await User.findById(req.params.userid);
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
+    
+    console.log("found");
+    
+    if(!user){
+        res.status(404).json({message:"no user found"});
+    }
+    else if(!course){
+        res.status(404).json({message:"no course found"});
+    }
+    else{
+        console.log(user.username);
+        console.log(course.coursename);
+        
+        user.updateOne({$addToSet: {"courses": course.coursename}})
+          .then(add_user(req, res, next, user, course))
+          .catch(err => next(err));
 
+        await user.save();
+        await course.save();
+    }
+
+
+}
+
+async function add_user(req, res, next, userParam, courseParam){
+    courseParam.updateOne({$addToSet: {"students": userParam.username}})
+    .then(res.json({"username": userParam.username,
+                   "coursename":courseParam.coursename}))
+    .catch(err => next(err));
 }
 
 async function new_course(req, res ,next){
 
   if(await Course.findOne({coursename: req.body.coursename})){
-    res.status(400).json({message:"course exists"});
+    res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
     var course = new Course(req.body);
@@ -37,7 +64,7 @@ async function new_course(req, res ,next){
   }
 }
 
-async function get_course(req,res,next){
+async function get_courseById(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id))
   if(course){
     res.json(course);
@@ -46,15 +73,36 @@ async function get_course(req,res,next){
     res.status(404).json({message:"no course found"});
   }
 }
-async function update_course(req,res,next){
+
+async function get_students(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id))
   if(course){
-    course.updateOne({$set: req.body});
+    res.json(course.students);
   }
   else{
     res.status(404).json({message:"no course found"});
   }
 }
+
+async function get_all(req,res,next){
+    await Course.find().select('-hash')
+    .then(users => res.json(users))
+    .catch(err => next(err));
+}
+
+async function update_course(req,res,next){
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id))
+  if(course){
+    Object.assign(course, req.body);
+      await course.save();
+      res.json(course);
+  }
+  else{
+    res.status(404).json({message:"no course found"});
+  }
+}
+
+
 async function delete_course(req,res,next){
   var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
   .then(()=>{res.json({message:"deleted"})}).catch(err=>next(err));

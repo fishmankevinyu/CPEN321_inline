@@ -2,7 +2,10 @@ const config = require('../config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
+const mongoose = require("mongoose");
 const User = db.User;
+const Course = db.Course;
+
 
 module.exports = {
     authenticate,

@@ -10,6 +10,7 @@ router.get('/current', getCurrent);
 router.get('/:id', getById);
 router.put('/:id', update);
 router.delete('/:id', _delete);
+router.get('/courses/:id', get_courses);
 
 module.exports = router;
 
@@ -19,10 +20,17 @@ function authenticate(req, res, next) {
         .catch(err => next(err));
 }
 
+function get_courses(req, res, next){
+    
+    userService.getById(req.params.id)
+        .then(user => user ? res.json(user.courses) : res.sendStatus(404))
+        .catch(err => next(err));
+}
+
 function register(req, res, next) {
     userService.create(req.body)
         .then(() => res.json({
-          'confirmation':req.body.username + ' successful'
+          'confirmation':req.body.username + ' created successful'
         }))
         .catch(err => next(err));
 }
