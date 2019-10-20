@@ -10,9 +10,13 @@ router.post('/new', new_queue);
 router.delete('/', queue_delete);
 
 module.exports = router;
+exports.newQueue = newQueue;
+exports.delete = _delete;
+exports.numOfElement = numOfElement;
 
 var db;
 var db2;
+var lwtime = null;
 
 MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
     if(err) throw err;
@@ -20,11 +24,19 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
     db2 = _db;
 });
 
+function numOfElement(coursename){
+    db.collection(coursename).count({start:true},function(err, count){
+      //count is the number, do what ever u want
+    });
+}
+
+
 async function enque(req,res,next){
-  var queue = await db.collection(req.body.coursename.toString()).insertOne({
+  var queue = await db.collection(req.body.coursename).insertOne({
     username:req.body.username,
     entime: Date.now(),
-    start: true});
+    start: true,
+    estime: lwtime.getTime()});
   if(queue) {
     res.status(200).json({messge:"you are in queue"});
   }
@@ -34,16 +46,27 @@ async function enque(req,res,next){
 }
 
 async function top(req,res,next){
-    var user = await db.collection(req.body.coursename).findOneAndUpdate({start:true},
+    var queue = await db.collection(req.body.coursename).findOneAndUpdate({start:true},
       {$set:{start : true}},
       {sort:{enTime: 1}});
-    res.json(user);
+    res.json(queue);
 
 }
 
 async function deque(req,res,next){
-await db.collection(req.body.coursename).findOneAndDelete({start:true}
-  ,{sort:{enTime: 1}}).then( queue => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
+  await db.collection(req.body.coursename).findOne({start:true},{sort:{enTime:1}},function(err, user){
+    if (err) throw err;
+    if(lwtime == null) {
+      lwtime = new Date(Date.now() - user.entime);
+    }
+    else{
+      lwtime = lwtime.setTime((lwtime.getTime() +(Date.now() - user.entime))/2);
+    }
+  });
+  await db.collection(req.body.coursename).findOneAndDelete(
+    {start:true},
+    {sort:{enTime: 1}})
+    .then( queue => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
 }
 
 async function newQueue(coursename){
