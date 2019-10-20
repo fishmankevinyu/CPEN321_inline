@@ -1,24 +1,32 @@
 package com.example.inline;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import android.location.Location;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
 
-public class map_fragment extends Fragment implements OnMapReadyCallback{
+public class map_fragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnPoiClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
+
     MapView mMapView;
     private GoogleMap mMap;
 
@@ -42,23 +50,23 @@ public class map_fragment extends Fragment implements OnMapReadyCallback{
     }
 
     @Override
+    public void onPoiClick(PointOfInterest poi) {
+        Toast.makeText(getActivity().getApplicationContext(), "Clicked: " +
+                        poi.name + "\nPlace ID:" + poi.placeId +
+                        "\nLatitude:" + poi.latLng.latitude +
+                        " Longitude:" + poi.latLng.longitude,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
+        googleMap.setOnPoiClickListener(this);
         LatLng Macleod = new LatLng(49.261885, -123.248379);
-        mMap.addMarker(new MarkerOptions().position(Macleod).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().position(Macleod).title("Macleod").snippet("CPEN321"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Macleod));
     }
 
-    public void setUpMap(){
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.setMyLocationEnabled(true);
-        mMap.setTrafficEnabled(true);
-        mMap.setIndoorEnabled(true);
-        mMap.setBuildingsEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-    }
 
     @Override
     public void onResume() {
