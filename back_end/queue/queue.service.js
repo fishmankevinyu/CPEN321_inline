@@ -25,7 +25,7 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
 });
 
 function numOfElement(coursename){
-    db.collection(coursename).count({start:true},function(err, count){
+    db.collection(coursename).countDocuments({start:true},function(err, count){
       //count is the number, do what ever u want
     });
 }
