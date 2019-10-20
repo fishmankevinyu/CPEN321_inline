@@ -21,7 +21,10 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
 });
 
 async function enque(req,res,next){
-  var queue = await db.collection(req.body.coursename.toString()).insertOne({username:req.body.username, entime:Date.now, start: true});
+  var queue = await db.collection(req.body.coursename.toString()).insertOne({
+    username:req.body.username,
+    entime: Date.now(),
+    start: true});
   if(queue) {
     res.status(200).json({messge:"you are in queue"});
   }
@@ -31,14 +34,16 @@ async function enque(req,res,next){
 }
 
 async function top(req,res,next){
-    var user = await db.collection(req.body.coursename).findAndModify({query: {start:true}, sort:{enTime: 1}, update: {$set:{start : true}}});
+    var user = await db.collection(req.body.coursename).findOneAndUpdate({start:true},
+      {$set:{start : true}},
+      {sort:{enTime: 1}});
     res.json(user);
 
 }
 
 async function deque(req,res,next){
-var queue = await db.collection(req.body.coursename).findAndModify({query: {start:true}, sort:{enTime: 1}, remove: 1});
-  res.status(200).json({messge:"dequed"});
+await db.collection(req.body.coursename).findOneAndDelete({start:true}
+  ,{sort:{enTime: 1}}).then( queue => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
 }
 
 async function newQueue(coursename){
