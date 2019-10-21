@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
 const mongoose = require("mongoose");
+const regToken = require("../fcm/regToken")
 const User = db.User;
 const Course = db.Course;
 
@@ -18,15 +19,14 @@ module.exports = {
     delete: _delete
 };
 
-async function authenticate({ username, password}, regToken) {
-    const user = await User.findOne({ username });
+async function authenticate(username, password, regToken) {
+    const user = await User.findOne({ username: username });
     console.log(regToken)
-    if (user && bcrypt.compareSync(password, user.hash)) {
+    if (user && bcrypt.compareSync({password:password}, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
         console.log(regToken);
-        await User.findOneAndUpdate({username},{registrationToken: regToken});
-        await user.save();
+        regToken.addToken(username,regToken)
         return {
             ...userWithoutHash,
             token,
