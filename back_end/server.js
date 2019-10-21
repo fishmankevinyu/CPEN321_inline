@@ -25,7 +25,7 @@ app.use(jwt());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/courses', require('./course/course.service'));
-app.use('/queue', require(queue.router));
+app.use('/queue', queue.router);
 app.use('/time', require('./course/time.service'));
 
 // global error handler
