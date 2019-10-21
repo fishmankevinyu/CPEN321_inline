@@ -8,8 +8,7 @@ var tokens;
 
 module.exports = {
   addToken,
-  deleteToken,
-  updateToken
+  deleteToken
 }
 
 MongoClient.connect('mongodb://localhost:27017/Token',function(err,_db){
