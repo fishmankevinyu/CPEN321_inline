@@ -20,7 +20,12 @@ module.exports = router;
 async function authenticate(req, res, next) {
     console.log(req.body.registrationToken)
     var user = await User.findOne({userame: req.body.username})
+    console.log(user)
     user.registrationToken = await req.body.registrationToken;
+    if(user.registrationToken == null){
+      console.log(reg.body.registrationToken)
+    }
+
     await user.save()
     await userService.authenticate({username: req.body.username , password: req.body.password})
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
