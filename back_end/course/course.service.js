@@ -5,6 +5,7 @@ const User = db.User
 const Course = db.Course
 const queue = require('../queue/queue.service')
 const mongoose = require("mongoose");
+const topic = require('../fcm/send2')
 // routes
 router.post('/new', new_course);
 router.post('/add/:userid&:courseid', add_course);
@@ -44,6 +45,7 @@ async function add_course(req, res, next){
 
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
+          .then(await topic.subscribe(user.registrationToken, course.coursename));
           .catch(err => next(err));
 
         await user.save();

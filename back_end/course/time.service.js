@@ -6,7 +6,7 @@ const schedule = require('../schedule/scheduling.service');
 
 // routes
 router.post('/add', add_time);
-router.post('/get', get_time);
+router.get('/get', get_time);
 router.delete('/', delete_time);
 
 module.exports = router;
@@ -55,11 +55,10 @@ async function add_time_service(time){
 }
 
 async function get_time_service(coursename){
-    var timeArray = time.find({coursename: coursename}).toArray();
-
+    var timeArray = await times.find({coursename: coursename}).toArray();
     return timeArray;
 }
 
 async function delete_time_service(time){
-    await time.findOndAndDelete({time});
+    await times.findOneAndDelete(time);
 }

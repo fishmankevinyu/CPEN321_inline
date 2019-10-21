@@ -9,6 +9,7 @@ const errorHandler = require('./_helpers/error-handler');
 var admin = require("firebase-admin");
 var serviceAccount = require('./fcm/privatekey.json') //put the generated private key path here
 
+// start push 
 admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       databaseURL: "https://inline-f628d.firebaseio.com"
