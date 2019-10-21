@@ -8,10 +8,11 @@ router.get('/top', top);
 router.post('/new', new_queue);
 router.delete('/', queue_delete);
 
-module.exports = router;
-exports.newQueue = newQueue;
-exports.delete = _delete;
-exports.check_index = check_index;
+module.exports = { router: router,
+                   newQueue:newQueue,
+                   delete: _delete,
+                   check_index: check_index
+                 };
 
 var db;
 var db2;
