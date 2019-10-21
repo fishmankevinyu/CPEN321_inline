@@ -7,6 +7,8 @@ const User = db.User;
 const Course = db.Course;
 
 
+
+
 module.exports = {
     authenticate,
     getAll,

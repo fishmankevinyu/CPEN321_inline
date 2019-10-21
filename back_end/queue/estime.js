@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const mongodb = require('mongodb');
 var db;
 var db2;
-var est;
+var ests;
 
 module.exports = {
   new_course_time,

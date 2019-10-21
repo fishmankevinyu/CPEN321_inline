@@ -6,7 +6,6 @@ const schema = new Schema({
   //hash:{type:String, required: true},
   teachers: {type:[{type:String, required: true}]},
   createdDate: { type: Date, default: Date.now },
-  officeHours: {type:[{type:Date}]},
   students: {type:[{type: String}]}
 });
 
