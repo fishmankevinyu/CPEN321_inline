@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Db = require('Mongodb').Db;
-const Server = require('Mongodb').Server
-const MongoClient = require('Mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 const Est = require("./estime");
 router.post('/enque',enque);
 router.put('/deque',deque);
