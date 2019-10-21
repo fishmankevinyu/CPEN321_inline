@@ -20,7 +20,7 @@ module.exports = router;
 function authenticate(req, res, next) {
     console.log(req.body.registrationToken)
     userService.authenticate({username: req.body.username , password: req.body.password})
-        .then(User.findOneAndUpdate({userame: req.body.username},{$set: {registrationToken:req.body.registrationToken}}))
+        .then(User.findOneAndUpdate({userame: req.body.username},{registrationToken:req.body.registrationToken}))
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
 
