@@ -22,7 +22,7 @@ async function addToken(username,token){
   var regToken =  await tokens.findOneAndUpdate({username:username}, {$set:{token:token}});
   console.log(regToken)
   if(regToken == null){
-    await tokens.insertOne({username: username, token: token})
+    var reg2Token = await tokens.insertOne({username: username, token: token})
   }
 }
 
