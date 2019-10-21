@@ -25,7 +25,7 @@ function authenticate(req, res, next) {
       console.log(reg.body.registrationToken)
     }
     user.save()
-    await userService.authenticate({username: req.body.username , password: req.body.password})
+    userService.authenticate({username: req.body.username , password: req.body.password})
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
 
