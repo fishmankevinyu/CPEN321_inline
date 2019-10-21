@@ -17,6 +17,7 @@ app.use(jwt());
 app.use('/users', require('./users/users.controller'));
 app.use('/courses', require('./course/course.service'));
 app.use('/queue', require('./queue/queue.service'));
+app.use('/time', require('./course/time.service')); 
 
 // global error handler
 app.use(errorHandler);

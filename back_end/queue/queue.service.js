@@ -76,7 +76,7 @@ async function newQueue(coursename){
     return queue;
   }
   else{
-    return -1;
+    return 0;
   }
 }
 
