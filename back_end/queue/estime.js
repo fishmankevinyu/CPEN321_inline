@@ -22,7 +22,7 @@ MongoClient.connect('mongodb://localhost:27017/EST',function(err,_db){
 async function new_course_time(coursename,aa){
   await ests.insertOne({
     coursename: coursename,
-    AHT: null,
+    AHT: 0,
     count: 0,
     AA: aa
   },function(err,est){
@@ -34,14 +34,12 @@ async function new_course_time(coursename,aa){
 function updateAHT(coursename,aht){
   var old_aht
   var count
-  ests.findOne({coursename:coursename},function(err, est){
-    if(err) throw err
-    old_aht = est.AHT
-    count = est.count
-    console.log(typeof old_aht)
-    console.log(typeof count)
-    console.log("success");
-  });
+  var est = ests.findOne({coursename:coursename})
+  old_aht = est.AHT
+  count = est.count
+  console.log(typeof old_aht)
+  console.log(typeof count)
+  console.log("success");
   var new_aht
 
   if(old_aht == null){

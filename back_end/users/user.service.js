@@ -18,14 +18,18 @@ module.exports = {
     delete: _delete
 };
 
-async function authenticate({ username, password }) {
+async function authenticate({ username, password, regToken }) {
     const user = await User.findOne({ username });
+    console.log(regToken)
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
+        console.log(regToken);
+        User.findOneAndUpdate({username},{$set: regToken});
         return {
             ...userWithoutHash,
-            token
+            token,
+            regToken
         };
     }
 }

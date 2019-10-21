@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../_helpers/db');
-const User = db.User;
-const Course = db.Course;
+const User = db.User
+const Course = db.Course
+const queue = require('../queue/queue.service')
 const mongoose = require("mongoose");
+const topic = require('../fcm/send2')
 // routes
 router.post('/new', new_course);
 router.post('/add/:userid&:courseid', add_course);
@@ -15,19 +17,21 @@ router.get('/students/:id', get_students);
 
 //var acourse = {course: "CPEN291"};
 module.exports = router;
-exports.getHours = getHourse;
+//exports.getHours = getHourse;
 
-function getHours(coursename){
-  var course = await Course.findOne({coursename: coursename});
-  if(course == null){console.log( err: ' + course)};
-
-
-}
+//function getHours(coursename){
+//  var course = await Course.findOne({coursename: coursename});
+//  if(course == null){console.log( err: ' + course)};
+//
+//
+//}
 
 async function add_course(req, res, next){
   var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));
     //var user = await User.findById(req.params.userid);
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
+
+  var queue = await queue.newQueue(req.body.couresname)
 
     console.log("found");
 
@@ -43,6 +47,7 @@ async function add_course(req, res, next){
 
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
+          .then(await topic.subscribe(user.registrationToken, course.coursename));
           .catch(err => next(err));
 
         await user.save();
@@ -65,6 +70,7 @@ async function new_course(req, res ,next){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
+    var queue = await queue.newQueue(req.body.couresename)
     var course = new Course(req.body);
     res.json(course);
     await course.save();
