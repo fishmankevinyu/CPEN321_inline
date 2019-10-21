@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
 const mongoose = require("mongoose");
+const regToken = require("../fcm/regToken")
 const User = db.User;
 const Course = db.Course;
 
