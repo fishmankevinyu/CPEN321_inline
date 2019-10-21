@@ -71,7 +71,7 @@ async function new_course(req, res ,next){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
-    var queue = await queue.newQueue(req.body.couresename)
+    var queue = await queue.newQueue(req.body.couresname)
     var course = new Course(req.body);
     res.json(course);
     await course.save();
