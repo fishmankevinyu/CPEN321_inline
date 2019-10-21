@@ -15,14 +15,22 @@ router.get('/students/:id', get_students);
 
 //var acourse = {course: "CPEN291"};
 module.exports = router;
+exports.getHours = getHourse;
+
+function getHours(coursename){
+  var course = await Course.findOne({coursename: coursename});
+  if(course == null){console.log( err: ' + course)};
+
+
+}
 
 async function add_course(req, res, next){
   var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));
     //var user = await User.findById(req.params.userid);
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
-    
+
     console.log("found");
-    
+
     if(!user){
         res.status(404).json({message:"no user found"});
     }
@@ -32,7 +40,7 @@ async function add_course(req, res, next){
     else{
         console.log(user.username);
         console.log(course.coursename);
-        
+
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
           .catch(err => next(err));
