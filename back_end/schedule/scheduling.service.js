@@ -13,6 +13,8 @@
 
 const cron = require('node-cron');
 const send = require('../fcm/send');
+const db = require('../_helpers/db');
+const User = db.User;
 
 exports.addSchedule = addSchedule
 
@@ -41,7 +43,8 @@ function addSchedule(newTime,coursename){
   }
   cron.schedule(minute + ' ' + hour + ' ' + dayOfMon + ' ' + month + ' ' + dayOfWeek, ()=>{
     console.log("time to send notification!")
-    send.sendNotification(tokens);
+    User.find()
+    send.sendNotification(coursename);
   })
   return 0
 }
