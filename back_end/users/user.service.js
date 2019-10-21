@@ -23,10 +23,12 @@ async function authenticate({ username, password, regToken }) {
     if (user && bcrypt.compareSync(password, user.hash)) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
+        console.log(regToken);
         User.findOneAndUpdate({username},{$set: regToken});
         return {
             ...userWithoutHash,
-            token
+            token,
+            regToken
         };
     }
 }
