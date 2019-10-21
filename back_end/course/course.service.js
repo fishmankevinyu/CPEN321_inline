@@ -30,6 +30,8 @@ async function add_course(req, res, next){
     //var user = await User.findById(req.params.userid);
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
 
+  var queue = await queue.newQueue(req.body.couresname)
+
     console.log("found");
 
     if(!user){
@@ -66,6 +68,7 @@ async function new_course(req, res ,next){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
+    var queue = await queue.newQueue(req.body.couresename)
     var course = new Course(req.body);
     res.json(course);
     await course.save();
