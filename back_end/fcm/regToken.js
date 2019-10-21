@@ -1,5 +1,4 @@
 const express = require('express');
-const queue = require('./queue.service');
 const MongoClient = require('mongodb').MongoClient;
 const mongodb = require('mongodb');
 
