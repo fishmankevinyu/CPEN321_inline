@@ -15,13 +15,14 @@ router.get('/courses/:id', get_courses);
 module.exports = router;
 
 function authenticate(req, res, next) {
+    console.log(req.body.registrationToken)
     userService.authenticate(req.body)
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
 }
 
 function get_courses(req, res, next){
-    
+
     userService.getById(req.params.id)
         .then(user => user ? res.json(user.courses) : res.sendStatus(404))
         .catch(err => next(err));
