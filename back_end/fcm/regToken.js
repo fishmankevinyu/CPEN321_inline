@@ -8,7 +8,8 @@ var tokens;
 
 module.exports = {
   addToken,
-  deleteToken
+  deleteToken,
+  getToken
 }
 
 MongoClient.connect('mongodb://localhost:27017/Token',function(err,_db){
@@ -24,6 +25,11 @@ async function addToken(username,token){
   console.log(regToken)
 }
 
-function deleteToken(username,token){
-tokens.findOneAndDelete({username: username});
+async function deleteToken(username,token){
+  await tokens.findOneAndDelete({username: username});
+}
+
+async function getToken(username){
+  var regToken = await tokens.findOne({username: username})
+  return regToken.token
 }

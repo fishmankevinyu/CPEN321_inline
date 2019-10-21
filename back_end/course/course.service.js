@@ -6,6 +6,7 @@ const Course = db.Course
 const queue = require('../queue/queue.service')
 const mongoose = require("mongoose");
 const topic = require('../fcm/send2')
+const regToken = require('../fcm/regToken')
 // routes
 router.post('/new', new_course);
 router.post('/add/:userid&:courseid', add_course);
@@ -44,10 +45,10 @@ async function add_course(req, res, next){
     else{
         console.log(user.username);
         console.log(course.coursename);
-
+        var token = regToken.getToken(user.username);
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
-          .then(await topic.subscribe(user.registrationToken, course.coursename))
+          .then(await topic.subscribe(token, course.coursename))
           .catch(err => next(err));
 
         await user.save();
