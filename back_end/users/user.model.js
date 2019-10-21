@@ -8,7 +8,8 @@ const schema = new Schema({
     lastName: { type: String, required: true },
     createdDate: { type: Date, default: Date.now },
     isTeacher: {type: Boolean, required: true},
-    courses: {type:[{type: String}]}
+    courses: {type:[{type: String}]},
+    registrationToken: {type: String, default: null}
 });
 
 schema.set('toJSON', { virtuals: true });
