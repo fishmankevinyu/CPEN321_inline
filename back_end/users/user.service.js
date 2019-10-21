@@ -25,7 +25,7 @@ async function authenticate({ username, password}, regToken) {
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
         console.log(regToken);
-        User.findOneAndUpdate({username},{$set: {registrationToken: regToken}});
+        await User.findOneAndUpdate({username},{$set: {registrationToken: regToken}});
         return {
             ...userWithoutHash,
             token,
