@@ -3,6 +3,7 @@ const router = express.Router();
 const Db = require('Mongodb').Db;
 const Server = require('Mongodb').Server
 const MongoClient = require('Mongodb').MongoClient;
+const Est = require("./estime");
 router.post('/enque',enque);
 router.put('/deque',deque);
 router.get('/top', top);
@@ -12,11 +13,10 @@ router.delete('/', queue_delete);
 module.exports = router;
 exports.newQueue = newQueue;
 exports.delete = _delete;
-exports.numOfElement = numOfElement;
+exports.check_index = check_index;
 
 var db;
 var db2;
-var lwtime = null;
 
 MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
     if(err) throw err;
@@ -24,50 +24,38 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
     db2 = _db;
 });
 
-function numOfElement(coursename){
-    db.collection(coursename).countDocuments({start:true},function(err, count){
-      //count is the number, do what ever u want
-    });
-}
-
 
 async function enque(req,res,next){
-  var queue = await db.collection(req.body.coursename).insertOne({
+  await db.collection(req.body.coursename).insertOne({
     username:req.body.username,
     entime: Date.now(),
     start: true,
-    estime: lwtime.getTime()});
-  if(queue) {
-    res.status(200).json({messge:"you are in queue"});
-  }
-  else{
-    res.status(400).json({messge:"not successful"})
-  }
+    estime: 0})
+    .then( queue => queue ? res.status(200).json({messge:"you are in queue"}):res.status(400).json({messge:"not successful"}))
+    .catch(err => next(err))
+
+  await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},
+    {$set: {estime: await Est.calEST(req.body.coursename, req.body.username)}})
 }
 
 async function top(req,res,next){
     var queue = await db.collection(req.body.coursename).findOneAndUpdate({start:true},
       {$set:{start : true}},
-      {sort:{enTime: 1}});
+      {sort:{entime: 1}});
     res.json(queue);
 
 }
 
 async function deque(req,res,next){
-  await db.collection(req.body.coursename).findOne({start:true},{sort:{enTime:1}},function(err, user){
+  await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
     if (err) throw err;
-    if(lwtime == null) {
-      lwtime = new Date(Date.now() - user.entime);
-    }
-    else{
-      lwtime = lwtime.setTime((lwtime.getTime() +(Date.now() - user.entime))/2);
-    }
+    Est.updateAHT(req.body.coursename, Date.now() - user.entime)
   });
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},
-    {sort:{enTime: 1}})
+    {sort:{entime: 1}})
     .then( queue => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
-}
+  }
 
 async function newQueue(coursename){
   var queue = await db.collection(coursename);
@@ -84,10 +72,20 @@ function queue_delete(req,res,next){
   _delete(req.body.coursename);
 }
 
-function new_queue(req,res,next){
-  newQueue(req.body.coursename).then(queue => queue ? res.json({"message":"success"}) : res.sendStatus(400));
+async function new_queue(req,res,next){
+  await newQueue(req.body.coursename)
+  .then(queue => queue ? res.json({"message":"success"}) : res.sendStatus(400)).catch(err => next(err));
+  Est.new_course_time(req.body.coursename,req.body.AA);
 }
 
 async function _delete(coursename){
   await db.collection(coursename).drop();
+}
+
+async function check_index(coursename,username){
+  var user = await db.collection(coursename).findOne({username:username});
+  console.log(user.entime)
+  var count = await db.collection(coursename).countDocuments({entime: {$gte : user.entime}});
+  console.log('count: '+ count);
+  return count
 }
