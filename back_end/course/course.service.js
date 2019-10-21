@@ -16,14 +16,14 @@ router.get('/students/:id', get_students);
 
 //var acourse = {course: "CPEN291"};
 module.exports = router;
-exports.getHours = getHourse;
+//exports.getHours = getHourse;
 
-function getHours(coursename){
-  var course = await Course.findOne({coursename: coursename});
-  if(course == null){console.log( err: ' + course)};
-
-
-}
+//function getHours(coursename){
+//  var course = await Course.findOne({coursename: coursename});
+//  if(course == null){console.log( err: ' + course)};
+//
+//
+//}
 
 async function add_course(req, res, next){
   var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));

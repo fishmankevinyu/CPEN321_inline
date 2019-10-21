@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         username = (EditText)findViewById(R.id.editText1);
         password = (EditText)findViewById(R.id.editText2);
+        MySingletonClass.getInstance().setName(username.getText().toString());
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
             @Override
