@@ -43,7 +43,8 @@ async function add_course(req, res, next){
     else{
         console.log(user.username);
         console.log(course.coursename);
-        var token = regToken.getToken(user.username);
+        var token = await regToken.getToken(user.username);
+        console.log(token);
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
           .then(await topic.subscribe(token, course.coursename))
