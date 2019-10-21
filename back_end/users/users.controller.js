@@ -21,7 +21,7 @@ async function authenticate(req, res, next) {
     console.log(req.body.registrationToken)
     var user = await User.findOne({userame: req.body.username})
     console.log(user)
-    await user.registrationToken = req.body.registrationToken;
+    await (user.registrationToken = req.body.registrationToken);
     if(user.registrationToken == null){
       console.log(reg.body.registrationToken)
     }
