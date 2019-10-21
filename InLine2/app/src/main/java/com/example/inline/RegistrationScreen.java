@@ -79,6 +79,7 @@ public class RegistrationScreen extends AppCompatActivity {
                     postdata.put("lastName", lastName.getText().toString());
                     postdata.put("username", username.getText().toString());
                     postdata.put("password", password.getText().toString());
+                    postdata.put("isTeacher", false);
                 } catch(JSONException e){
                     e.printStackTrace();
                 }
@@ -99,7 +100,7 @@ public class RegistrationScreen extends AppCompatActivity {
 
 
                 Request request = new Request.Builder()
-                        .url("https://reqres.in/api/users")
+                        .url("http://40.117.195.60:4000/users/register")
                         .post(body)
                         .header("Accept", "application/json")
                         .header("Content-Type", "application/json")
