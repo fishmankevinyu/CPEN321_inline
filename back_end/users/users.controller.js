@@ -17,11 +17,11 @@ router.get('/courses/:id', get_courses);
 
 module.exports = router;
 
-async function authenticate(req, res, next) {
+function authenticate(req, res, next) {
     console.log(req.body.registrationToken)
-    var user = await User.findOne({userame: req.body.username})
-    console.log(user)
-    await (user.registrationToken = req.body.registrationToken);
+    var user = User.findOne({userame: req.body.username})
+    user.registrationToken = req.body.registrationToken;
+    user.save()
     if(user.registrationToken == null){
       console.log(reg.body.registrationToken)
     }
