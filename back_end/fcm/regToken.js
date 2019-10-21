@@ -18,11 +18,11 @@ MongoClient.connect('mongodb://localhost:27017/Token',function(err,_db){
     db2 = _db;
 });
 
-function addToken(username,token){
+async function addToken(username,token){
   var regToken =  await tokens.findOneAndUpdate({username:username}, {$set:{token:token}});
   console.log(regToken)
   if(regToken == null){
-    tokens.insertOne({username: username, token: token})
+    await tokens.insertOne({username: username, token: token})
   }
 }
 
