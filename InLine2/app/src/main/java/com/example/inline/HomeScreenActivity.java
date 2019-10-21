@@ -50,7 +50,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         /*Dummy data*/
 
-        JSONObject class1 = new JSONObject();
+        /* JSONObject class1 = new JSONObject();
         try {
             class1.put("id", "CPEN321");
             class1.put("section", "101");
@@ -68,6 +68,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         classList = new JSONArray();
         classList.put(class1);
         classList.put(class2);
+
 
         JSONObject json_data;
 
@@ -94,7 +95,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                                     int position, long id) {
                 getCourseInfo(position);
             }
-        });
+        }); */
 
     }
 
