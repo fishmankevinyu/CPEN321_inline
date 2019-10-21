@@ -47,7 +47,7 @@ async function add_course(req, res, next){
 
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
-          .then(await topic.subscribe(user.registrationToken, course.coursename));
+          .then(await topic.subscribe(user.registrationToken, course.coursename))
           .catch(err => next(err));
 
         await user.save();
