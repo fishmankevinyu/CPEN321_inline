@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     public void login(View view) {
 
         if (username.getText().toString().equals("admin") && password.getText().toString().equals("admin")) {
