@@ -39,15 +39,6 @@ public class HomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( HomeScreenActivity.this,  new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String mToken = instanceIdResult.getToken();
-                Log.e("HomeScreenActivity","HERE IS OUR TOKEN");
-                Log.e("Token",mToken);
-            }
-        });
-
         setContentView(R.layout.activity_home_screen);
 
         toolbar = getSupportActionBar();
@@ -59,7 +50,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         /*Dummy data*/
 
-        JSONObject class1 = new JSONObject();
+        /* JSONObject class1 = new JSONObject();
         try {
             class1.put("id", "CPEN321");
             class1.put("section", "101");
@@ -77,6 +68,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         classList = new JSONArray();
         classList.put(class1);
         classList.put(class2);
+
 
         JSONObject json_data;
 
@@ -103,7 +95,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                                     int position, long id) {
                 getCourseInfo(position);
             }
-        });
+        }); */
 
     }
 

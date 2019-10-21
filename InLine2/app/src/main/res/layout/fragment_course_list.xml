@@ -6,16 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".course_list_fragment">
 
-    <TextView
-        android:id="@+id/title"
+    <ListView
+        android:id="@+id/mobile_list"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Course List"
-        android:textColor="#03A9F4"
-        android:textSize="50sp"
+        android:layout_height="fill_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,9 +62,14 @@ public class map_fragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         googleMap.setOnPoiClickListener(this);
-        LatLng Macleod = new LatLng(49.261885, -123.248379);
-        mMap.addMarker(new MarkerOptions().position(Macleod).title("Macleod").snippet("CPEN321"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(Macleod));
+        LatLng CPEN321 = new LatLng(49.261885, -123.248379);
+        LatLng MATH100 = new LatLng(49.266326, -123.254789);
+        LatLng CHEM200 = new LatLng(49.266012, -123.253058);
+
+        mMap.addMarker(new MarkerOptions().position(CPEN321).title("CPEN321").snippet("MCLD"));
+        mMap.addMarker(new MarkerOptions().position(MATH100).title("MATH100").snippet("MATH"));
+        mMap.addMarker(new MarkerOptions().position(CHEM200).title("CHEM200").snippet("CHEM"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(CPEN321));
     }
 
 
