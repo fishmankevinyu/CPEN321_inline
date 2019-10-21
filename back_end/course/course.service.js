@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../_helpers/db');
 const User = db.User
 const Course = db.Course
-const queue = require('../queue/queue.service')
+const queues = require('../queue/queue.service')
 const mongoose = require("mongoose");
 const topic = require('../fcm/send2')
 const regToken = require('../fcm/regToken')
@@ -71,7 +71,7 @@ async function new_course(req, res ,next){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
-    var queue = await queue.newQueue(req.body.coursename)
+    var queue = await queues.newQueue(req.body.coursename)
     var course = new Course(req.body);
     res.json(course);
     await course.save();
