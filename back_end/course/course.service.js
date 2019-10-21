@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../_helpers/db');
-const User = db.User;
-const Course = db.Course;
+const User = db.User
+const Course = db.Course
+const queue = require('../queue/queue.service')
 const mongoose = require("mongoose");
 // routes
 router.post('/new', new_course);
