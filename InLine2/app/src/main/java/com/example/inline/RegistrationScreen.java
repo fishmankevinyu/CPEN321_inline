@@ -108,7 +108,6 @@ public class RegistrationScreen extends AppCompatActivity {
                 //  .url("http://40.117.195.60:8080/users/register")
                 //  .url("https://reqres.in/api/users")
                 //https://reqres.in/ for testing
-
                 new MyAsyncTask().execute(request);
             }
         });
