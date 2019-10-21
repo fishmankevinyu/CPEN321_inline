@@ -28,7 +28,7 @@ function authenticate(req, res, next) {
     userService.authenticate({username: req.body.username , password: req.body.password})
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
-    regTOken.addToken(req.body.username,req.body.registrationToken);
+    regToken.addToken(req.body.username,req.body.registrationToken);
 
 }
 
