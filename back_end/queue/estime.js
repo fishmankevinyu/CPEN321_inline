@@ -5,7 +5,9 @@ const mongodb = require('mongodb');
 var db;
 var db2;
 var ests;
-
+/*
+this is a private interface, no front end request here
+*/
 module.exports = {
   new_course_time,
   updateAHT,
@@ -25,10 +27,8 @@ async function new_course_time(coursename,aa){
     AHT: 0,
     count: 0,
     AA: aa
-  },function(err,est){
-    if(err) throw err;
-    console.log("success");
-  })
+  }).then((x)=>x).catch(err=>console.log(err))
+  console.log(aa)
 }
 
 function updateAHT(coursename,aht){

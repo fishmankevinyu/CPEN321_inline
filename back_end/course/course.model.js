@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-  coursename:{type: String, required: true},
-  //hash:{type:String, required: true},
+  coursename:{type: String, unique: true, required: true},
   teachers: {type:[{type:String, required: true}]},
   createdDate: { type: Date, default: Date.now },
   students: {type:[{type: String}]}
