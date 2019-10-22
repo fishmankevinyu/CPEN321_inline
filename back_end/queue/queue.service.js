@@ -10,9 +10,9 @@ router.delete('/', queue_delete);
 
 module.exports = { router: router,
                    newQueue:newQueue,
-                   delete: _delete,
-                   check_index: check_index
+                   delete: _delete
                  };
+exports.checkIndex = checkIndex
 
 var db;
 var db2;
@@ -25,16 +25,29 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
 
 
 async function enque(req,res,next){
-  await db.collection(req.body.coursename).insertOne({
-    username:req.body.username,
-    entime: Date.now(),
-    start: true,
-    estime: 0})
-    .then( queue => queue ? res.status(200).json({messge:"you are in queue"}):res.status(400).json({messge:"not successful"}))
-    .catch(err => next(err))
+  var user = await db.collection(req.body.coursename).findOne({
+    username:req.body.username
+  }).then((x)=>x);
+  if(user == null){
+    await db.collection(req.body.coursename).insertOne({
+      username:req.body.username,
+      entime: Date.now(),
+      start: true,
+      estime: 0})
+    .then( function(queue){return queue;});
 
-  await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},
-    {$set: {estime: await Est.calEST(req.body.coursename, req.body.username)}})
+    var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime});
+    console.log("enque/ESTime: " + ESTime)
+    var user = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
+    .then(function(newUser){
+      console.log("been in 3rd fulfilled")
+      res.status(200).json({success:"you are in queue", EST: ESTime});
+      return newUser
+    }, () => res.status(400).json({messge:"not successful"}));
+  }
+  else{
+    res.status(400).json({failure:"you are in queue already"})
+  }
 }
 
 async function top(req,res,next){
@@ -81,10 +94,11 @@ async function _delete(coursename){
   await db.collection(coursename).drop();
 }
 
-async function check_index(coursename,username){
-  var user = await db.collection(coursename).findOne({username:username});
-  console.log(user.entime)
-  var count = await db.collection(coursename).countDocuments({entime: {$gte : user.entime}});
-  console.log('count: '+ count);
+function checkIndex(coursename,username){
+  var count = db.collection(coursename).findOne({username:username})
+  .then(function(user){
+    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((new_count)=>new_count);
+    return count;
+  });
   return count
 }

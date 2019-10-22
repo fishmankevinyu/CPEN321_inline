@@ -20,9 +20,12 @@ MongoClient.connect('mongodb://localhost:27017/Token',function(err,_db){
 });
 
 async function addToken(username,token){
-  var regToken =  await tokens.findOneAndUpdate({username:username}, {$set:{token:token}})
-    .then(()=>{console.log("success")}, await tokens.insertOne({username: username, token: token}));
-  console.log(regToken)
+  await tokens.findOneAndUpdate({username:username}, {$set:{token:token}},{upsert: true})
+    .then(function(regToken){
+      console.log("success: " + token)
+    }, function(err){
+      console.log("failed: " + err)
+    })
 }
 
 async function deleteToken(username,token){
