@@ -39,23 +39,19 @@ function updateAHT(coursename,aht){
   count = est.count
   console.log(typeof old_aht)
   console.log(typeof count)
-  console.log("success");
   var new_aht
 
   if(old_aht == null){
     new_aht = aht;
     count = aht - aht;
-    console.log("if");
   }
   else{
     new_aht = (old_aht + aht*count)/(count+1);
     console.log(count)
-    console.log("else");
 
   }
   ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:new_aht}, $inc: {count: 1}},function(err, est){
     if(err) throw err;
-    console.log("success");
   });
 }
 
