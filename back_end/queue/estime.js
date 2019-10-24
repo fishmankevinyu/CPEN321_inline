@@ -1,16 +1,18 @@
 const express = require('express');
-const queue = require('./queue.service');
+const Queue = require('./queue.service');
 const MongoClient = require('mongodb').MongoClient;
 const mongodb = require('mongodb');
 var db;
 var db2;
 var ests;
-
+/*
+this is a private interface, no front end request here
+*/
 module.exports = {
   new_course_time,
   updateAHT,
   calEST
-}
+};
 
 MongoClient.connect('mongodb://localhost:27017/EST',function(err,_db){
     if(err) throw err;
@@ -25,10 +27,8 @@ async function new_course_time(coursename,aa){
     AHT: 0,
     count: 0,
     AA: aa
-  },function(err,est){
-    if(err) throw err;
-    console.log("success");
-  })
+  }).then((x)=>x).catch(err=>console.log(err))
+  console.log(aa)
 }
 
 function updateAHT(coursename,aht){
@@ -60,16 +60,21 @@ function updateAHT(coursename,aht){
 }
 
 async function calEST(coursename,username){
-  var aht
-  var aa
-  var piQ = await queue.check_index(coursename,username);
-  var est = await ests.findOne({coursename:coursename});
-  aht = await parseInt(est.AHT,10)
-  aa = await parseInt(est.AA,10)
-  console.log('piq'+piQ);
-  var est = await aht*piQ/aa;
-  console.log(est);
-
-  return est;
-
+  var count = await Queue.checkIndex(coursename,username)
+  .then(function(newcount){
+    console.log("newcount: " + newcount)
+    return newcount
+  })
+  console.log("count3: " + count)
+  var piQ = parseInt(count,10);
+  var est = await ests.findOne({coursename:coursename})
+  .then(function(newest){
+    console.log(newest.AHT);
+    console.log(newest.AA);
+    return newest
+  },function(err){console.log("err: " + err)})
+  console.log("est:" +est)
+  var ESTime = piQ*est.AHT/est.AA
+  console.log(ESTime + " " + piQ + " " + est.AHT + " " + est.AA)
+  return ESTime
 }

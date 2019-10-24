@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const Est = require("./estime");
+const mongoosedb = require("../_helpers/db")
+const mongoose = require("mongoose")
+const User = mongoosedb.User
+const Course = mongoosedb.Course
 router.post('/enque',enque);
 router.put('/deque',deque);
 router.get('/top', top);
@@ -10,9 +14,9 @@ router.delete('/', queue_delete);
 
 module.exports = { router: router,
                    newQueue:newQueue,
-                   delete: _delete,
-                   check_index: check_index
+                   delete: _delete
                  };
+exports.checkIndex = checkIndex
 
 var db;
 var db2;
@@ -23,20 +27,50 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
     db2 = _db;
 });
 
-
-async function enque(req,res,next){
-  await db.collection(req.body.coursename).insertOne({
-    username:req.body.username,
-    entime: Date.now(),
-    start: true,
-    estime: 0})
-    .then( queue => queue ? res.status(200).json({messge:"you are in queue"}):res.status(400).json({messge:"not successful"}))
-    .catch(err => next(err))
-
-  await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},
-    {$set: {estime: await Est.calEST(req.body.coursename, req.body.username)}})
+/*private */
+async function enqueCheck(username,coursename){
+  var user = await User.findOne({username:username, courses: coursename})
+  var course = await Course.findOne({coursename:coursename, students: username})
+  if(user == null || course == null){
+    return false
+  }
+  return true
 }
 
+/*
+post request
+put a student in a queue
+url: /queue/enque
+need json ({"coursename":"","username":""})
+*/
+async function enque(req,res,next){
+  var user = await db.collection(req.body.coursename).findOne({
+    username:req.body.username
+  }).then((x)=>x);
+  if(user == null && await enqueCheck(req.body.username,req.body.coursename).then((x)=>x)){
+    await db.collection(req.body.coursename).insertOne({
+      username:req.body.username,
+      entime: Date.now(),
+      start: true,
+      estime: 0})
+    .then( function(queue){return queue;});
+
+    var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime});
+
+    console.log("enque/ESTime: " + ESTime)
+
+    var user = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
+    .then(function(newUser){
+      console.log("been in 3rd fulfilled")
+      res.status(200).json({success:"you are in queue", EST: ESTime});
+      return newUser
+    }, () => res.status(400).json({messge:"not successful"}));
+  }
+  else{
+    res.status(400).json({failure:"you are in queue already/you are not a student of this course"})
+  }
+}
+/*look at the next one that is about to be dequed*/
 async function top(req,res,next){
     var queue = await db.collection(req.body.coursename).findOneAndUpdate({start:true},
       {$set:{start : true}},
@@ -45,6 +79,12 @@ async function top(req,res,next){
 
 }
 
+/*
+put request
+deque a user in the queue by FIFO
+url: /queue/deque
+need json {"coursename":""}
+*/
 async function deque(req,res,next){
   await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
     if (err) throw err;
@@ -56,10 +96,11 @@ async function deque(req,res,next){
     .then( queue => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
   }
 
-async function newQueue(coursename){
+/*private for backend*/
+async function newQueue(coursename,aa){
   var queue = await db.collection(coursename);
-
-  if(queue){
+  var estime = await Est.new_course_time(coursename,aa);
+  if(queue && estime ){
     return queue;
   }
   else{
@@ -67,24 +108,41 @@ async function newQueue(coursename){
   }
 }
 
+/*
+delete request
+delete a course queue
+url /queue/delete
+json({"coursename":""})
+this could be merge into course.service deleted, but not yet
+*/
 function queue_delete(req,res,next){
   _delete(req.body.coursename);
 }
 
+/*
+post request
+create a queue of a courses
+url /queue/newe
+json({"coursename":"","AA":""})
+already merge into course service, but still can use sepearately
+*/
 async function new_queue(req,res,next){
-  await newQueue(req.body.coursename)
+  await newQueue(req.body.coursename,req.body.AA)
   .then(queue => queue ? res.json({"message":"success"}) : res.sendStatus(400)).catch(err => next(err));
-  Est.new_course_time(req.body.coursename,req.body.AA);
 }
 
+/*private*/
 async function _delete(coursename){
   await db.collection(coursename).drop();
 }
 
-async function check_index(coursename,username){
-  var user = db.collection(coursename).findOne({username:username});
-  console.log(user.entime)
-  var count = db.collection(coursename).countDocuments({entime: {$gte : user.entime}});
-  console.log('count: '+ count);
+/*private*/
+function checkIndex(coursename,username){
+  var count = db.collection(coursename).findOne({username:username})
+  .then(function(user){
+    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((new_count)=>new_count);
+    return count;
+  });
+
   return count
 }
