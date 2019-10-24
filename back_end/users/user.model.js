@@ -9,7 +9,6 @@ const schema = new Schema({
     createdDate: { type: Date, default: Date.now },
     isTeacher: {type: Boolean, required: true},
     courses: {type:[{type: String}]},
-    registrationToken: {type: String, default: null}
 });
 
 schema.set('toJSON', { virtuals: true });

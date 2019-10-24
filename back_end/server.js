@@ -5,15 +5,17 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('./_helpers/jwt');
 const errorHandler = require('./_helpers/error-handler');
+const queue = require("./queue/queue.service");
 
 var admin = require("firebase-admin");
 var serviceAccount = require('./fcm/privatekey.json') //put the generated private key path here
 
-// start push 
+// start push
 admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       databaseURL: "https://inline-f628d.firebaseio.com"
-    });
+});
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -25,7 +27,7 @@ app.use(jwt());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/courses', require('./course/course.service'));
-app.use('/queue', require('./queue/queue.service'));
+app.use('/queue', queue.router);
 app.use('/time', require('./course/time.service'));
 
 // global error handler

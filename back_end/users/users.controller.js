@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../_helpers/db');
+const User = db.User;
 const userService = require('./user.service');
+const regToken = require('../fcm/regToken')
 
 // routes
 router.post('/authenticate', authenticate);
@@ -16,9 +19,11 @@ module.exports = router;
 
 function authenticate(req, res, next) {
     console.log(req.body.registrationToken)
-    userService.authenticate(req.body , req.body.registrationToken)
+    userService.authenticate({username: req.body.username , password: req.body.password})
         .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
         .catch(err => next(err));
+    regToken.addToken(req.body.username,req.body.registrationToken);
+
 }
 
 function get_courses(req, res, next){

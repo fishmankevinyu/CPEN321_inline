@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
 var admin = require("firebase-admin");
+var admin = require("firebase-admin");
 var serviceAccount = require('./privatekey.json') //put the generated private key path here
 
-function sendNotification(){
-//    admin.initializeApp({
-//          credential: admin.credential.cert(serviceAccount),
-//          databaseURL: "https://inline-f628d.firebaseio.com"
-//        });
 
-    var token = "dsB4G4H5a4w:APA91bGNQLVKoHtxPxrIfrELqUm4yIOv9VFsNkfGPYqq8z3Gb6dOhEFhAy3F_aHmIchgtDr6A98YRbX29cy2djjOWpE3gegOzq7GpomjessWrkiPWAmcG9Cye6cc1MEEqnBE7CtbYw_B";
+    admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+          databaseURL: "https://inline-f628d.firebaseio.com"
+        });
+
+    var token = "cVKSvNvX3TA:APA91bFa6da5VefoA5ees5UDf5XD6s27kvmy7jUlCjADMSAe1fGookUkaEkw6nYCKyphFcH5wGTrevmsDa8Kni34MoQMMJaY8SMo4Pu74worLkJQDTUWyPr9ee40FeoQmfwqenc66E2Y";
 
 
     var message = {
@@ -29,10 +30,10 @@ function sendNotification(){
         .catch(function(error){
                console.log("Something has gone wrong: ", error);
                });
-}
-
-module.exports = {
-    sendNotification
-};
 
 
+//module.exports = {
+//    sendNotification
+//};
+//
+//

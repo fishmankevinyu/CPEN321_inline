@@ -12,7 +12,7 @@
 */
 
 const cron = require('node-cron');
-const send = require('../fcm/send');
+const send = require('../fcm/send2');
 const db = require('../_helpers/db');
 const User = db.User;
 
