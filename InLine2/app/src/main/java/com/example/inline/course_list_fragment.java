@@ -1,5 +1,6 @@
 package com.example.inline;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -80,17 +81,21 @@ public class course_list_fragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+               /* String coursename = getCourseInfo(position);
+                CourseSingletonClass.getInstance().setCourse(coursename);
+
+                Intent intent = new Intent(this, queue.class);
+                startActivity(intent); */
                 String coursename = getCourseInfo(position);
-                Log.i(TAG, "onItemClick: courseInfo lalala");
+                //Log.e(TAG, "onItemClick: courseInfo lalala");
                 registerCourse(coursename, MySingletonClass.getInstance().getName());
-                Log.i(TAG, "onItemClick: registerCourse lalala");
+                //Log.e(TAG, "onItemClick: registerCourse lalala" + MySingletonClass.getInstance().getName());
             }
         });
-
         return view;
     }
 
-    public String getCourseInfo(int position) {
+    private String getCourseInfo(int position) {
         try {
             JSONObject classInformation = classList.getJSONObject(position);
             String courseName = classInformation.getString("id");
@@ -109,6 +114,7 @@ public class course_list_fragment extends Fragment {
         JSONObject postdata = new JSONObject();
         try {
             postdata.put("coursename", coursename);
+            Log.e(TAG, ""+coursename);
             postdata.put("username", username);
         } catch(JSONException e){
             e.printStackTrace();
@@ -116,7 +122,8 @@ public class course_list_fragment extends Fragment {
 
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
         Request request = new Request.Builder()
-                .url("https://reqres.in/api/users")
+                .url("http://40.117.195.60:4000/queue/enque")
+                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
                 .post(body)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
@@ -151,18 +158,11 @@ public class course_list_fragment extends Fragment {
 
                 Log.i("idf", response.body().string());
 
-                /* Extra code for debugging
-                Headers responseHeaders = response.headers();
-                for (int i = 0; i < responseHeaders.size(); i++) {
-                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    Log.i("idf", responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                }*/
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
 
             }
-
 
         }
 
