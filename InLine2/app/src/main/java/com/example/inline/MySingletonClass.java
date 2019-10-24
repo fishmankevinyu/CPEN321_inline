@@ -22,15 +22,15 @@ public class MySingletonClass {
 
     private ArrayList<String> classes;
 
+    private boolean isteacher;
 
+    public String getName() { return username;}
 
-    public String getName() {
-        return username;
-    }
+    public void setName(String username) { this.username = username;}
 
-    public void setName(String username) {
-        this.username = username;
-    }
+    public boolean getIsteacher() {return this.isteacher;}
+
+    public void setIsteacher(boolean isteacher) {this.isteacher = isteacher;}
 
     public void setmToken(String mtoken){ this.mToken = mtoken;} //For push notifications
 

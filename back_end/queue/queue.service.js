@@ -143,5 +143,6 @@ function checkIndex(coursename,username){
     var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((new_count)=>new_count);
     return count;
   });
+
   return count
 }

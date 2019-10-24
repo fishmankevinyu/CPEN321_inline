@@ -23,6 +23,7 @@ import java.io.IOException;
 import android.view.SurfaceHolder.Callback;
 
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +80,7 @@ public class RegistrationScreen extends AppCompatActivity {
                     postdata.put("lastName", lastName.getText().toString());
                     postdata.put("username", username.getText().toString());
                     postdata.put("password", password.getText().toString());
-                    postdata.put("isTeacher", false);
+                    postdata.put("isTeacher", MySingletonClass.getInstance().getIsteacher());
                 } catch(JSONException e){
                     e.printStackTrace();
                 }
@@ -157,6 +158,20 @@ public class RegistrationScreen extends AppCompatActivity {
 
         }
 
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_meat:
+                if (checked) {MySingletonClass.getInstance().setIsteacher(true);}
+                else
+                    MySingletonClass.getInstance().setIsteacher(false);
+                break;
+        }
     }
 
 }
