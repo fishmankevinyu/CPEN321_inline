@@ -82,9 +82,9 @@ async function _delete(coursename){
 }
 
 async function check_index(coursename,username){
-  var user = await db.collection(coursename).findOne({username:username});
+  var user = db.collection(coursename).findOne({username:username});
   console.log(user.entime)
-  var count = await db.collection(coursename).countDocuments({entime: {$gte : user.entime}});
+  var count = db.collection(coursename).countDocuments({entime: {$gte : user.entime}});
   console.log('count: '+ count);
   return count
 }
