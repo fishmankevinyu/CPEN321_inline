@@ -10,7 +10,7 @@ var serviceAccount = require('./privatekey.json') //put the generated private ke
           databaseURL: "https://inline-f628d.firebaseio.com"
         });
 
-    var token = "cVKSvNvX3TA:APA91bFa6da5VefoA5ees5UDf5XD6s27kvmy7jUlCjADMSAe1fGookUkaEkw6nYCKyphFcH5wGTrevmsDa8Kni34MoQMMJaY8SMo4Pu74worLkJQDTUWyPr9ee40FeoQmfwqenc66E2Y";
+    var token = "dVY5qzPD38I:APA91bF7pkWUwBDD8QuERR8At0ceCJ7u9FOswl1NF9Zac5kWnnwVN8FeKmUhbPFZLOuZqA7yRcDj4sTKD6QcyaExAQnneti9Pif6upJwvJaaWuZqVLPGrwTMa4kKUIYMfc0qC7iAUDjy";
 
 
     var message = {

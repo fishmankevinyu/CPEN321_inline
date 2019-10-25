@@ -5,6 +5,8 @@ const mongoose = require("mongoose")
 const mongoosedb = require("../_helpers/db")
 const Course = mongoosedb.Course
 
+const send = require('../fcm/send2');
+
 const schedule = require('../schedule/scheduling.service');
 
 // routes
@@ -27,7 +29,7 @@ MongoClient.connect('mongodb://localhost:27017/time',function(err,_db){
 
 async function add_time(req, res, next){
     if(await Course.findOne({coursename: req.body.coursename})){
-        await add_time_service(req.body)
+        await add_time_service(req.body, req.body.coursename)
         .then(()=>res.json({message: "successully added"}))
         .catch(err => next(err));
     }
@@ -53,9 +55,11 @@ async function delete_time(req, res, next){
     .catch(err=>next(err));
 }
 
-async function add_time_service(time){
+async function add_time_service(time, coursename){
     if(await times.insertOne(time)){
-        await schedule.addSchedule(time, time.coursename);
+        await schedule.addSchedule(time, coursename);
+        //await schedule.startSchedule(task);
+        //await send.sendNotification(coursename);
     }
     else{
         throw "added failure";
@@ -68,5 +72,11 @@ async function get_time_service(coursename){
 }
 
 async function delete_time_service(time){
-    await times.findOneAndDelete(time);
+    if(await times.findOneAndDelete(time)){
+        await schedule.deleteSchedule(time, time.coursename);
+    }
+    else{
+       throw "delete failure";
+    }
+    
 }
