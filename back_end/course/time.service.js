@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
+const mongoose = require("mongoose")
+const mongoosedb = require("../_helpers/db")
+const Course = mongoosedb.Course
 
 const schedule = require('../schedule/scheduling.service');
 
@@ -23,9 +26,14 @@ MongoClient.connect('mongodb://localhost:27017/time',function(err,_db){
 });
 
 async function add_time(req, res, next){
-    await add_time_service(req.body)
-    .then(()=>res.json({message: "successully added"}))
-    .catch(err => next(err));
+    if(await Course.findOne({coursename: req.body.coursename})){
+        await add_time_service(req.body)
+        .then(()=>res.json({message: "successully added"}))
+        .catch(err => next(err));
+    }
+    else{
+        res.status(400).json({message: "course not found"});
+    }
     
 }
 

@@ -38,6 +38,13 @@ async function enqueCheck(username,coursename){
 }
 
 /*
+ get request
+ get the position of a student in queue
+ url: /queue/index
+ need json ({"coursename":"","username":""})
+ */
+
+/*
 post request
 put a student in a queue
 url: /queue/enque

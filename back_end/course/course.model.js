@@ -5,6 +5,7 @@ const schema = new Schema({
   coursename:{type: String, unique: true, required: true},
   teachers: {type:[{type:String, required: true}]},
   createdDate: { type: Date, default: Date.now },
+  AA: {type: Number, default: 1},
   students: {type:[{type: String}]}
 });
 

@@ -1,3 +1,4 @@
+  
 const express = require('express');
 const router = express.Router();
 const db = require('../_helpers/db');
@@ -16,6 +17,7 @@ router.get('/', get_all);
 router.put('/:id', update_course)
 router.delete('/:id', delete_course);
 router.get('/students/:id', get_students);
+router.post('/name', getByName);
 
 module.exports = router;
 
@@ -117,7 +119,7 @@ get all students courses
 */
 async function get_all(req,res,next){
     await Course.find().select('-hash')
-    .then(users => res.json(users))
+    .then(courses => res.json(courses))
     .catch(err => next(err));
 }
 
@@ -146,4 +148,19 @@ delete a specific course
 async function delete_course(req,res,next){
   var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
   .then(()=>{res.json({message:"deleted"})}).catch(err=>next(err));
+}
+
+/*
+post request, /courses/name
+get one course by name
+json: {"coursename": ""}
+*/
+async function getByName(req, res, next){
+    var course = await Course.findOne({coursename: req.body.coursename});
+    if(course){
+        res.json(course);
+    }else{
+        res.status(404).json({message:"no course found"});
+    }
+
 }
