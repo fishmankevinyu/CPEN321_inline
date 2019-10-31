@@ -5,18 +5,6 @@ const User = db.User;
 const userService = require('./user.service');
 const regToken = require('../fcm/regToken')
 
-// routes
-router.post('/authenticate', authenticate);
-router.post('/register', register);
-router.get('/', getAll);
-router.get('/current', getCurrent);
-router.get('/:id', getById);
-router.put('/:id', update);
-router.delete('/:id', _delete);
-router.get('/courses/:id', get_courses);
-
-module.exports = router;
-
 function authenticate(req, res, next) {
     console.log(req.body.registrationToken)
     userService.authenticate({username: req.body.username , password: req.body.password})
@@ -70,3 +58,15 @@ function _delete(req, res, next) {
         .then(() => res.json({}))
         .catch(err => next(err));
 }
+
+// routes
+router.post('/authenticate', authenticate);
+router.post('/register', register);
+router.get('/', getAll);
+router.get('/current', getCurrent);
+router.get('/:id', getById);
+router.put('/:id', update);
+router.delete('/:id', _delete);
+router.get('/courses/:id', get_courses);
+
+module.exports = router;
