@@ -1,20 +1,15 @@
-const express = require('express');
-const Queue = require('./queue.service');
-const MongoClient = require('mongodb').MongoClient;
-const mongodb = require('mongodb');
+const express = require("express");
+const Queue = require("./queue.service");
+const MongoClient = require("mongodb").MongoClient;
+const mongodb = require("mongodb");
 var db;
 var db2;
 var ests;
 /*
 this is a private interface, no front end request here
 */
-module.exports = {
-  new_course_time,
-  updateAHT,
-  calEST
-};
 
-MongoClient.connect('mongodb://localhost:27017/EST',function(err,_db){
+MongoClient.connect("mongodb://localhost:27017/EST",function(err,_db){
     if(err) throw err;
     db = _db.db("ESTs");
     ests = db.collection("ests");
@@ -27,19 +22,19 @@ async function new_course_time(coursename,aa){
     AHT: 0,
     count: 0,
     AA: aa
-  }).then((x)=>x).catch(err=>console.log(err))
-  console.log(aa)
+  }).then((x)=>x).catch(err=>console.log(err));
+  console.log(aa);
 }
 
 function updateAHT(coursename,aht){
-  var old_aht
-  var count
-  var est = ests.findOne({coursename:coursename})
-  old_aht = est.AHT
-  count = est.count
-  console.log(typeof old_aht)
-  console.log(typeof count)
-  var new_aht
+  var old_aht;
+  var count;
+  var est = ests.findOne({coursename:coursename});
+  old_aht = est.AHT;
+  count = est.count;
+  console.log(typeof old_aht);
+  console.log(typeof count);
+  var new_aht;
 
   if(old_aht == null){
     new_aht = aht;
@@ -47,7 +42,7 @@ function updateAHT(coursename,aht){
   }
   else{
     new_aht = (old_aht + aht*count)/(count+1);
-    console.log(count)
+    console.log(count);
 
   }
   ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:new_aht}, $inc: {count: 1}},function(err, est){
@@ -60,17 +55,23 @@ async function calEST(coursename,username){
   .then(function(newcount){
     console.log("newcount: " + newcount)
     return newcount
-  })
-  console.log("count3: " + count)
+  });
+  console.log("count3: " + count);
   var piQ = parseInt(count,10);
   var est = await ests.findOne({coursename:coursename})
   .then(function(newest){
     console.log(newest.AHT);
     console.log(newest.AA);
     return newest
-  },function(err){console.log("err: " + err)})
-  console.log("est:" +est)
-  var ESTime = piQ*est.AHT/est.AA
-  console.log(ESTime + " " + piQ + " " + est.AHT + " " + est.AA)
-  return ESTime
+  },function(err){console.log("err: " + err)});
+  console.log("est:" +est);
+  var ESTime = piQ*est.AHT/est.AA;
+  console.log(ESTime + " " + piQ + " " + est.AHT + " " + est.AA);
+  return ESTime;
 }
+
+module.exports = {
+  new_course_time,
+  updateAHT,
+  calEST
+};

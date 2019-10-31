@@ -6,24 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.util.ArrayList;
 
 
 public class HomeScreenActivity extends AppCompatActivity {
@@ -145,4 +133,5 @@ public class HomeScreenActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 }
