@@ -156,7 +156,9 @@ public class course_list_fragment extends Fragment {
 
                 Log.i("idf", "Response is successful");
 
-                Log.i("idf", response.body().string());
+                String jsonData = response.body().string();
+
+                Log.i("idf", jsonData);
 
             } catch (IOException e) {
                 e.printStackTrace();

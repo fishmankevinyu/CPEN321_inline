@@ -140,9 +140,6 @@ public class MainActivity extends AppCompatActivity {
         //} catch (Exception e){
 
         //}
-
-
-
     }
 
     class MyAsyncTaskMain extends AsyncTask<Request, Void, Response> {
@@ -198,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
                     MySingletonClass.getInstance().setToken(token);
                     Log.i("idf", token);
 
+//                    String isTeacher = Jobject.getString("isTeacher");
+//                    Boolean isTeacher_bool = Boolean.parseBoolean(isTeacher);
+//                    MySingletonClass.getInstance().setIsteacher(isTeacher_bool);
+//                    Log.i("idf", token);
 
                     String userName = Jobject.getString("username");
                     MySingletonClass.getInstance().setName(userName);
@@ -216,18 +217,11 @@ public class MainActivity extends AppCompatActivity {
                     MySingletonClass.getInstance().setClasses(classList);
 
 
-
-
-
                     navMainScreen();
 
                 } catch(Exception e){
 
                 }
-
-
-
-
 
             } catch (IOException e) {
                 e.printStackTrace();
