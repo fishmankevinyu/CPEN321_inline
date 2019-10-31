@@ -1,18 +1,18 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const mongoose = require("mongoose")
-const mongoosedb = require("../_helpers/db")
-const Course = mongoosedb.Course
+const MongoClient = require("mongodb").MongoClient;
+const mongoose = require("mongoose");
+const mongoosedb = require("../_helpers/db");
+const Course = mongoosedb.Course;
 
-const send = require('../fcm/send2');
+const send = require("../fcm/send2");
 
-const schedule = require('../schedule/scheduling.service');
+const schedule = require("../schedule/scheduling.service");
 
 // routes
-router.post('/add', add_time);
-router.get('/get', get_time);
-router.delete('/', delete_time);
+router.post("/add", add_time);
+router.get("/get", get_time);
+router.delete("/", delete_time);
 
 module.exports = router;
 
@@ -20,7 +20,7 @@ var times;
 var db;
 var lwtime = null;
 
-MongoClient.connect('mongodb://localhost:27017/time',function(err,_db){
+MongoClient.connect("mongodb://localhost:27017/time",function(err,_db){
     if(err) throw err;
     db = _db.db("time");
     times = db.collection("times");

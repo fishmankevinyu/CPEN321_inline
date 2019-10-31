@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
@@ -9,6 +9,6 @@ const schema = new Schema({
   students: {type:[{type: String}]}
 });
 
-schema.set('toJSON',{virtuals: true});
+schema.set("toJSON",{virtuals: true});
 
-module.exports = mongoose.model('Course', schema);
+module.exports = mongoose.model("Course", schema);

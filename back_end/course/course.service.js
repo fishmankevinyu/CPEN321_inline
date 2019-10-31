@@ -1,23 +1,23 @@
   
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../_helpers/db');
-const User = db.User
-const Course = db.Course
-const queues = require('../queue/queue.service')
+const db = require("../_helpers/db");
+const User = db.User;
+const Course = db.Course;
+const queues = require("../queue/queue.service");
 const mongoose = require("mongoose");
-const topic = require('../fcm/send2')
-const regToken = require('../fcm/regToken')
+const topic = require("../fcm/send2");
+const regToken = require("../fcm/regToken");
 
 // routes
-router.post('/new', new_course);
-router.post('/add/:userid&:courseid', add_course);
-router.get('/:id', get_courseById);
-router.get('/', get_all);
-router.put('/:id', update_course)
-router.delete('/:id', delete_course);
-router.get('/students/:id', get_students);
-router.post('/name', getByName);
+router.post("/new", new_course);
+router.post("/add/:userid&:courseid", add_course);
+router.get("/:id", get_courseById);
+router.get("/", get_all);
+router.put("/:id", update_course);
+router.delete("/:id", delete_course);
+router.get("/students/:id", get_students);
+router.post("/name", getByName);
 
 module.exports = router;
 
@@ -61,7 +61,7 @@ async function add_user(req, res, next, userParam, courseParam){
     courseParam.updateOne({$addToSet: {"students": userParam.username}})
     .then(res.json({"username": userParam.username,
                    "coursename":courseParam.coursename}))
-    .catch(err => next(err));
+    .catch((err) => next(err));
 }
 
 /*
@@ -75,11 +75,11 @@ async function new_course(req, res ,next){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
-    var queue = await queues.newQueue(req.body.coursename,req.body.AA)
+    var queue = await queues.newQueue(req.body.coursename,req.body.AA);
     var course = new Course(req.body);
     res.json(course);
     await course.save();
-    console.log(course.coursename)
+    console.log(course.coursename);
   }
 }
 
@@ -104,7 +104,7 @@ get request, need courseid in url
 get all students usernames in a specific course
 */
 async function get_students(req,res,next){
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id))
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
   if(course){
     res.json(course.students);
   }
@@ -118,7 +118,7 @@ url: /courses/
 get all students courses
 */
 async function get_all(req,res,next){
-    await Course.find().select('-hash')
+    await Course.find().select("-hash")
     .then(courses => res.json(courses))
     .catch(err => next(err));
 }
@@ -129,7 +129,7 @@ put request, need courseid in url
 update a specific course
 */
 async function update_course(req,res,next){
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id))
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
   if(course){
     Object.assign(course, req.body);
       await course.save();
