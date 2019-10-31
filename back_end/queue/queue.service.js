@@ -6,17 +6,7 @@ const mongoosedb = require("../_helpers/db")
 const mongoose = require("mongoose")
 const User = mongoosedb.User
 const Course = mongoosedb.Course
-router.post('/enque',enque);
-router.put('/deque',deque);
-router.get('/top', top);
-router.post('/new', new_queue);
-router.delete('/', queue_delete);
 
-module.exports = { router: router,
-                   newQueue:newQueue,
-                   delete: _delete
-                 };
-exports.checkIndex = checkIndex
 
 var db;
 var db2;
@@ -153,3 +143,16 @@ function checkIndex(coursename,username){
 
   return count
 }
+
+router.post('/enque',enque);
+router.put('/deque',deque);
+router.get('/top', top);
+router.post('/new', new_queue);
+router.delete('/', queue_delete);
+
+module.exports = { router: router,
+                   newQueue:newQueue,
+                   delete: _delete
+                 };
+exports.checkIndex = checkIndex;
+
