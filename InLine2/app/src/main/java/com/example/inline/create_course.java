@@ -7,15 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -89,9 +86,7 @@ public class create_course extends AppCompatActivity {
                         .build();
 
                 new MyAsyncTask().execute(request);
-                ///////////////////////////////////////////////////////////
-                //////////////////////////////////////////////////////////
-                ///////////////////////////////////////////////////////////
+
 //                RequestBody delete_body = RequestBody.create(null, new byte[0]);
 //
 //                Request delete_request = new Request.Builder()
