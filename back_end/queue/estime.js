@@ -8,11 +8,6 @@ var ests;
 /*
 this is a private interface, no front end request here
 */
-module.exports = {
-  new_course_time,
-  updateAHT,
-  calEST
-};
 
 MongoClient.connect('mongodb://localhost:27017/EST',function(err,_db){
     if(err) throw err;
@@ -74,3 +69,9 @@ async function calEST(coursename,username){
   console.log(ESTime + " " + piQ + " " + est.AHT + " " + est.AA)
   return ESTime
 }
+
+module.exports = {
+  new_course_time,
+  updateAHT,
+  calEST
+};
