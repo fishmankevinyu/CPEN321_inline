@@ -16,7 +16,7 @@ MongoClient.connect("mongodb://localhost:27017/EST",function(err,_db){
     db2 = _db;
 });
 
-async function new_course_time(coursename,aa){
+async function newCourseTime(coursename,aa){
   await ests.insertOne({
     coursename: coursename,
     AHT: 0,
@@ -27,25 +27,25 @@ async function new_course_time(coursename,aa){
 }
 
 function updateAHT(coursename,aht){
-  var old_aht;
+  var oldAht;
   var count;
   var est = ests.findOne({coursename:coursename});
-  old_aht = est.AHT;
+  oldAht = est.AHT;
   count = est.count;
-  console.log(typeof old_aht);
+  console.log(typeof oldAht);
   console.log(typeof count);
-  var new_aht;
+  var newAht;
 
-  if(old_aht == null){
-    new_aht = aht;
+  if(oldAht == null){
+    newAht = aht;
     count = aht - aht;
   }
   else{
-    new_aht = (old_aht + aht*count)/(count+1);
+    newAht = (oldAht + aht*count)/(count+1);
     console.log(count);
 
   }
-  ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:new_aht}, $inc: {count: 1}},function(err, est){
+  ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
     if(err) {throw err;}
   });
 }
@@ -71,7 +71,7 @@ async function calEST(coursename,username){
 }
 
 module.exports = {
-  new_course_time,
+  newCourseTime,
   updateAHT,
   calEST
 };
