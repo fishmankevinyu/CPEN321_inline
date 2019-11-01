@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 var admin = require("firebase-admin");
-var admin = require("firebase-admin");
+//var admin = require("firebase-admin");
 var serviceAccount = require('./privatekey.json') //put the generated private key path here
 
 
@@ -31,9 +31,3 @@ var serviceAccount = require('./privatekey.json') //put the generated private ke
                console.log("Something has gone wrong: ", error);
                });
 
-
-//module.exports = {
-//    sendNotification
-//};
-//
-//

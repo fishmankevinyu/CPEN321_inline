@@ -1,9 +1,9 @@
-const config = require('../config.json');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const db = require('../_helpers/db');
+const config = require("../config.json");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const db = require("../_helpers/db");
 const mongoose = require("mongoose");
-const regToken = require("../fcm/regToken")
+const regToken = require("../fcm/regToken");
 const User = db.User;
 const Course = db.Course;
 
@@ -21,11 +21,11 @@ async function authenticate({ username, password }) {
 }
 
 async function getAll() {
-    return await User.find().select('-hash');
+    return await User.find().select("-hash");
 }
 
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    return await User.findById(id).select("-hash");
 }
 
 async function create(userParam) {
@@ -49,7 +49,7 @@ async function update(id, userParam) {
     const user = await User.findById(id);
 
     // validate
-    if (!user) throw 'User not found';
+    if (!user) throw ”User not found“;
     if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
         throw 'Username "' + userParam.username + '" is already taken';
     }
