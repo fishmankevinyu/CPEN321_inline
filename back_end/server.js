@@ -1,14 +1,14 @@
-require('rootpath')();
-const express = require('express');
+require("rootpath")();
+const express = require("express");
 const app = express();
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const jwt = require('./_helpers/jwt');
-const errorHandler = require('./_helpers/error-handler');
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const jwt = require("./_helpers/jwt");
+const errorHandler = require("./_helpers/error-handler");
 const queue = require("./queue/queue.service");
 
 var admin = require("firebase-admin");
-var serviceAccount = require('./fcm/privatekey.json') //put the generated private key path here
+var serviceAccount = require("./fcm/privatekey.json") //put the generated private key path here
 
 // start push
 admin.initializeApp({
