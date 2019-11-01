@@ -25,10 +25,10 @@ app.use(cors());
 app.use(jwt());
 
 // api routes
-app.use('/users', require('./users/users.controller'));
-app.use('/courses', require('./course/course.service'));
-app.use('/queue', queue.router);
-app.use('/time', require('./course/time.service'));
+app.use("/users", require("./users/users.controller"));
+app.use("/courses", require("./course/course.service"));
+app.use("/queue", queue.router);
+app.use("/time", require("./course/time.service"));
 
 // global error handler
 app.use(errorHandler);
