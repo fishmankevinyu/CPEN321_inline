@@ -11,7 +11,7 @@ async function isRevoked(req, payload, done) {
     }
 
     done();
-};
+}
 
 function jwt() {
     const secret = config.secret;

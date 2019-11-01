@@ -9,7 +9,9 @@ var tokens;
 
 
 MongoClient.connect("mongodb://localhost:27017/Token",function(err,_db){
-    if(err) throw err;
+   if(err) {
+       throw err;
+    }
     db = _db.db("RegTokens");
     tokens = db.collection("regTokens");
     db2 = _db;

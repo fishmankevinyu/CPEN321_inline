@@ -90,12 +90,12 @@ get one course
 */
 async function get_courseById(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
-  if(course){
+  if(course)
     res.json(course);
-  }
-  else{
+  
+  else
     res.status(404).json({message:"no course found"});
-  }
+  
 }
 
 /*
@@ -147,7 +147,7 @@ delete a specific course
 */
 async function delete_course(req,res,next){
   var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
-  .then(()=>{res.json({message:"deleted"}); }).catch((err)=>next(err););
+  .then(()=>{res.json({message:"deleted"}); }).catch((err)=>next(err));
 }
 
 /*

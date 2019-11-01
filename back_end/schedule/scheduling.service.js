@@ -16,10 +16,7 @@ const send = require("../fcm/send2");
 const db = require("../_helpers/db");
 const User = db.User;
 
-exports.addSchedule = addSchedule;
-//exports.deleteSchedule = deleteSchedule;
-exports.startSchedule = startSchedule;
-exports.stopSchedule = stopSchedule;
+
 
 function addSchedule(newTime,coursename){
   var minute = newTime.minute;
@@ -44,7 +41,7 @@ function addSchedule(newTime,coursename){
   if(newTime.dayOfWeek == null){
     dayOfWeek = "*";
   }
-  var task = cron.schedule(minute + " " + hour + " " + dayOfMon + " " + month + " " + dayOfWeek, ()=>{
+  var task = cron.schedule(minute + " " + hour + " " + dayOfMon + " " + month + " " + dayOfWeek, () => {
     console.log("time to send notification!");
     //User.find()
     send.sendNotification(coursename);
@@ -59,6 +56,11 @@ function startSchedule(task){
 function stopSchedule(task){
     task.stop();
 }
+
+exports.addSchedule = addSchedule;
+//exports.deleteSchedule = deleteSchedule;
+exports.startSchedule = startSchedule;
+exports.stopSchedule = stopSchedule;
 
 //function deleteSchedule(time,coursename){
 //  var minute = time.minute;
