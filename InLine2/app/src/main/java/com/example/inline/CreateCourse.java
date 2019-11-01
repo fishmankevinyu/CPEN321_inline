@@ -20,11 +20,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class create_course extends AppCompatActivity {
-    OkHttpClient client = new OkHttpClient();
-    EditText coursename;
-    Button btnSend, btnSend2;
-    String courseid;
+public class CreateCourse extends AppCompatActivity {
+    private OkHttpClient client = new OkHttpClient();
+    private EditText coursename;
+    private Button btnSend;
+    private Button btnSend2;
+    private String courseid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

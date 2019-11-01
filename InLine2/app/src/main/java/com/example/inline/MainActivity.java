@@ -31,13 +31,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
-    OkHttpClient client = new OkHttpClient();
-
-    EditText username;
-    EditText password;
-
-    Button btnSend;
-
+    private OkHttpClient client = new OkHttpClient();
+    private EditText username;
+    private EditText password;
+    private Button btnSend;
 
 
     @Override
@@ -138,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
     class MyAsyncTaskMain extends AsyncTask<Request, Void, Response> {
 
         @Override
-        protected okhttp3.Response doInBackground(Request... requests) {
-            okhttp3.Response response = null;
+        protected Response doInBackground(Request... requests) {
+            Response response = null;
             try {
                 response = client.newCall(requests[0]).execute();
             } catch (IOException e) {

@@ -27,12 +27,9 @@ import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 
-public class course_list_fragment extends Fragment {
-    OkHttpClient client = new OkHttpClient();
+public class CourseListFragment extends Fragment {
+    private OkHttpClient client = new OkHttpClient();
     public JSONArray classList;
-
-    public course_list_fragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,7 +121,7 @@ public class course_list_fragment extends Fragment {
                 .header("Content-Type", "application/json")
                 .build();
 
-        new course_list_fragment.MyAsyncTask().execute(request);
+        new CourseListFragment.MyAsyncTask().execute(request);
     }
 
     class MyAsyncTask extends AsyncTask<Request, Void, Response> {

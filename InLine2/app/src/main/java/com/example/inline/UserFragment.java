@@ -9,12 +9,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import androidx.fragment.app.Fragment;
 
-public class user_fragment extends Fragment {
-    private static final int SELECT_PICTURE = 0;
-    private ImageView imageView;
-
-    public user_fragment() {
-    }
+public class UserFragment extends Fragment {
+    //private static final int SELECT_PICTURE = 0;
+    //private ImageView imageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,7 +27,7 @@ public class user_fragment extends Fragment {
     }
 
     public void navCreateCourse() {
-        Intent intent = new Intent(getActivity(), create_course.class);
+        Intent intent = new Intent(getActivity(), CreateCourse.class);
         startActivity(intent);
     }
 }

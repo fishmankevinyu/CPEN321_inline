@@ -25,13 +25,13 @@ import org.json.JSONObject;
 
 public class RegistrationScreen extends AppCompatActivity {
 
-    OkHttpClient client = new OkHttpClient();
-    Button btnSend;
+    private OkHttpClient client = new OkHttpClient();
+    private Button btnSend;
 
-    EditText username;
-    EditText password;
-    EditText firstName;
-    EditText lastName;
+    private EditText username;
+    private EditText password;
+    private EditText firstName;
+    private EditText lastName;
 
 
 
@@ -150,6 +150,7 @@ public class RegistrationScreen extends AppCompatActivity {
                 else
                     MySingletonClass.getInstance().setIsteacher(false);
                 break;
+            default:
         }
     }
 

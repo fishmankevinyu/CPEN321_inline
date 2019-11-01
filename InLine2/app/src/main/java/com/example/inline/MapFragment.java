@@ -18,11 +18,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 
-public class map_fragment extends Fragment implements OnMapReadyCallback,
+public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnPoiClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    MapView mMapView;
+    private MapView mMapView;
     private GoogleMap mMap;
 
     @Override
