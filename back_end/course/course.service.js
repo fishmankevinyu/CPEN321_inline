@@ -89,7 +89,7 @@ courses/:id
 get one course
 */
 async function get_courseById(req,res,next){
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id))
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
   if(course){
     res.json(course);
   }
@@ -147,7 +147,7 @@ delete a specific course
 */
 async function delete_course(req,res,next){
   var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
-  .then(()=>{res.json({message:"deleted"})}).catch(err=>next(err));
+  .then(()=>{res.json({message:"deleted"}); }).catch((err)=>next(err););
 }
 
 /*

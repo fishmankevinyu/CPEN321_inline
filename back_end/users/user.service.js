@@ -49,7 +49,7 @@ async function update(id, userParam) {
     const user = await User.findById(id);
 
     // validate
-    if (!user) throw ”User not found“;
+    if (!user) throw "User not found";
     if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
         throw 'Username "' + userParam.username + '" is already taken';
     }

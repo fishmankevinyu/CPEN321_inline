@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const Est = require("./estime");
-const mongoosedb = require("../_helpers/db")
-const mongoose = require("mongoose")
-const User = mongoosedb.User
-const Course = mongoosedb.Course
+const mongoosedb = require("../_helpers/db");
+const mongoose = require("mongoose");
+const User = mongoosedb.User;
+const Course = mongoosedb.Course;
 
 
 var db;
@@ -52,7 +52,7 @@ async function enque(req,res,next){
       estime: 0})
     .then( function(queue){return queue;});
 
-    var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime});
+    var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime; });
 
     console.log("enque/ESTime: " + ESTime);
 
@@ -85,7 +85,7 @@ need json {"coursename":""}
 async function deque(req,res,next){
   await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
     if (err) throw err;
-    Est.updateAHT(req.body.coursename, Date.now() - user.entime)
+    Est.updateAHT(req.body.coursename, Date.now() - user.entime); 
   });
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},

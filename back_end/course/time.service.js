@@ -51,8 +51,8 @@ async function get_time(req, res, next){
 
 async function delete_time(req, res, next){
     await delete_time_service(req.body)
-   .then(()=>{res.json({message:"deleted"})})
-    .catch(err=>next(err));
+   .then(()=>{res.json({message:"deleted"});})
+    .catch((err)=>next(err));
 }
 
 async function add_time_service(time, coursename){

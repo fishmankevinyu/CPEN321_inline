@@ -22,9 +22,9 @@ MongoClient.connect("mongodb://localhost:27017/Token",function(err,_db){
 async function addToken(username,token){
   await tokens.findOneAndUpdate({username:username}, {$set:{token:token}},{upsert: true})
     .then(function(regToken){
-      console.log("success: " + token)
+      console.log("success: " + token);
     }, function(err){
-      console.log("failed: " + err)
+      console.log("failed: " + err);
     });
 }
 

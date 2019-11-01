@@ -8,7 +8,7 @@ const errorHandler = require("./_helpers/error-handler");
 const queue = require("./queue/queue.service");
 
 var admin = require("firebase-admin");
-var serviceAccount = require("./fcm/privatekey.json") //put the generated private key path here
+var serviceAccount = require("./fcm/privatekey.json");  //put the generated private key path here
 
 // start push
 admin.initializeApp({

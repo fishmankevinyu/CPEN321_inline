@@ -17,7 +17,7 @@ const db = require("../_helpers/db");
 const User = db.User;
 
 exports.addSchedule = addSchedule;
-exports.deleteSchedule = deleteSchedule;
+//exports.deleteSchedule = deleteSchedule;
 exports.startSchedule = startSchedule;
 exports.stopSchedule = stopSchedule;
 
@@ -48,7 +48,7 @@ function addSchedule(newTime,coursename){
     console.log("time to send notification!");
     //User.find()
     send.sendNotification(coursename);
-  })
+  }); 
   return task;
 }
 

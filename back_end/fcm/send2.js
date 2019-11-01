@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 var admin = require("firebase-admin");
-var serviceAccount = require("./privatekey.json") //put the generated private key path here
+var serviceAccount = require("./privatekey.json"); //put the generated private key path here
 
 function sendNotification(topic){
 
