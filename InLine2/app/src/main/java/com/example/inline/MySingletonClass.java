@@ -5,6 +5,12 @@ import java.util.ArrayList;
 public class MySingletonClass {
     private static MySingletonClass instance;
 
+    private String username;
+    private String mToken; //This is for push notificaitons
+    private String token;
+    private ArrayList<String> classes;
+    private boolean isteacher;
+
     public static MySingletonClass getInstance() {
         if (instance == null)
             instance = new MySingletonClass();
@@ -13,13 +19,6 @@ public class MySingletonClass {
 
     private MySingletonClass() {
     }
-
-    private String username;
-    private String mToken; //This is for push notificaitons
-    private String token;
-    private ArrayList<String> classes;
-    private boolean isteacher;
-
 
     public String getName() { return username;}
     public void setName(String username) { this.username = username;}
