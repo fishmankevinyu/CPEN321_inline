@@ -10,7 +10,7 @@ this is a private interface, no front end request here
 */
 
 MongoClient.connect("mongodb://localhost:27017/EST",function(err,_db){
-    if(err) throw err;
+    if(err) {throw err;}
     db = _db.db("ESTs");
     ests = db.collection("ests");
     db2 = _db;

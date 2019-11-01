@@ -10,7 +10,7 @@ var serviceAccount = require("./privatekey.json");  //put the generated private 
           databaseURL: "https://inline-f628d.firebaseio.com"
         });
 
-    var token = "dVY5qzPD38I:APA91bF7pkWUwBDD8QuERR8At0ceCJ7u9FOswl1NF9Zac5kWnnwVN8FeKmUhbPFZLOuZqA7yRcDj4sTKD6QcyaExAQnneti9Pif6upJwvJaaWuZqVLPGrwTMa4kKUIYMfc0qC7iAUDjy";
+    var tokenTemp = "dVY5qzPD38I:APA91bF7pkWUwBDD8QuERR8At0ceCJ7u9FOswl1NF9Zac5kWnnwVN8FeKmUhbPFZLOuZqA7yRcDj4sTKD6QcyaExAQnneti9Pif6upJwvJaaWuZqVLPGrwTMa4kKUIYMfc0qC7iAUDjy";
 
 
     var message = {
@@ -18,7 +18,7 @@ var serviceAccount = require("./privatekey.json");  //put the generated private 
             title: "hello",
             body: "hahahahahaha"
           },
-      token: token
+      token: tokenTemp
     };
 
 

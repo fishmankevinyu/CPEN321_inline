@@ -9,6 +9,13 @@ const mongoose = require("mongoose");
 const topic = require("../fcm/send2");
 const regToken = require("../fcm/regToken");
 
+/*function that should be only use inside addCourse, do not use it outside*/
+async function addUser(req, res, next, userParam, courseParam){
+    courseParam.updateOne({$addToSet: {"students": userParam.username}})
+    .then(res.json({"username": userParam.username,
+                   "coursename":courseParam.coursename}))
+    .catch((err) => next(err));
+}
 
 
 /*
@@ -46,13 +53,6 @@ async function addCourse(req, res, next){
 
 }
 
-/*function that should be only use inside addCourse, do not use it outside*/
-async function addUser(req, res, next, userParam, courseParam){
-    courseParam.updateOne({$addToSet: {"students": userParam.username}})
-    .then(res.json({"username": userParam.username,
-                   "coursename":courseParam.coursename}))
-    .catch((err) => next(err));
-}
 
 /*
 post request, /courses/new

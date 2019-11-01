@@ -31,9 +31,9 @@ async function addTimeService(time, coursename){
         //await schedule.startSchedule(task);
         //await send.sendNotification(coursename);
     }
-    else{
+    else
         throw "added failure";
-    }
+    
 }
 
 async function addTime(req, res, next){
@@ -68,7 +68,7 @@ async function deleteTimeService(time){
         await schedule.deleteSchedule(time, time.coursename);
     }
     else
-    {throw "delete failure";}
+    throw "delete failure";
     
     
 }

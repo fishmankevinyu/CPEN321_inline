@@ -64,7 +64,7 @@ async function enque(req,res,next){
     }, () => res.status(400).json({messge:"not successful"}));
   }
   else
-  {res.status(400).json({failure:"you are in queue already/you are not a student of this course"});}
+  res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
   
 }
 /*look at the next one that is about to be dequed*/
