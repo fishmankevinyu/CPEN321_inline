@@ -11,7 +11,7 @@ const Course = mongoosedb.Course
 var db;
 var db2;
 
-MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
+MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
     if(err) throw err;
     db = _db.db("queue");
     db2 = _db;
@@ -19,12 +19,12 @@ MongoClient.connect('mongodb://localhost:27017/queue',function(err,_db){
 
 /*private */
 async function enqueCheck(username,coursename){
-  var user = await User.findOne({username:username, courses: coursename})
-  var course = await Course.findOne({coursename:coursename, students: username})
+  var user = await User.findOne({username:username, courses: coursename});
+  var course = await Course.findOne({coursename:coursename, students: username});
   if(user == null || course == null){
-    return false
+    return false;
   }
-  return true
+  return true;
 }
 
 /*
@@ -54,17 +54,17 @@ async function enque(req,res,next){
 
     var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime});
 
-    console.log("enque/ESTime: " + ESTime)
+    console.log("enque/ESTime: " + ESTime);
 
     var user = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
     .then(function(newUser){
-      console.log("been in 3rd fulfilled")
+      console.log("been in 3rd fulfilled");
       res.status(200).json({success:"you are in queue", EST: ESTime});
-      return newUser
+      return newUser;
     }, () => res.status(400).json({messge:"not successful"}));
   }
   else{
-    res.status(400).json({failure:"you are in queue already/you are not a student of this course"})
+    res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
   }
 }
 /*look at the next one that is about to be dequed*/
@@ -141,7 +141,7 @@ function checkIndex(coursename,username){
     return count;
   });
 
-  return count
+  return count;
 }
 
 router.post('/enque',enque);
