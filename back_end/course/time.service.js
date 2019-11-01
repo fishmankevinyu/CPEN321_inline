@@ -16,7 +16,9 @@ var db;
 var lwtime = null;
 
 MongoClient.connect("mongodb://localhost:27017/time",function(err,_db){
-    if(err) throw err;
+    if(err)  {
+        throw err;
+    }
     db = _db.db("time");
     times = db.collection("times");
 
@@ -37,8 +39,8 @@ async function add_time_service(time, coursename){
 async function add_time(req, res, next){
     if(await Course.findOne({coursename: req.body.coursename})){
         await add_time_service(req.body, req.body.coursename)
-        .then(()=>res.json({message: "successully added"}))
-        .catch(err => next(err));
+        .then(() => res.json({message: "successully added"}))
+        .catch((err) => next(err));
     }
     else{
         res.status(400).json({message: "course not found"});
@@ -65,16 +67,16 @@ async function delete_time_service(time){
     if(await times.findOneAndDelete(time)){
         await schedule.deleteSchedule(time, time.coursename);
     }
-    else{
-       throw "delete failure";
-    }
+    else
+    {throw "delete failure";}
+    
     
 }
 
 async function delete_time(req, res, next){
     await delete_time_service(req.body)
-   .then(()=>{res.json({message:"deleted"});})
-    .catch((err)=>next(err));
+   .then(() => {res.json({message:"deleted"});})
+    .catch((err) => next(err));
 }
 
 

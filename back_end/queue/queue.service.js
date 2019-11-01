@@ -12,7 +12,7 @@ var db;
 var db2;
 
 MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
-    if(err) throw err;
+    if(err) {throw err;}
     db = _db.db("queue");
     db2 = _db;
 });
@@ -43,8 +43,8 @@ need json ({"coursename":"","username":""})
 async function enque(req,res,next){
   var user = await db.collection(req.body.coursename).findOne({
     username:req.body.username
-  }).then((x)=>x);
-  if(user == null && await enqueCheck(req.body.username,req.body.coursename).then((x)=>x)){
+  }).then((x) => x);
+  if(user == null && await enqueCheck(req.body.username,req.body.coursename).then((x) => x)){
     await db.collection(req.body.coursename).insertOne({
       username:req.body.username,
       entime: Date.now(),
@@ -56,22 +56,22 @@ async function enque(req,res,next){
 
     console.log("enque/ESTime: " + ESTime);
 
-    var user = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
+    var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
     .then(function(newUser){
       console.log("been in 3rd fulfilled");
       res.status(200).json({success:"you are in queue", EST: ESTime});
       return newUser;
     }, () => res.status(400).json({messge:"not successful"}));
   }
-  else{
-    res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
-  }
+  else
+  {res.status(400).json({failure:"you are in queue already/you are not a student of this course"});}
+  
 }
 /*look at the next one that is about to be dequed*/
 async function top(req,res,next){
     var queue = await db.collection(req.body.coursename).findOneAndUpdate({start:true},
-      {$set:{start : true}},
-      {sort:{entime: 1}});
+    {$set:{start : true}},
+    {sort:{entime: 1}});
     res.json(queue);
 
 }
@@ -84,13 +84,13 @@ need json {"coursename":""}
 */
 async function deque(req,res,next){
   await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
-    if (err) throw err;
+    if (err) {throw err;}
     Est.updateAHT(req.body.coursename, Date.now() - user.entime); 
   });
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},
     {sort:{entime: 1}})
-    .then( queue => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
+    .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
   }
 
 /*private for backend*/
@@ -130,7 +130,7 @@ already merge into course service, but still can use sepearately
 */
 async function new_queue(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
-  .then(queue => queue ? res.json({"message":"success"}) : res.sendStatus(400)).catch(err => next(err));
+  .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
 }
 
 
@@ -139,7 +139,7 @@ async function new_queue(req,res,next){
 function checkIndex(coursename,username){
   var count = db.collection(coursename).findOne({username:username})
   .then(function(user){
-    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((new_count)=>new_count);
+    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((new_count) => new_count);
     return count;
   });
 

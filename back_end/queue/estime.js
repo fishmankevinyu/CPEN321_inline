@@ -22,7 +22,7 @@ async function new_course_time(coursename,aa){
     AHT: 0,
     count: 0,
     AA: aa
-  }).then((x)=>x).catch(err=>console.log(err));
+  }).then((x) => x).catch((err) => console.log(err));
   console.log(aa);
 }
 
@@ -46,7 +46,7 @@ function updateAHT(coursename,aht){
 
   }
   ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:new_aht}, $inc: {count: 1}},function(err, est){
-    if(err) throw err;
+    if(err) {throw err;}
   });
 }
 
