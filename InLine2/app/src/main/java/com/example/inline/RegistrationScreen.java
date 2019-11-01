@@ -24,10 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RegistrationScreen extends AppCompatActivity {
-
     private OkHttpClient client = new OkHttpClient();
     private Button btnSend;
-
     private EditText username;
     private EditText password;
     private EditText firstName;
