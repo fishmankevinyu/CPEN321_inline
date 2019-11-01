@@ -6,11 +6,7 @@ var db;
 var db2;
 var tokens;
 
-module.exports = {
-  addToken,
-  deleteToken,
-  getToken
-};
+
 
 MongoClient.connect("mongodb://localhost:27017/Token",function(err,_db){
     if(err) throw err;
@@ -36,3 +32,9 @@ async function getToken(username){
   var regToken = await tokens.findOne({username: username});
   return regToken.token;
 }
+
+module.exports = {
+  addToken,
+  deleteToken,
+  getToken
+};

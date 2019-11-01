@@ -7,8 +7,8 @@ function sendNotification(topic){
 
     var message = {
           notification: {
-            title: 'topic test',
-            body: 'hahahahahaha'
+            title: "topic test",
+            body: "hahahahahaha"
           },
       topic: topic
     };
@@ -34,7 +34,7 @@ function subscribe(token, topic){
           console.log("token: ", token);
     })
     .catch(function(error) {
-      console.log('Error subscribing to topic:', error);
+      console.log("Error subscribing to topic:", error);
     });
 }
 

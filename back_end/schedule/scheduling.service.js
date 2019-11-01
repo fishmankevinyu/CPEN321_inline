@@ -44,7 +44,7 @@ function addSchedule(newTime,coursename){
   if(newTime.dayOfWeek == null){
     dayOfWeek = "*";
   }
-  var task = cron.schedule(minute + ' ' + hour + ' ' + dayOfMon + ' ' + month + ' ' + dayOfWeek, ()=>{
+  var task = cron.schedule(minute + " " + hour + " " + dayOfMon + " " + month + " " + dayOfWeek, ()=>{
     console.log("time to send notification!");
     //User.find()
     send.sendNotification(coursename);

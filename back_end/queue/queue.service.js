@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 const Est = require("./estime");
 const mongoosedb = require("../_helpers/db");
 const mongoose = require("mongoose");
@@ -105,6 +105,11 @@ async function newQueue(coursename,aa){
   }
 }
 
+/*private*/
+async function _delete(coursename){
+  await db.collection(coursename).drop();
+}
+
 /*
 delete request
 delete a course queue
@@ -128,10 +133,7 @@ async function new_queue(req,res,next){
   .then(queue => queue ? res.json({"message":"success"}) : res.sendStatus(400)).catch(err => next(err));
 }
 
-/*private*/
-async function _delete(coursename){
-  await db.collection(coursename).drop();
-}
+
 
 /*private*/
 function checkIndex(coursename,username){
@@ -144,11 +146,11 @@ function checkIndex(coursename,username){
   return count;
 }
 
-router.post('/enque',enque);
-router.put('/deque',deque);
-router.get('/top', top);
-router.post('/new', new_queue);
-router.delete('/', queue_delete);
+router.post("/enque",enque);
+router.put("/deque",deque);
+router.get("/top", top);
+router.post("/new", new_queue);
+router.delete("/", queue_delete);
 
 module.exports = { router: router,
                    newQueue:newQueue,
