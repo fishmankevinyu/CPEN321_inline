@@ -1,4 +1,4 @@
-  
+
 const express = require("express");
 const router = express.Router();
 const db = require("../_helpers/db");
@@ -9,17 +9,7 @@ const mongoose = require("mongoose");
 const topic = require("../fcm/send2");
 const regToken = require("../fcm/regToken");
 
-// routes
-router.post("/new", new_course);
-router.post("/add/:userid&:courseid", add_course);
-router.get("/:id", get_courseById);
-router.get("/", get_all);
-router.put("/:id", update_course);
-router.delete("/:id", delete_course);
-router.get("/students/:id", get_students);
-router.post("/name", getByName);
 
-module.exports = router;
 
 /*
 add_course adds a student into the course document as well as add the course into
@@ -47,7 +37,7 @@ async function add_course(req, res, next){
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(add_user(req, res, next, user, course))
           .then(await topic.subscribe(token, course.coursename))
-          .catch(err => next(err));
+          .catch((err) => next(err));
 
         await user.save();
         await course.save();
@@ -91,10 +81,10 @@ get one course
 async function get_courseById(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
   if(course)
-    res.json(course);
+  {res.json(course);}
   
   else
-    res.status(404).json({message:"no course found"});
+  {res.status(404).json({message:"no course found"});}
   
 }
 
@@ -119,8 +109,8 @@ get all students courses
 */
 async function get_all(req,res,next){
     await Course.find().select("-hash")
-    .then(courses => res.json(courses))
-    .catch(err => next(err));
+    .then((courses) => res.json(courses))
+    .catch((err) => next(err));
 }
 
 /*
@@ -147,7 +137,7 @@ delete a specific course
 */
 async function delete_course(req,res,next){
   var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
-  .then(()=>{res.json({message:"deleted"}); }).catch((err)=>next(err));
+  .then(() => {res.json({message:"deleted"}); }).catch((err) => next(err));
 }
 
 /*
@@ -164,3 +154,15 @@ async function getByName(req, res, next){
     }
 
 }
+
+// routes
+router.post("/new", new_course);
+router.post("/add/:userid&:courseid", add_course);
+router.get("/:id", get_courseById);
+router.get("/", get_all);
+router.put("/:id", update_course);
+router.delete("/:id", delete_course);
+router.get("/students/:id", get_students);
+router.post("/name", getByName);
+
+module.exports = router;

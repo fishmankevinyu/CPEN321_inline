@@ -12,7 +12,7 @@ var db;
 var db2;
 
 MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
-    if(err) throw err;
+    if(err) {throw err;}
     db = _db.db("queue");
     db2 = _db;
 });
@@ -64,7 +64,7 @@ async function enque(req,res,next){
     }, () => res.status(400).json({messge:"not successful"}));
   }
   else
-    res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
+  {res.status(400).json({failure:"you are in queue already/you are not a student of this course"});}
   
 }
 /*look at the next one that is about to be dequed*/
@@ -130,7 +130,7 @@ already merge into course service, but still can use sepearately
 */
 async function new_queue(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
-  .then(queue => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch(err => next(err));
+  .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
 }
 
 

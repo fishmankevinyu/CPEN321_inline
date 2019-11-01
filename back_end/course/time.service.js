@@ -68,7 +68,7 @@ async function delete_time_service(time){
         await schedule.deleteSchedule(time, time.coursename);
     }
     else
-       throw "delete failure";
+    {throw "delete failure";}
     
     
 }
