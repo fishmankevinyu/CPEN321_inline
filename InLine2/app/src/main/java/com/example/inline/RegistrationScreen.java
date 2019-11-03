@@ -25,7 +25,6 @@ import org.json.JSONObject;
 
 public class RegistrationScreen extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
-    private Button btnSend;
     private EditText username;
     private EditText password;
     private EditText firstName;
@@ -37,6 +36,7 @@ public class RegistrationScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_screen);
+        Button btnSend;
 
         firstName = (EditText)findViewById(R.id.firstName);
         lastName = (EditText)findViewById(R.id.lastName);

@@ -2,8 +2,8 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../_helpers/db");
-const User = db.User;
-const Course = db.Course;
+const User = db.user;
+const Course = db.course;
 const queues = require("../queue/queue.service");
 const mongoose = require("mongoose");
 const topic = require("../fcm/send2");
@@ -82,10 +82,10 @@ async function getCourseById(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
   if(course)
   {res.json(course);}
-  
+
   else
   {res.status(404).json({message:"no course found"});}
-  
+
 }
 
 /*
