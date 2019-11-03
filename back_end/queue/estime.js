@@ -29,7 +29,7 @@ async function newCourseTime(coursename,aa){
 function updateAHT(coursename,aht){
   var oldAht;
   var count;
-  var est = ests.findOne({coursename:coursename});
+  var est = ests.findOne({"coursename":coursename});
   oldAht = est.AHT;
   count = est.count;
   console.log(typeof oldAht);
@@ -45,7 +45,7 @@ function updateAHT(coursename,aht){
     console.log(count);
 
   }
-  ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
+  ests.findOneAndUpdate({"coursename":coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
     if(err) {throw err;}
   });
 }
@@ -56,7 +56,7 @@ async function calEST(coursename,username){
     return newcount;
   });
   var piQ = parseInt(count,10);
-  var est = await ests.findOne({coursename:coursename})
+  var est = await ests.findOne({"coursename":coursename})
   .then(function(newest){
     return newest;
   },function(err){console.log("err: " + err); });
