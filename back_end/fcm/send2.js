@@ -3,14 +3,14 @@ const router = express.Router();
 var admin = require("firebase-admin");
 var serviceAccount = require("./privatekey.json"); //put the generated private key path here
 
-function sendNotification(topic){
+function sendNotification(topicTemp){
 
     var message = {
           notification: {
             title: "topic test",
             body: "hahahahahaha"
           },
-      topic: topic
+      topic: topicTemp
     };
 
 

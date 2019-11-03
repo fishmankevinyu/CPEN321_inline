@@ -14,7 +14,7 @@ function authenticate(req, res, next) {
 
 }
 
-function get_courses(req, res, next){
+function getCourses(req, res, next){
 
     userService.getById(req.params.id)
         .then((user) => user ? res.json(user.courses) : res.sendStatus(404))
@@ -67,6 +67,6 @@ router.get("/current", getCurrent);
 router.get("/:id", getById);
 router.put("/:id", update);
 router.delete("/:id", _delete);
-router.get("/courses/:id", get_courses);
+router.get("/courses/:id", getCourses);
 
 module.exports = router;

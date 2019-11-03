@@ -25,20 +25,20 @@ MongoClient.connect("mongodb://localhost:27017/time",function(err,_db){
 });
 
 
-async function add_time_service(time, coursename){
+async function addTimeService(time, coursename){
     if(await times.insertOne(time)){
         await schedule.addSchedule(time, coursename);
         //await schedule.startSchedule(task);
         //await send.sendNotification(coursename);
     }
-    else{
+    else
         throw "added failure";
-    }
+    
 }
 
-async function add_time(req, res, next){
+async function addTime(req, res, next){
     if(await Course.findOne({coursename: req.body.coursename})){
-        await add_time_service(req.body, req.body.coursename)
+        await addTimeService(req.body, req.body.coursename)
         .then(() => res.json({message: "successully added"}))
         .catch((err) => next(err));
     }
@@ -48,13 +48,13 @@ async function add_time(req, res, next){
     
 }
 
-async function get_time_service(coursename){
+async function getTimeService(coursename){
     var timeArray = await times.find({coursename: coursename}).toArray();
     return timeArray;
 }
 
-async function get_time(req, res, next){
-    var timeArray = await get_time_service(req.body.coursename);
+async function getTime(req, res, next){
+    var timeArray = await getTimeService(req.body.coursename);
     if(timeArray){
         res.json(timeArray);
     }
@@ -63,18 +63,18 @@ async function get_time(req, res, next){
     }
 }
 
-async function delete_time_service(time){
+async function deleteTimeService(time){
     if(await times.findOneAndDelete(time)){
         await schedule.deleteSchedule(time, time.coursename);
     }
     else
-    {throw "delete failure";}
+        throw "delete failure";
     
     
 }
 
-async function delete_time(req, res, next){
-    await delete_time_service(req.body)
+async function deleteTime(req, res, next){
+    await deleteTimeService(req.body)
    .then(() => {res.json({message:"deleted"});})
     .catch((err) => next(err));
 }
@@ -83,8 +83,8 @@ async function delete_time(req, res, next){
 
 
 // routes
-router.post("/add", add_time);
-router.get("/get", get_time);
-router.delete("/", delete_time);
+router.post("/add", addTime);
+router.get("/get", getTime);
+router.delete("/", deleteTime);
 
 module.exports = router;

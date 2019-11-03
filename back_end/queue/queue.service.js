@@ -64,7 +64,7 @@ async function enque(req,res,next){
     }, () => res.status(400).json({messge:"not successful"}));
   }
   else
-  {res.status(400).json({failure:"you are in queue already/you are not a student of this course"});}
+  res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
   
 }
 /*look at the next one that is about to be dequed*/
@@ -96,7 +96,7 @@ async function deque(req,res,next){
 /*private for backend*/
 async function newQueue(coursename,aa){
   var queue = await db.collection(coursename);
-  var estime = await Est.new_course_time(coursename,aa);
+  var estime = await Est.newCourseTime(coursename,aa);
   if(queue && estime ){
     return queue;
   }
@@ -117,7 +117,7 @@ url /queue/delete
 json({"coursename":""})
 this could be merge into course.service deleted, but not yet
 */
-function queue_delete(req,res,next){
+function queueDelete(req,res,next){
   _delete(req.body.coursename);
 }
 
@@ -128,7 +128,7 @@ url /queue/newe
 json({"coursename":"","AA":""})
 already merge into course service, but still can use sepearately
 */
-async function new_queue(req,res,next){
+async function newQueue(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
   .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
 }
@@ -139,7 +139,7 @@ async function new_queue(req,res,next){
 function checkIndex(coursename,username){
   var count = db.collection(coursename).findOne({username:username})
   .then(function(user){
-    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((new_count) => new_count);
+    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
     return count;
   });
 
@@ -149,8 +149,8 @@ function checkIndex(coursename,username){
 router.post("/enque",enque);
 router.put("/deque",deque);
 router.get("/top", top);
-router.post("/new", new_queue);
-router.delete("/", queue_delete);
+router.post("/new", newQueue);
+router.delete("/", queueDelete);
 
 module.exports = { router: router,
                    newQueue:newQueue,
