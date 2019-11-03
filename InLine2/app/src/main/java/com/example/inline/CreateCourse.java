@@ -23,14 +23,14 @@ import okhttp3.Response;
 public class CreateCourse extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private EditText coursename;
-    private Button btnSend;
-    private Button btnSend2;
     private String courseid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+        Button btnSend;
+        Button btnSend2;
 
         coursename = (EditText)findViewById(R.id.edit_course_name);
 
@@ -87,6 +87,8 @@ public class CreateCourse extends AppCompatActivity {
                         .build();
 
                 new MyAsyncTask().execute(request);
+
+                Log.i("tag", courseid);
 
 //                RequestBody delete_body = RequestBody.create(null, new byte[0]);
 //

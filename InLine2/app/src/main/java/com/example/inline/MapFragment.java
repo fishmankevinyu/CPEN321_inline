@@ -23,7 +23,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private MapView mMapView;
-    private GoogleMap mMap;
+    //private GoogleMap mMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +55,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        GoogleMap mMap;
         mMap = googleMap;
         googleMap.setOnPoiClickListener(this);
         LatLng CPEN321 = new LatLng(49.261885, -123.248379);

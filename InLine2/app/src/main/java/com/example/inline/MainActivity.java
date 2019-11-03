@@ -34,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private EditText username;
     private EditText password;
-    private Button btnSend;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button btnSend;
 
         username = (EditText)findViewById(R.id.editText1);
         password = (EditText)findViewById(R.id.editText2);
