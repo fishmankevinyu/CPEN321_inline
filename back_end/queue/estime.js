@@ -53,20 +53,14 @@ function updateAHT(coursename,aht){
 async function calEST(coursename,username){
   var count = await Queue.checkIndex(coursename,username)
   .then(function(newcount){
-    console.log("newcount: " + newcount);
     return newcount;
   });
-  console.log("count3: " + count);
   var piQ = parseInt(count,10);
   var est = await ests.findOne({coursename:coursename})
   .then(function(newest){
-    console.log(newest.AHT);
-    console.log(newest.AA);
     return newest;
   },function(err){console.log("err: " + err); });
-  console.log("est:" +est);
   var ESTime = piQ*est.AHT/est.AA;
-  console.log(ESTime + " " + piQ + " " + est.AHT + " " + est.AA);
   return ESTime;
 }
 
