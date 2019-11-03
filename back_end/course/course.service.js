@@ -2,8 +2,8 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../_helpers/db");
-const User = db.User;
-const Course = db.Course;
+const user_model = db.user;
+const course_model = db.course;
 const queues = require("../queue/queue.service");
 const mongoose = require("mongoose");
 const topic = require("../fcm/send2");
@@ -25,8 +25,8 @@ url requirement /courses/add/:userid&:courseid
 where :userid, :courseid are the ids for the user doucment and coursename
 */
 async function addCourse(req, res, next){
-  var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
+  var user = await user_model.findById(mongoose.Types.ObjectId(req.params.userid));
+  var course = await course_model.findById(mongoose.Types.ObjectId(req.params.courseid));
 
     console.log("found");
 
@@ -61,12 +61,12 @@ AA are the avaiable agents that is needed when starts a new line up
 */
 async function newCourse(req, res ,next){
 
-  if(await Course.findOne({coursename: req.body.coursename})){
+  if(await course_model.findOne({coursename: req.body.coursename})){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
     var queue = await queues.newQueue(req.body.coursename,req.body.AA);
-    var course = new Course(req.body);
+    var course = new course_model(req.body);
     res.json(course);
     await course.save();
     console.log(course.coursename);
@@ -79,13 +79,13 @@ courses/:id
 get one course
 */
 async function getCourseById(req,res,next){
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
+  var course = await course_model.findById(mongoose.Types.ObjectId(req.params.id));
   if(course)
   {res.json(course);}
-  
+
   else
   {res.status(404).json({message:"no course found"});}
-  
+
 }
 
 /*
@@ -94,7 +94,7 @@ get request, need courseid in url
 get all students usernames in a specific course
 */
 async function getStudents(req,res,next){
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
+  var course = await course_model.findById(mongoose.Types.ObjectId(req.params.id));
   if(course){
     res.json(course.students);
   }
@@ -108,7 +108,7 @@ url: /courses/
 get all students courses
 */
 async function getAll(req,res,next){
-    await Course.find().select("-hash")
+    await course_model.find().select("-hash")
     .then((courses) => res.json(courses))
     .catch((err) => next(err));
 }
@@ -119,7 +119,7 @@ put request, need courseid in url
 update a specific course
 */
 async function updateCourse(req,res,next){
-  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id));
+  var course = await course_model.findById(mongoose.Types.ObjectId(req.params.id));
   if(course){
     Object.assign(course, req.body);
       await course.save();
@@ -136,7 +136,7 @@ delete request, need courseid in url
 delete a specific course
 */
 async function deleteCourse(req,res,next){
-  var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
+  var course = await course_model.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
   .then(() => {res.json({message:"deleted"}); }).catch((err) => next(err));
 }
 
@@ -146,7 +146,7 @@ get one course by name
 json: {"coursename": ""}
 */
 async function getByName(req, res, next){
-    var course = await Course.findOne({coursename: req.body.coursename});
+    var course = await course_model.findOne({coursename: req.body.coursename});
     if(course){
         res.json(course);
     }else{
