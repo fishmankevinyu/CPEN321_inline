@@ -49,7 +49,7 @@ async function addTime(req, res, next){
 }
 
 async function getTimeService(coursename){
-    var timeArray = await times.find({coursename: coursename}).toArray();
+    var timeArray = await times.find({coursename}).toArray();
     return timeArray;
 }
 

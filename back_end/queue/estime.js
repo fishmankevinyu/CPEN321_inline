@@ -18,7 +18,7 @@ MongoClient.connect("mongodb://localhost:27017/EST",function(err,_db){
 
 async function newCourseTime(coursename,aa){
   await ests.insertOne({
-    coursename: coursename,
+    coursename,
     AHT: 0,
     count: 0,
     AA: aa
@@ -29,7 +29,7 @@ async function newCourseTime(coursename,aa){
 function updateAHT(coursename,aht){
   var oldAht;
   var count;
-  var est = ests.findOne({coursename:coursename});
+  var est = ests.findOne({coursename});
   oldAht = est.AHT;
   count = est.count;
   console.log(typeof oldAht);
@@ -45,7 +45,7 @@ function updateAHT(coursename,aht){
     console.log(count);
 
   }
-  ests.findOneAndUpdate({coursename:coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
+  ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
     if(err) {throw err;}
   });
 }
@@ -58,7 +58,7 @@ async function calEST(coursename,username){
   });
   console.log("count3: " + count);
   var piQ = parseInt(count,10);
-  var est = await ests.findOne({coursename:coursename})
+  var est = await ests.findOne({coursename})
   .then(function(newest){
     console.log(newest.AHT);
     console.log(newest.AA);
