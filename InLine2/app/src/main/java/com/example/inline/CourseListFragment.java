@@ -1,6 +1,5 @@
 package com.example.inline;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +9,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,12 +27,9 @@ import okhttp3.Response;
 
 import static android.content.ContentValues.TAG;
 
-public class course_list_fragment extends Fragment {
-    OkHttpClient client = new OkHttpClient();
+public class CourseListFragment extends Fragment {
+    private OkHttpClient client = new OkHttpClient();
     public JSONArray classList;
-
-    public course_list_fragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -129,7 +121,7 @@ public class course_list_fragment extends Fragment {
                 .header("Content-Type", "application/json")
                 .build();
 
-        new course_list_fragment.MyAsyncTask().execute(request);
+        new CourseListFragment.MyAsyncTask().execute(request);
     }
 
     class MyAsyncTask extends AsyncTask<Request, Void, Response> {
@@ -156,7 +148,9 @@ public class course_list_fragment extends Fragment {
 
                 Log.i("idf", "Response is successful");
 
-                Log.i("idf", response.body().string());
+                String jsonData = response.body().string();
+
+                Log.i("idf", jsonData);
 
             } catch (IOException e) {
                 e.printStackTrace();
