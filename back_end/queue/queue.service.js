@@ -65,7 +65,7 @@ async function enque(req,res,next){
   }
   else
   res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
-  
+
 }
 /*look at the next one that is about to be dequed*/
 async function top(req,res,next){
@@ -85,7 +85,7 @@ need json {"coursename":""}
 async function deque(req,res,next){
   await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
     if (err) {throw err;}
-    Est.updateAHT(req.body.coursename, Date.now() - user.entime); 
+    Est.updateAHT(req.body.coursename, Date.now() - user.entime);
   });
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},
@@ -95,6 +95,7 @@ async function deque(req,res,next){
 
 /*private for backend*/
 async function newQueue(coursename,aa){
+  console.log(coursename);
   var queue = await db.collection(coursename);
   var estime = await Est.newCourseTime(coursename,aa);
   if(queue && estime ){
@@ -128,7 +129,7 @@ url /queue/newe
 json({"coursename":"","AA":""})
 already merge into course service, but still can use sepearately
 */
-async function newQueue(req,res,next){
+async function newQueue2(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
   .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
 }
@@ -149,7 +150,7 @@ function checkIndex(coursename,username){
 router.post("/enque",enque);
 router.put("/deque",deque);
 router.get("/top", top);
-router.post("/new", newQueue);
+router.post("/new", newQueue2);
 router.delete("/", queueDelete);
 
 module.exports = { router: router,
@@ -157,4 +158,3 @@ module.exports = { router: router,
                    delete: _delete
                  };
 exports.checkIndex = checkIndex;
-
