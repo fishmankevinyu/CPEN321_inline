@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 const db = require("../_helpers/db");
 const mongoose = require("mongoose");
 const regToken = require("../fcm/regToken");
-const User = db.User;
-const Course = db.Course;
+const User = db.user;
+const Course = db.course;
 
 
 async function authenticate({ username, password }) {
