@@ -31,8 +31,8 @@ async function deleteToken(username,token){
 }
 
 async function getToken(username){
-  var regToken = await tokens.findOne({"username": username})
-  return regToken.token
+  var regToken = await tokens.findOne({"username": username});
+  return regToken.token; 
 }
 
 module.exports = {
