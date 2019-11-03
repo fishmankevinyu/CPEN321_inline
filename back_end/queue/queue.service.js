@@ -19,8 +19,8 @@ MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
 
 /*private */
 async function enqueCheck(username,coursename){
-  var user = await User.findOne({username:username, courses: coursename});
-  var course = await Course.findOne({coursename:coursename, students: username});
+  var user = await User.findOne({username, courses: coursename});
+  var course = await Course.findOne({coursename, students: username});
   if(user == null || course == null){
     return false;
   }
@@ -138,7 +138,7 @@ async function newQueue2(req,res,next){
 
 /*private*/
 function checkIndex(coursename,username){
-  var count = db.collection(coursename).findOne({username:username})
+  var count = db.collection(coursename).findOne({username})
   .then(function(user){
     var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
     return count;
@@ -153,8 +153,8 @@ router.get("/top", top);
 router.post("/new", newQueue2);
 router.delete("/", queueDelete);
 
-module.exports = { router: router,
-                   newQueue:newQueue,
+module.exports = { router,
+                   newQueue,
                    delete: _delete
                  };
 exports.checkIndex = checkIndex;
