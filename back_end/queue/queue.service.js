@@ -129,6 +129,7 @@ url /queue/newe
 json({"coursename":"","AA":""})
 already merge into course service, but still can use sepearately
 */
+
 async function newQueue2(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
   .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
