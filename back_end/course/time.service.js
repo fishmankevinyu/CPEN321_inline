@@ -1,36 +1,60 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
+const mongoose = require("mongoose");
+const mongoosedb = require("../_helpers/db");
+const Course = mongoosedb.Course;
 
-const schedule = require('../schedule/scheduling.service');
+const send = require("../fcm/send2");
 
-// routes
-router.post('/add', add_time);
-router.get('/get', get_time);
-router.delete('/', delete_time);
+const schedule = require("../schedule/scheduling.service");
 
-module.exports = router;
+
 
 var times;
 var db;
 var lwtime = null;
 
-MongoClient.connect('mongodb://localhost:27017/time',function(err,_db){
-    if(err) throw err;
+MongoClient.connect("mongodb://localhost:27017/time",function(err,_db){
+    if(err)  {
+        throw err;
+    }
     db = _db.db("time");
     times = db.collection("times");
 
 });
 
-async function add_time(req, res, next){
-    await add_time_service(req.body)
-    .then(()=>res.json({message: "successully added"}))
-    .catch(err => next(err));
+
+async function addTimeService(time, coursename){
+    if(await times.insertOne(time)){
+        await schedule.addSchedule(time, coursename);
+        //await schedule.startSchedule(task);
+        //await send.sendNotification(coursename);
+    }
+    else
+        throw "added failure";
     
 }
 
-async function get_time(req, res, next){
-    var timeArray = await get_time_service(req.body.coursename);
+async function addTime(req, res, next){
+    if(await Course.findOne({coursename: req.body.coursename})){
+        await addTimeService(req.body, req.body.coursename)
+        .then(() => res.json({message: "successully added"}))
+        .catch((err) => next(err));
+    }
+    else{
+        res.status(400).json({message: "course not found"});
+    }
+    
+}
+
+async function getTimeService(coursename){
+    var timeArray = await times.find({coursename}).toArray();
+    return timeArray;
+}
+
+async function getTime(req, res, next){
+    var timeArray = await getTimeService(req.body.coursename);
     if(timeArray){
         res.json(timeArray);
     }
@@ -39,26 +63,28 @@ async function get_time(req, res, next){
     }
 }
 
-async function delete_time(req, res, next){
-    await delete_time_service(req.body)
-   .then(()=>{res.json({message:"deleted"})})
-    .catch(err=>next(err));
-}
-
-async function add_time_service(time){
-    if(await times.insertOne(time)){
-        await schedule.addSchedule(time, time.coursename);
+async function deleteTimeService(time){
+    if(await times.findOneAndDelete(time)){
+        await schedule.deleteSchedule(time, time.coursename);
     }
-    else{
-        throw "added failure";
-    }
+    else
+        throw "delete failure";
+    
+    
 }
 
-async function get_time_service(coursename){
-    var timeArray = await times.find({coursename: coursename}).toArray();
-    return timeArray;
+async function deleteTime(req, res, next){
+    await deleteTimeService(req.body)
+   .then(() => {res.json({message:"deleted"});})
+    .catch((err) => next(err));
 }
 
-async function delete_time_service(time){
-    await times.findOneAndDelete(time);
-}
+
+
+
+// routes
+router.post("/add", addTime);
+router.get("/get", getTime);
+router.delete("/", deleteTime);
+
+module.exports = router;

@@ -35,6 +35,7 @@
 
         <activity android:name=".HomeScreenActivity" />
         <activity android:name=".RegistrationScreen" />
+        <activity android:name=".CreateCourse" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

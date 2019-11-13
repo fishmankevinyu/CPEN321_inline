@@ -6,24 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.util.ArrayList;
 
 
 public class HomeScreenActivity extends AppCompatActivity {
@@ -32,8 +20,27 @@ public class HomeScreenActivity extends AppCompatActivity {
     //info for the registered user
 
     public JSONArray classList;
-
     private ActionBar toolbar;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = (item) -> {
+        switch (item.getItemId()) {
+            case R.id.navigation_course_list:
+                toolbar.setTitle("CourseList");
+                loadFragment (new CourseListFragment());
+                return true;
+            case R.id.navigation_map:
+                toolbar.setTitle("Map");
+                loadFragment (new MapFragment());
+                return true;
+            case R.id.navigation_user:
+                toolbar.setTitle("User");
+                loadFragment (new UserFragment());
+                return true;
+            default:
+                return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         toolbar.setTitle("CourseList");
-        loadFragment(new course_list_fragment());
+        loadFragment(new CourseListFragment());
 
         /*Dummy data*/
 
@@ -120,29 +127,11 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = (item) -> {
-        switch (item.getItemId()) {
-            case R.id.navigation_course_list:
-                toolbar.setTitle("CourseList");
-                loadFragment (new course_list_fragment());
-                return true;
-            case R.id.navigation_map:
-                toolbar.setTitle("Map");
-                loadFragment (new map_fragment());
-                return true;
-            case R.id.navigation_user:
-                toolbar.setTitle("User");
-                loadFragment (new user_fragment());
-                return true;
-        }
-        return false;
-    };
-
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 }

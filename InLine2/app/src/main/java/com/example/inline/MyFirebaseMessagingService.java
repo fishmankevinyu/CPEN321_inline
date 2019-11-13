@@ -1,8 +1,5 @@
 package com.example.inline;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -24,13 +21,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
+            scheduleJob();
+            handleNow();
+//            if (/* Check if data needs to be processed by long running job */ true) {
+//                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
+//                scheduleJob();
+//            } else {
+//                // Handle message within 10 seconds
+//                handleNow();
+//            }
 
         }
 
@@ -44,9 +43,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void handleNow() {
+        Log.i("tag","Avoid warnning");
     }
 
     private void scheduleJob() {
+        Log.i("tag","Avoid warnning");
     }
 
     /**
@@ -65,6 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
-
+        String a = token;
+        Log.i("tag",a);
     }
 }

@@ -7,51 +7,28 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import okhttp3.Headers;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
-
 import java.io.IOException;
 
-import android.view.SurfaceHolder.Callback;
-
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-
 public class RegistrationScreen extends AppCompatActivity {
-
-    OkHttpClient client = new OkHttpClient();
-    Button btnSend;
-
-    EditText username;
-    EditText password;
-    EditText firstName;
-    EditText lastName;
+    private OkHttpClient client = new OkHttpClient();
+    private EditText username;
+    private EditText password;
+    private EditText firstName;
+    private EditText lastName;
 
 
 
@@ -59,6 +36,7 @@ public class RegistrationScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_screen);
+        Button btnSend;
 
         firstName = (EditText)findViewById(R.id.firstName);
         lastName = (EditText)findViewById(R.id.lastName);
@@ -79,7 +57,7 @@ public class RegistrationScreen extends AppCompatActivity {
                     postdata.put("lastName", lastName.getText().toString());
                     postdata.put("username", username.getText().toString());
                     postdata.put("password", password.getText().toString());
-                    postdata.put("isTeacher", false);
+                    postdata.put("isTeacher", MySingletonClass.getInstance().getIsteacher());
                 } catch(JSONException e){
                     e.printStackTrace();
                 }
@@ -157,6 +135,21 @@ public class RegistrationScreen extends AppCompatActivity {
 
         }
 
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkbox_meat:
+                if (checked) {MySingletonClass.getInstance().setIsteacher(true);}
+                else
+                    MySingletonClass.getInstance().setIsteacher(false);
+                break;
+            default:
+        }
     }
 
 }

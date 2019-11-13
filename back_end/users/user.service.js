@@ -1,23 +1,12 @@
-const config = require('../config.json');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const db = require('../_helpers/db');
+const config = require("../config.json");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const db = require("../_helpers/db");
 const mongoose = require("mongoose");
-const regToken = require("../fcm/regToken")
-const User = db.User;
-const Course = db.Course;
+const regToken = require("../fcm/regToken");
+const User = db.user;
+const Course = db.course;
 
-
-
-
-module.exports = {
-    authenticate,
-    getAll,
-    getById,
-    create,
-    update,
-    delete: _delete
-};
 
 async function authenticate({ username, password }) {
     const user = await User.findOne({ username });
@@ -32,17 +21,17 @@ async function authenticate({ username, password }) {
 }
 
 async function getAll() {
-    return await User.find().select('-hash');
+    return await User.find().select("-hash");
 }
 
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    return await User.findById(id).select("-hash");
 }
 
 async function create(userParam) {
     // validate
     if (await User.findOne({ username: userParam.username })) {
-        throw 'Username "' + userParam.username + '" is already taken';
+        throw "Username " + userParam.username + " is already taken";
     }
 
     const user = new User(userParam);
@@ -60,9 +49,9 @@ async function update(id, userParam) {
     const user = await User.findById(id);
 
     // validate
-    if (!user) throw 'User not found';
+    if (!user) {throw "User not found";}
     if (user.username !== userParam.username && await User.findOne({ username: userParam.username })) {
-        throw 'Username "' + userParam.username + '" is already taken';
+        throw "Username " + userParam.username + " is already taken";
     }
 
     // hash password if it was entered
@@ -79,3 +68,12 @@ async function update(id, userParam) {
 async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
+
+module.exports = {
+    authenticate,
+    getAll,
+    getById,
+    create,
+    update,
+    delete: _delete
+};
