@@ -98,6 +98,7 @@ async function deque(req,res,next){
 
 /*private for backend*/
 async function newQueue(coursename,aa){
+	console.log("coursenae :" + coursename)
   var queue = await db.collection(coursename);
   var estime = await Est.new_course_time(coursename,aa);
   if(queue && estime ){
@@ -127,6 +128,7 @@ json({"coursename":"","AA":""})
 already merge into course service, but still can use sepearately
 */
 async function new_queue(req,res,next){
+  console.log("coursename0" + req.body.coursename);
   await newQueue(req.body.coursename,req.body.AA)
   .then(queue => queue ? res.json({"message":"success"}) : res.sendStatus(400)).catch(err => next(err));
 }
