@@ -36,6 +36,7 @@ public class CreateCourse extends AppCompatActivity {
 
 
         btnSend = (Button) findViewById(R.id.button_create);
+        //if (MySingletonClass.getInstance().getIsteacher())
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +69,7 @@ public class CreateCourse extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
                 JSONObject postdata2 = new JSONObject();
                 try {
                     Log.i("idf",  coursename.getText().toString());
@@ -78,6 +80,7 @@ public class CreateCourse extends AppCompatActivity {
 
                 RequestBody body = RequestBody.create(MEDIA_TYPE, postdata2.toString());
 
+                /* Send a request to get course id first */
                 Request request = new Request.Builder()
                         .url("http://40.117.195.60:4000/courses/name")
                         .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
@@ -86,21 +89,8 @@ public class CreateCourse extends AppCompatActivity {
                         .header("Content-Type", "application/json")
                         .build();
 
-                new MyAsyncTask().execute(request);
+                new DeleteAsyncTask().execute(request);
 
-                Log.i("tag", courseid);
-
-//                RequestBody delete_body = RequestBody.create(null, new byte[0]);
-//
-//                Request delete_request = new Request.Builder()
-//                        .url("http://40.117.195.60:4000/courses/"+courseid)
-//                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
-//                        .post(delete_body)
-//                        .header("Accept", "application/json")
-//                        .header("Content-Type", "application/json")
-//                        .build();
-//
-//                new MyAsyncTask().execute(delete_request);
             }
         });
     }
@@ -133,8 +123,7 @@ public class CreateCourse extends AppCompatActivity {
 
                 try{
                     JSONObject Jobject = new JSONObject(jsonData);
-                    courseid = Jobject.getString("id");
-                    Log.i("idf", "This is courseid"+courseid);
+                    //courseid = Jobject.getString("id");
                 }
                 catch(Exception e){
                 }
@@ -147,4 +136,62 @@ public class CreateCourse extends AppCompatActivity {
         }
 
     }
+
+    class DeleteAsyncTask extends AsyncTask<Request, Void, Response> {
+
+        @Override
+        protected Response doInBackground(Request... requests) {
+            Response response = null;
+            try {
+                response = client.newCall(requests[0]).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(Response response) {
+            //super.onPostExecute(response); what does this line do
+
+            //TODO have a spinner when waiting for asynch wait
+            try {
+                if(response == null) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Log.i("idf", "Response is successful");
+                String jsonData = response.body().string();
+                Log.i("idf", jsonData);
+
+                try{
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    courseid = Jobject.getString("id");
+                    Log.i("idf", "This is courseid: "+courseid);
+
+                    ///////////////////////////////////////////
+                    /* Send DELETE course request */
+                    RequestBody delete_body = RequestBody.create(null, new byte[0]);
+
+                    Request delete_request = new Request.Builder()
+                        .url("http://40.117.195.60:4000/courses/"+courseid)
+                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                        .delete(delete_body)
+                        .header("Accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .build();
+                    new MyAsyncTask().execute(delete_request);
+                    ///////////////////////////////////////////
+                }
+                catch(Exception e){
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+
+        }
+
+    }
+
 }

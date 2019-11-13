@@ -30,13 +30,11 @@ public class RegistrationScreen extends AppCompatActivity {
     private EditText firstName;
     private EditText lastName;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration_screen);
         Button btnSend;
+        setContentView(R.layout.activity_registration_screen);
 
         firstName = (EditText)findViewById(R.id.firstName);
         lastName = (EditText)findViewById(R.id.lastName);
