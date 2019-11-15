@@ -10,6 +10,7 @@ public class MySingletonClass {
     private String token;
     private ArrayList<String> classes;
     private boolean isteacher;
+    private String userId;
 
     public static MySingletonClass getInstance() {
         if (instance == null)
@@ -29,8 +30,11 @@ public class MySingletonClass {
     public void setmToken(String mtoken){ this.mToken = mtoken;} //For push notifications
     public String getmToken(){return this.mToken;}
 
-    public void setToken(String token){ this.token = token;}
+    public void setToken(String token){ this.token = token;} //userId
     public String getToken(){return this.token;}
+
+    public void setId(String id){ this.userId = id;} //userId
+    public String getId(){return this.userId;}
 
     public void setClasses(ArrayList<String> classes){ this.classes = classes;}
 

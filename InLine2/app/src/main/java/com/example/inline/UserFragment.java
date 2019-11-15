@@ -26,18 +26,22 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        //Button for navigating to create and delete course page
         Button create_button = (Button) view.findViewById(R.id.create_delete_course);
         create_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Request getuser_request = new Request.Builder()
-//                        .url("http://40.117.195.60:4000/users/current")
-//                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
-//                        .header("Accept", "application/json")
-//                        .header("Content-Type", "application/json")
-//                        .build();
-//
                 navCreateCourse();
+            }
+        });
+
+        //Button for navigating to register and deregister course page
+        Button register_button = (Button) view.findViewById(R.id.reguster_deregister_course);
+        register_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navRegisterCourse();
             }
         });
         return view;
@@ -48,4 +52,9 @@ public class UserFragment extends Fragment {
         startActivity(intent);
     }
 
+
+    public void navRegisterCourse() {
+        Intent intent = new Intent(getActivity(), addCourse.class);
+        startActivity(intent);
+    }
 }

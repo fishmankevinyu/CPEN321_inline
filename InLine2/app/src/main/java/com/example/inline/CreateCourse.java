@@ -36,6 +36,7 @@ public class CreateCourse extends AppCompatActivity {
 
 
         btnSend = (Button) findViewById(R.id.button_create);
+
         //if (MySingletonClass.getInstance().getIsteacher())
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override

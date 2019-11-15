@@ -55,54 +55,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         toolbar.setTitle("CourseList");
         loadFragment(new CourseListFragment());
 
-        /*Dummy data*/
 
-        /* JSONObject class1 = new JSONObject();
-        try {
-            class1.put("id", "CPEN321");
-            class1.put("section", "101");
-        } catch (JSONException e) {
-        }
-
-        JSONObject class2 = new JSONObject();
-        try {
-            class2.put("id", "CPEN331");
-            class2.put("section", "102");
-        } catch (JSONException e) {
-        }
-
-
-        classList = new JSONArray();
-        classList.put(class1);
-        classList.put(class2);
-
-
-        JSONObject json_data;
-
-        ArrayList<String> classListNames = new ArrayList<String>();
-
-        for(int i=0; i < classList.length() ; i++) {
-            try {
-                json_data = classList.getJSONObject(i);
-                String courseName = json_data.getString("id");
-                classListNames.add(courseName);
-            } catch (JSONException e) {
-            }
-        }
-
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
-                R.layout.activity_listview, classListNames);
-
-        ListView listView = (ListView) findViewById(R.id.mobile_list);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                getCourseInfo(position);
-            }
-        }); */
 
     }
 
