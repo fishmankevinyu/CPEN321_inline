@@ -27,16 +27,20 @@ describe("enque", () =>{
         expect(queue_service.db).toBeInstanceOf(Mongodb);
     });
 
-    test("enque not a user", async ()=>{
+    test("enque not a user", () =>{
         const req = mock.mockRequest({
             username: "xxx",
             coursename: "xxx"
         });
         var res = mock.mockResponse();
         var next = jest.fn();
-        data = await queue_service.enque(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(queue_service.db).toBeInstanceOf(Mongodb);
+
+        queue_service.enque(req, res, next).then((x)=>{
+            expect(res.status).toHaveBeenCalledWith(400);
+        });
+
     });
 
     
