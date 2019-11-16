@@ -19,8 +19,8 @@ MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
 
 /*private */
 async function enqueCheck(username,coursename){
-  var user = await User.findOne({username:username, courses: coursename});
-  var course = await Course.findOne({coursename:coursename, students: username});
+  var user = await User.findOne({username, courses: coursename});
+  var course = await Course.findOne({coursename, students: username});
   if(user == null || course == null){
     return false;
   }
@@ -63,9 +63,9 @@ async function enque(req,res,next){
       return newUser;
     }, () => res.status(400).json({messge:"not successful"}));
   }
-  else
+  else{
   res.status(400).json({failure:"you are in queue already/you are not a student of this course"});
-
+  }
 }
 /*look at the next one that is about to be dequed*/
 async function top(req,res,next){
@@ -129,6 +129,7 @@ url /queue/newe
 json({"coursename":"","AA":""})
 already merge into course service, but still can use sepearately
 */
+
 async function newQueue2(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
   .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
@@ -138,7 +139,7 @@ async function newQueue2(req,res,next){
 
 /*private*/
 function checkIndex(coursename,username){
-  var count = db.collection(coursename).findOne({username:username})
+  var count = db.collection(coursename).findOne({username})
   .then(function(user){
     var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
     return count;
@@ -153,8 +154,8 @@ router.get("/top", top);
 router.post("/new", newQueue2);
 router.delete("/", queueDelete);
 
-module.exports = { router: router,
-                   newQueue:newQueue,
+module.exports = { router,
+                   newQueue,
                    delete: _delete
                  };
 exports.checkIndex = checkIndex;

@@ -30,13 +30,11 @@ public class RegistrationScreen extends AppCompatActivity {
     private EditText firstName;
     private EditText lastName;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration_screen);
         Button btnSend;
+        setContentView(R.layout.activity_registration_screen);
 
         firstName = (EditText)findViewById(R.id.firstName);
         lastName = (EditText)findViewById(R.id.lastName);
@@ -63,19 +61,6 @@ public class RegistrationScreen extends AppCompatActivity {
                 }
 
                 RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-
-                /*
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("firstName", "test3")
-                        .addFormDataPart("lastName", "yasdf")
-                        .addFormDataPart("username", "your-email@email.com")
-                        .addFormDataPart("password", "your-email@email.com")
-                        .build();
-
-                        This code does not post correctly in json format
-                        */
-
 
                 Request request = new Request.Builder()
                         .url("http://40.117.195.60:4000/users/register")
@@ -110,7 +95,6 @@ public class RegistrationScreen extends AppCompatActivity {
         @Override
         protected void onPostExecute(Response response) {
             //super.onPostExecute(response); what does this line do
-
             //TODO have a spinner when waiting for asynch wait
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);

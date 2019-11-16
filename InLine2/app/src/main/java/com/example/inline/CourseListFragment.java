@@ -34,6 +34,8 @@ public class CourseListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
+
+        /*
         JSONObject class1 = new JSONObject();
         try {
             class1.put("id", "CPEN321");
@@ -48,7 +50,19 @@ public class CourseListFragment extends Fragment {
 
         classList = new JSONArray();
         classList.put(class1);
-        classList.put(class2);
+        classList.put(class2);*/
+
+        classList = new JSONArray();
+        ArrayList<String> classes = MySingletonClass.getInstance().getClasses();
+
+        for (String courses : classes){
+            try {
+                JSONObject tempObj = new JSONObject();
+                tempObj.put("id", courses);
+                classList.put(tempObj);
+            } catch (JSONException e) {
+            }
+        }
 
         JSONObject json_data;
 
