@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "directories": {
-    "test": "tests"
+    "test": "__tests__"
   },
   "scripts": {
     "test": "jest"
