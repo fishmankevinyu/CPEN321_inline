@@ -1,5 +1,5 @@
 const mockRequest = (data) =>{
-    return data;
+    return {body: data};
 };
 
 const mockResponse = () => {
@@ -8,3 +8,8 @@ const mockResponse = () => {
     res.json = jest.fn().mockReturnValue(res);
     return res;
 }
+
+module.exports = {
+    mockRequest,
+    mockResponse
+};
