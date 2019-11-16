@@ -11,5 +11,18 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "firebase-admin": "^8.7.0",
+    "mongoose": "^5.7.11",
+    "node-cron": "^2.0.3",
+    "rootpath": "^0.1.2"
+  }
 }
