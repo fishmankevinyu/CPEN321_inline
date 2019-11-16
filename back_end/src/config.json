@@ -1,0 +1,4 @@
+{
+    "connectionString": "mongodb://localhost/IN_line",
+    "secret": "INLINE"
+}
