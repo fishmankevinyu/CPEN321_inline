@@ -4,7 +4,7 @@ const Mongodb = require("mongodb").Db;
 const MongoClient = require("mongodb").MongoClient;
 const Mongoose = require("mongoose");
 const config = require("../src/config.json");
-const Db = require("../src/_helpers/db")
+const Db = require("../src/_helpers/db");
 describe("enque", () =>{
     var connection;
     beforeAll(async ()=>{
@@ -43,5 +43,4 @@ describe("enque", () =>{
 
     });
 
-    
 });
