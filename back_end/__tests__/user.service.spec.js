@@ -78,39 +78,39 @@ describe("user", () =>{
         await expect(res.json).toHaveBeenCalledWith(users);
     });
     
-//        test("registerUser", async ()=>{
-//
-//             const req = mockRequest({body: {
-//                                     firstname: "lalala",
-//                                     lastname: "hahaha",
-//                                     isTeacher: true,
-//                                     username: "dadada",
-//                                     password: "dididi"
-//                                     }
-//              });
-//              var res = mockResponse();
-//              const next = jest.fn();
-//
-//             const regis = {
-//                async test(req, res, next){
-//                    await userService.register(req, res, next);
-//                }
-//
-//             };
-//             const spy = jest.spyOn(regis, 'test');
-//             await regis.test(req, res, next);
-//
-//             const spy1 = jest.spyOn(helper, 'create');
-//             //spy.mockReturnValue();
-//
-//             await expect(spy).toHaveBeenCalledWith(req, res, next);
-//             await expect(spy1).toHaveBeenCalledWith(req.body);
-//             await expect(res.json).toHaveBeenCalledTimes(1);
-//              await expect(res.json).toHaveBeenCalledWith({
-//                "confirmation":req.body.username + " created successful"
-//              });
-//
-//        });
+        test("registerUser", async ()=>{
+
+             const req = mockRequest({body: {
+                                     firstname: "lalala",
+                                     lastname: "hahaha",
+                                     isTeacher: true,
+                                     username: "dadada",
+                                     password: "dididi"
+                                     }
+              });
+              var res = mockResponse();
+              const next = jest.fn();
+
+             const regis = {
+                async test(req, res, next){
+                    await userService.register(req, res, next);
+                }
+
+             };
+             const spy = jest.spyOn(regis, 'test');
+             await regis.test(req, res, next);
+
+             const spy1 = jest.spyOn(helper, 'create');
+             //spy.mockReturnValue();
+
+             await expect(spy).toHaveBeenCalledWith(req, res, next);
+             await expect(spy1).toHaveBeenCalledWith(req.body);
+             await expect(res.json).toHaveBeenCalledTimes(1);
+              await expect(res.json).toHaveBeenCalledWith({
+                "confirmation":req.body.username + " created successful"
+              });
+
+        });
          
 });
 

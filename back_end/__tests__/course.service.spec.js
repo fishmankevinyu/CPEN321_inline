@@ -4,6 +4,7 @@ const courseService = require("../src/course/course.service");
 //const mock = require("../__mocks__/mock_api_request");
 const Course = require("../src/course/course.model");
 const User = require("../src/users/user.model");
+const Queue = require("../src/queue/queue.service");
 
 const mockRequest = (data) =>{
     return data;
@@ -26,6 +27,8 @@ describe("course", () =>{
          
          
     test("newCourse", async ()=>{
+         jest.mock("../src/queue/queue.service");
+         Queue.newQueue = jest.fn();
         const req = mockRequest({body: {
                                 coursename: "lalala",
                                 teachers: "1234"
@@ -54,6 +57,7 @@ describe("course", () =>{
          
          await expect(spyTest).toHaveBeenCalledWith(req, res, next);
          await expect(res.json).toHaveBeenCalledTimes(2);
+         //await expect(Queue.newQueue).toHaveBeenCalledTimes(1);
          await expect(course).toBeDefined();
          await expect(res.json).toHaveBeenCalledWith({message:"course " + req.body.coursename + " exists"});
     });
@@ -116,34 +120,7 @@ describe("course", () =>{
               await expect(res.status).toHaveBeenCalledWith(404);
               await expect(res.json).toHaveBeenCalledWith({message:"no course found"});
          });
-         
-//         test("add course", async ()=>{
-//
-//              var course = await Course.findOne({coursename: "lalala"});
-//              var user = await User.findOne({username: "lalala"});
-//
-//              const req = mockRequest({params: {courseid: course.id, userid: user.id}});
-//              var res = mockResponse();
-//              const next = jest.fn();
-//
-//              const addCourse = {
-//
-//                 async test(req, res, next){
-//                     await courseService.addCourse(req, res, next);
-//                 }
-//              };
-//
-//             const spyTest = jest.spyOn(addCourse, 'test');
-//
-//             await addCourse.test(req, res, next);
-//
-//              await expect(spyTest).toHaveBeenCalledWith(req, res, next);
-//              await expect(res.json).toHaveBeenCalledTimes(1);
-//              //await expect(after).toBe(null);
-//              //await expect(res.status).toHaveBeenCalledWith(404);
-//              //await expect(res.json).toHaveBeenCalledWith({message:"no course found"});
-//         });
-         
+                  
          
          test("get id by name - found ", async ()=>{
               

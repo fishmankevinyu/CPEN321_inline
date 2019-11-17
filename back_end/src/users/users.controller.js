@@ -6,6 +6,7 @@ const userService = require("./user.service");
 const regToken = require("../fcm/regToken");
 
 function authenticate(req, res, next) {
+    console.log("enter login"); 
     console.log(req.body.registrationToken);
     userService.authenticate({username: req.body.username , password: req.body.password})
         .then((user) => user ? res.json(user) : res.status(400).json({ message: "Username or password is incorrect" }))
@@ -77,7 +78,8 @@ router.get("/courses/:id", getCourses);
 
 module.exports = { router,
   getAll,
-  register
+  register,
+  authenticate
 
 };
 //module.exports = router;

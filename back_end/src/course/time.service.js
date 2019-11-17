@@ -87,4 +87,8 @@ router.post("/add", addTime);
 router.get("/get", getTime);
 router.delete("/", deleteTime);
 
-module.exports = router;
+module.exports = {router,
+                addTime,
+                addTimeService,
+                db
+};
