@@ -6,3 +6,4 @@ cache:
     - "back_end/node_modules"
 script:
   - cd back_end
+  -npm run test
