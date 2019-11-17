@@ -156,6 +156,8 @@ router.delete("/", queueDelete);
 
 module.exports = { router,
                    newQueue,
-                   delete: _delete
+                   delete: _delete,
+                    db
+                    
                  };
 exports.checkIndex = checkIndex;

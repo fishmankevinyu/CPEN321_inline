@@ -21,17 +21,22 @@ function getCourses(req, res, next){
         .catch((err) => next(err));
 }
 
-function register(req, res, next) {
-    userService.create(req.body)
-        .then(() => res.json({
+async function register(req, res, next) {
+    console.log(req.body);
+
+    await userService.create(req.body)
+    .then(() => {console.log("success"); res.json({
           "confirmation":req.body.username + " created successful"
-        }))
+        });
+          
+          })
         .catch((err) => next(err));
 }
 
-function getAll(req, res, next) {
-    userService.getAll()
-        .then((users) => res.json(users))
+async function getAll(req, res, next) {
+    console.log("get called!");
+    await userService.getAll()
+    .then((users) => res.json(users))
         .catch((err) => next(err));
 }
 
@@ -69,4 +74,10 @@ router.put("/:id", update);
 router.delete("/:id", _delete);
 router.get("/courses/:id", getCourses);
 
-module.exports = router;
+
+module.exports = { router,
+  getAll,
+  register
+
+};
+//module.exports = router;
