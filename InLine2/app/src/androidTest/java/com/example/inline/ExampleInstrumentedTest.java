@@ -1,5 +1,7 @@
 package com.example.inline;
 
+import android.util.Log;
+
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -114,5 +116,31 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.checkbox_meat)).check(matches((isChecked())));
         onView(withId(R.id.checkbox_meat)).perform(click());
         onView(withId(R.id.checkbox_meat)).check(matches(not(isChecked())));
+    }
+
+    @Test
+    public void responseTimeTest() {
+        onView(withId(R.id.editText1)).perform(typeText("stu"), closeSoftKeyboard());
+        onView(withId(R.id.editText2)).perform(typeText("stu"), closeSoftKeyboard());
+
+        long start = System.nanoTime();
+
+        onView(withId(R.id.button)).perform(click());
+
+        for (int i=0; i < 10; i++){
+            onView(withId(R.id.navigation_map)).perform(click());
+            onView(withId(R.id.navigation_course_list)).perform(click());
+            onView(withId(R.id.navigation_user)).perform(click());
+        }
+
+        for(int i=0; i < 10; i++) {
+            onView(withId(R.id.reguster_deregister_course)).perform(click());
+            pressBack();
+            onView(withId(R.id.create_delete_course)).perform(click());
+            pressBack();
+        }
+
+        long elapsedTime = System.nanoTime() - start;
+        System.out.println("Total Respond Time: "+elapsedTime);
     }
 }
