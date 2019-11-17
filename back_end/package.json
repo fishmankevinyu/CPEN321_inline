@@ -15,6 +15,10 @@
   "devDependencies": {
     "jest": "^24.9.0"
   },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html"]
+  },
   "dependencies": {
     "@jest/console": "^24.9.0",
     "@jest/fake-timers": "^24.9.0",
