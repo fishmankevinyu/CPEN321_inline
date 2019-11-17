@@ -4,17 +4,17 @@ const MongoClient = require("mongodb").MongoClient;
 const Est = require("./estime");
 const mongoosedb = require("../_helpers/db");
 const mongoose = require("mongoose");
-const User = mongoosedb.User;
-const Course = mongoosedb.Course;
+const User = mongoosedb.user;
+const Course = mongoosedb.course;
 
 
 var db;
-var db2;
+var client;
 
 MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
     if(err) {throw err;}
     db = _db.db("queue");
-    db2 = _db;
+    client = _db;
 });
 
 /*private */
@@ -154,10 +154,16 @@ router.get("/top", top);
 router.post("/new", newQueue2);
 router.delete("/", queueDelete);
 
-module.exports = { router,
-                   newQueue,
-                   delete: _delete,
-                    db
-                    
-                 };
+module.exports = 
+{ 
+  router,
+  newQueue,
+  delete: _delete,
+  enque,
+  deque,
+  newQueue2,
+  queueDelete,
+  db,
+  client
+};
 exports.checkIndex = checkIndex;
