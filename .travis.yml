@@ -3,4 +3,7 @@ node_js:
   - "stable"
 cache:
   directories:
-    - "node_modules"
+    - "back_end/node_modules"
+script:
+  - cd back_end
+  - npm test
