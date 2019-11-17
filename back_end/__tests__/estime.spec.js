@@ -30,14 +30,35 @@ describe("estime", () =>{
         expect(estime.db).toBeInstanceOf(Mongodb);
     });
 
-    test("newCourseTime", () =>{
+    test("newCourseTime test", async () =>{
 
-        estime.newCourseTime("ABC000","1").then((x)=>{
+        await estime.newCourseTime("ABC000","1").then((x)=>{
             estime.ests.findOne({coursename: "ABC000"}).then((x)=>{
-                expect(x.coursename).resolves.toBe("ABC000");
+                expect(x.coursename).toBe("ABC000");
             });
         });
 
     });
+
+    test("updateAHT test", async ()=>{
+        var oldtime = estime.ests.findOne({coursename: "ABC000"})
+        .then((result)=>{
+            return result.AHT;
+        });
+
+        await estime.updateAHT("ABC000", "1").then((x)=>{
+            return estime.ests.findOne({coursename: "ABC000"});
+        })
+        .then((result)=>{
+            expect(result.AHT).not.toBe(oldtime);
+        });
+    });
+
+    test("calEST test", async()=>{
+        await estime.calEST("CPEN433", "kevin").then((x)=>{
+            expect(x).toBeDefined();
+        });
+    });
+
 
 });

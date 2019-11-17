@@ -26,11 +26,11 @@ async function newCourseTime(coursename,aa){
   console.log(aa);
 }
 
-function updateAHT(coursename,aht){
+async function updateAHT(coursename,aht){
   var oldAht;
   var count;
 
-    var est = ests.findOne({coursename});
+  var est = await ests.findOne({coursename});
 
   oldAht = est.AHT;
   count = est.count;
@@ -47,7 +47,7 @@ function updateAHT(coursename,aht){
     console.log(count);
 
   }
-  ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
+  await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
 
     if(err) {throw err;}
   });
