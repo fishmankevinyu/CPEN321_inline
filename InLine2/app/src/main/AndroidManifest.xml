@@ -35,6 +35,8 @@
         <activity android:name=".HomeScreenActivity" />
         <activity android:name=".RegistrationScreen" />
         <activity android:name=".CreateCourse" />
+        <activity android:name=".queueActivity"/>
+        <activity android:name=".setOfficeTime"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

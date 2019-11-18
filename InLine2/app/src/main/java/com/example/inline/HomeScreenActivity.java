@@ -26,15 +26,15 @@ public class HomeScreenActivity extends AppCompatActivity {
             = (item) -> {
         switch (item.getItemId()) {
             case R.id.navigation_course_list:
-                toolbar.setTitle("CourseList");
+                //toolbar.setTitle("CourseList");
                 loadFragment (new CourseListFragment());
                 return true;
             case R.id.navigation_map:
-                toolbar.setTitle("Map");
+                //toolbar.setTitle("Map");
                 loadFragment (new MapFragment());
                 return true;
             case R.id.navigation_user:
-                toolbar.setTitle("User");
+                //toolbar.setTitle("User");
                 loadFragment (new UserFragment());
                 return true;
             default:
@@ -52,7 +52,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        toolbar.setTitle("CourseList");
+        //toolbar.setTitle("CourseList");
         loadFragment(new CourseListFragment());
 
 
