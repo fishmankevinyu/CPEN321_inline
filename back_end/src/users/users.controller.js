@@ -6,6 +6,7 @@ const userService = require("./user.service");
 const regToken = require("../fcm/regToken");
 
 function authenticate(req, res, next) {
+    console.log("enter login"); 
     console.log(req.body.registrationToken);
     userService.authenticate({username: req.body.username , password: req.body.password})
         .then((user) => user ? res.json(user) : res.status(400).json({ message: "Username or password is incorrect" }))
@@ -21,17 +22,22 @@ function getCourses(req, res, next){
         .catch((err) => next(err));
 }
 
-function register(req, res, next) {
-    userService.create(req.body)
-        .then(() => res.json({
+async function register(req, res, next) {
+    console.log(req.body);
+
+    await userService.create(req.body)
+    .then(() => {console.log("success"); res.json({
           "confirmation":req.body.username + " created successful"
-        }))
+        });
+          
+          })
         .catch((err) => next(err));
 }
 
-function getAll(req, res, next) {
-    userService.getAll()
-        .then((users) => res.json(users))
+async function getAll(req, res, next) {
+    console.log("get called!");
+    await userService.getAll()
+    .then((users) => res.json(users))
         .catch((err) => next(err));
 }
 
@@ -69,4 +75,11 @@ router.put("/:id", update);
 router.delete("/:id", _delete);
 router.get("/courses/:id", getCourses);
 
-module.exports = router;
+
+module.exports = { router,
+  getAll,
+  register,
+  authenticate
+
+};
+//module.exports = router;

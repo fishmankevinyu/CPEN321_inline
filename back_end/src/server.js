@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const jwt = require("./_helpers/jwt");
 const errorHandler = require("./_helpers/error-handler");
 const queue = require("./queue/queue.service");
+const user = require("./users/users.controller");
+const course = require("./course/course.service");
 
 var admin = require("firebase-admin");
 var serviceAccount = require("./fcm/privatekey.json");  //put the generated private key path here
@@ -25,8 +27,8 @@ app.use(cors());
 app.use(jwt());
 
 // api routes
-app.use("/users", require("./users/users.controller"));
-app.use("/courses", require("./course/course.service"));
+app.use("/users", user.router);
+app.use("/courses", course.router);
 app.use("/queue", queue.router);
 app.use("/time", require("./course/time.service"));
 

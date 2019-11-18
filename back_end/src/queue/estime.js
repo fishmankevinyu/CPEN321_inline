@@ -3,7 +3,7 @@ const Queue = require("./queue.service");
 const MongoClient = require("mongodb").MongoClient;
 const mongodb = require("mongodb");
 var db;
-var db2;
+var client;
 var ests;
 /*
 this is a private interface, no front end request here
@@ -13,7 +13,7 @@ MongoClient.connect("mongodb://localhost:27017/EST",function(err,_db){
     if(err) {throw err;}
     db = _db.db("ESTs");
     ests = db.collection("ests");
-    db2 = _db;
+    client = _db;
 });
 
 async function newCourseTime(coursename,aa){
@@ -26,11 +26,11 @@ async function newCourseTime(coursename,aa){
   console.log(aa);
 }
 
-function updateAHT(coursename,aht){
+async function updateAHT(coursename,aht){
   var oldAht;
   var count;
 
-    var est = ests.findOne({coursename});
+  var est = await ests.findOne({coursename});
 
   oldAht = est.AHT;
   count = est.count;
@@ -47,7 +47,7 @@ function updateAHT(coursename,aht){
     console.log(count);
 
   }
-  ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
+  await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
 
     if(err) {throw err;}
   });
@@ -71,5 +71,8 @@ async function calEST(coursename,username){
 module.exports = {
   newCourseTime,
   updateAHT,
-  calEST
+  calEST,
+  client,
+  db,
+  ests
 };

@@ -1,7 +1,6 @@
 {
   "name": "back_end",
   "version": "1.0.0",
-  "description": "",
   "main": "src/server.js",
   "directories": {
     "test": "__tests__"
@@ -16,14 +15,27 @@
   "devDependencies": {
     "jest": "^24.9.0"
   },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["html"]
+  },
   "dependencies": {
+    "@jest/console": "^24.9.0",
+    "@jest/fake-timers": "^24.9.0",
     "bcryptjs": "^2.4.3",
+    "ci-info": "^2.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
+    "find-up": "^4.1.0",
     "firebase-admin": "^8.7.0",
+    "import-local": "^3.0.2",
+    "is-ci": "^2.0.0",
+    "jest-cli": "^24.9.0",
+    "jest-util": "^24.9.0",
     "mongoose": "^5.7.11",
     "node-cron": "^2.0.3",
     "rootpath": "^0.1.2"
-  }
+  },
+  "description": ""
 }

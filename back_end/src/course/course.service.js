@@ -165,4 +165,11 @@ router.delete("/:id", deleteCourse);
 router.get("/students/:id", getStudents);
 router.post("/name", getByName);
 
-module.exports = router;
+module.exports = {router,
+                newCourse,
+                deleteCourse,
+                updateCourse,
+                getByName,
+                getAll,
+                addCourse
+};

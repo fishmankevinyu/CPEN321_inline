@@ -30,19 +30,25 @@ async function getById(id) {
 
 async function create(userParam) {
     // validate
+    //console.log(userParam);
     if (await User.findOne({ username: userParam.username })) {
         throw "Username " + userParam.username + " is already taken";
     }
 
     const user = new User(userParam);
 
+    console.log(user);
+    
     // hash password
     if (userParam.password) {
         user.hash = bcrypt.hashSync(userParam.password, 10);
     }
 
     // save user
+    console.log("save");
     await user.save();
+    
+    console.log("return");
 }
 
 async function update(id, userParam) {
@@ -75,5 +81,6 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    create
 };
