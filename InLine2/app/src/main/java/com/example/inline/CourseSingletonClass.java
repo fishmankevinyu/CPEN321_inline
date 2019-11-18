@@ -14,11 +14,7 @@
 //
 //    private String coursename;
 //
-//    public String getCourse() {
-//        return coursename;
-//    }
+//    public String getCourse() { return coursename; }
 //
-//    public void setCourse(String coursename) {
-//        this.coursename = coursename;
-//    }
+//    public void setCourse(String coursename) { this.coursename = coursename; }
 //}

@@ -1,5 +1,6 @@
 package com.example.inline;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,10 +35,7 @@ public class CreateCourse extends AppCompatActivity {
 
         coursename = (EditText)findViewById(R.id.edit_course_name);
 
-
         btnSend = (Button) findViewById(R.id.button_create);
-
-        //if (MySingletonClass.getInstance().getIsteacher())
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,6 +60,7 @@ public class CreateCourse extends AppCompatActivity {
                         .build();
 
                 new MyAsyncTask().execute(request);
+                navCreateCourse();
             }
         });
 
@@ -94,6 +93,12 @@ public class CreateCourse extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void navCreateCourse() {
+        MySingletonClass.getInstance().setCourseSettime(coursename.getText().toString());
+        Intent intent = new Intent(this, setOfficeTime.class);
+        startActivity(intent);
     }
 
     class MyAsyncTask extends AsyncTask<Request, Void, Response> {
