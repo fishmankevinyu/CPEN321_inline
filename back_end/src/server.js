@@ -8,6 +8,7 @@ const errorHandler = require("./_helpers/error-handler");
 const queue = require("./queue/queue.service");
 const user = require("./users/users.controller");
 const course = require("./course/course.service");
+const time = require("./course/time.service"); 
 
 var admin = require("firebase-admin");
 var serviceAccount = require("./fcm/privatekey.json");  //put the generated private key path here
@@ -30,7 +31,7 @@ app.use(jwt());
 app.use("/users", user.router);
 app.use("/courses", course.router);
 app.use("/queue", queue.router);
-app.use("/time", require("./course/time.service"));
+app.use("/time", time.router);
 
 // global error handler
 app.use(errorHandler);
