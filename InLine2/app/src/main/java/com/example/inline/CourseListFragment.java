@@ -1,5 +1,6 @@
 package com.example.inline;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -87,14 +88,16 @@ public class CourseListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-               /* String coursename = getCourseInfo(position);
+                String coursename = getCourseInfo(position);
                 CourseSingletonClass.getInstance().setCourse(coursename);
 
-                Intent intent = new Intent(this, queue.class);
-                startActivity(intent); */
-                String coursename = getCourseInfo(position);
+                Intent intent = new Intent(CourseListFragment.this.getActivity(), queueActivity.class);
+                startActivity(intent);
+
+
+               //String coursename = getCourseInfo(position);
                 //Log.e(TAG, "onItemClick: courseInfo lalala");
-                registerCourse(coursename, MySingletonClass.getInstance().getName());
+                //registerCourse(coursename, MySingletonClass.getInstance().getName());
                 //Log.e(TAG, "onItemClick: registerCourse lalala" + MySingletonClass.getInstance().getName());
             }
         });
@@ -114,6 +117,7 @@ public class CourseListFragment extends Fragment {
         }
     }
 
+    /*
     private void registerCourse(String coursename, String username) {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
@@ -174,6 +178,6 @@ public class CourseListFragment extends Fragment {
 
         }
 
-    }
+    }*/
 
 }
