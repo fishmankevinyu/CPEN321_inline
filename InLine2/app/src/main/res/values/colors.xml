@@ -7,4 +7,13 @@
     <color name="endblue">#0bcce6</color>
     <color name="primaryDark">#292b3d</color>
     <color name="graylight">#fafafa</color>
+
+    <color name="button_left">#a1eddb</color>
+    <color name="button_right">#009efd</color>
+
+    <color name="white">#ffffff</color>
+    <color name="textbox_bg">#e6e6e6</color>
+
+    <color name="logout_start">#ff2e5f</color>
+    <color name="logout_end">#ff7898</color>
 </resources>

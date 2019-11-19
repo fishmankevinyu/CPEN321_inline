@@ -2,6 +2,7 @@ package com.example.inline;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +43,14 @@ public class RegistrationScreen extends AppCompatActivity {
 
         username = (EditText)findViewById(R.id.userName);
         password = (EditText)findViewById(R.id.passWord);
+
+        TextView signupLink = findViewById(R.id.link_signup);
+        signupLink.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                navLogin();
+            }
+        });
 
         btnSend = (Button) findViewById(R.id.button);
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +83,7 @@ public class RegistrationScreen extends AppCompatActivity {
                 //  .url("https://reqres.in/api/users")
                 //https://reqres.in/ for testing
                 new MyAsyncTask().execute(request);
+                navLogin();
             }
         });
     }
@@ -134,6 +145,11 @@ public class RegistrationScreen extends AppCompatActivity {
                 break;
             default:
         }
+    }
+
+    public void navLogin() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }
