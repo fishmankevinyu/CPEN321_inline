@@ -16,7 +16,7 @@ const send = require("../fcm/send2");
 const db = require("../_helpers/db");
 const User = db.User;
 
-
+var map = new Map(); 
 
 function addSchedule(newTime,coursename){
   var minute = newTime.minute;
@@ -46,7 +46,16 @@ function addSchedule(newTime,coursename){
     //User.find()
     send.sendNotification(coursename);
   }); 
-  return task;
+  var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
+  console.log("add schedule: key is " + key); 
+
+  if(map.has(key)){
+    throw "time already exists"; 
+  }
+  else{
+    map.set(key, task); 
+    return task; 
+  }
 }
 
 function startSchedule(task){
@@ -57,43 +66,48 @@ function stopSchedule(task){
     task.stop();
 }
 
+
+
+function deleteSchedule(time,coursename){
+  
+ var minute = time.minute;
+ var hour = time.hour;
+ var dayOfMon = time.dayOfMon;
+ var month = time.month;
+ var dayOfWeek = time.dayOfWeek;
+   console.log("want to delete schedule ");
+
+ if(time == null){console.log("time null"); return 1;}
+ if(time.minute == null){
+     minute = '*'
+ }
+ if(time.hour == null){
+   hour = '*'
+ }
+ if(time.dayOfMon == null){
+   dayOfMon = '*'
+ }
+ if(time.month == null){
+   month = '*'
+ }
+ if(time.dayOfWeek == null){
+   dayOfWeek = '*'
+ }
+
+ var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
+ console.log("delete schedule: key is " + key); 
+ if(map.has(key)){
+   var task = map.get(key); 
+   stopSchedule(task); 
+   map.delete(key); 
+ }
+ else{
+   throw "time does not exist"; 
+ }
+
+}
+
 exports.addSchedule = addSchedule;
-//exports.deleteSchedule = deleteSchedule;
+exports.deleteSchedule = deleteSchedule;
 exports.startSchedule = startSchedule;
 exports.stopSchedule = stopSchedule;
-
-//function deleteSchedule(time,coursename){
-//  var minute = time.minute;
-//  var hour = time.hour;
-//  var dayOfMon = time.dayOfMon;
-//  var month = time.month;
-//  var dayOfWeek = time.dayOfWeek;
-//    console.log("want to delete schedule ");
-//
-//  if(time == null){console.log("time null"); return 1;}
-//  if(time.minute == null){
-//      minute = '*'
-//  }
-//  if(time.hour == null){
-//    hour = '*'
-//  }
-//  if(time.dayOfMon == null){
-//    dayOfMon = '*'
-//  }
-//  if(time.month == null){
-//    month = '*'
-//  }
-//  if(time.dayOfWeek == null){
-//    dayOfWeek = '*'
-//  }
-// cron.schedule(minute + ' ' + hour + ' ' + dayOfMon + ' ' + month + ' ' + dayOfWeek, ()=>{
-//    console.log("will not excecute anymore ")
-//    //User.find()
-//    send.sendNotification(coursename);
-//
-//  },
-//    {
-//    scheduled: false
-//    });
-//  return 0
-//}
