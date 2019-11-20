@@ -91,7 +91,30 @@ async function deque(req,res,next){
     {start:true},
     {sort:{entime: 1}})
     .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
-  }
+}
+
+/*
+put request
+deque a user in the queue by FIFO
+url: /queue/selfdeque
+need json {"coursename":"", "username":""}
+*/
+
+async function selfDeque(req,res,next){
+  await db.collection(req.body.coursename).findOneAndDelete(
+    {username:req.body.username},
+    {sort:{entime: 1}})
+    .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
+}
+
+async function updateEST(req, res, next){
+  var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){
+    res.status(200).json({Estime: ESTime}); 
+  }).catch((err)=>{
+    res.status(400).json({failure: "Did you send the correct course name?"});
+  });
+
+}
 
 /*private for backend*/
 async function newQueue(coursename,aa){
@@ -148,9 +171,12 @@ function checkIndex(coursename,username){
   return count;
 }
 
+
 router.post("/enque",enque);
 router.put("/deque",deque);
+router.put("/selfdeque", selfDeque);
 router.get("/top", top);
+router.get("/estime", updateEST);
 router.post("/new", newQueue2);
 router.delete("/", queueDelete);
 
