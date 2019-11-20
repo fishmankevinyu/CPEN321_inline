@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -55,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
                 MySingletonClass.getInstance().setmToken(mToken);
                 Log.e("HomeScreenActivity", "HERE IS OUR TOKEN");
                 Log.e("Token", mToken);
+            }
+        });
+
+        TextView regLink = findViewById(R.id.link_reg);
+        regLink.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                navRegisterUser(view);
             }
         });
 
