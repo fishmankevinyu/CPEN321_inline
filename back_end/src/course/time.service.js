@@ -3,7 +3,7 @@ const router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
 const mongoose = require("mongoose");
 const mongoosedb = require("../_helpers/db");
-const Course = mongoosedb.Course;
+const Course = mongoosedb.course;
 
 const send = require("../fcm/send2");
 
