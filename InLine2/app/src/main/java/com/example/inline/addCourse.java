@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class addCourse extends AppCompatActivity {
 
-    private OkHttpClient client = new OkHttpClient();
+    //private OkHttpClient client = new OkHttpClient();
     private EditText courseName;
     private Button addCourseButton;
 
