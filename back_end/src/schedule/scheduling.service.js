@@ -16,7 +16,19 @@ const send = require("../fcm/send2");
 const db = require("../_helpers/db");
 const User = db.User;
 
+var tasks;
+var db;
 
+var map = new Map(); 
+
+MongoClient.connect("mongodb://localhost:27017/schedule",function(err,_db){
+    if(err)  {
+        throw err;
+    }
+    db = _db.db("schedule");
+    tasks = db.collection("schedules");
+
+});
 
 function addSchedule(newTime,coursename){
   var minute = newTime.minute;
@@ -45,7 +57,13 @@ function addSchedule(newTime,coursename){
     console.log("time to send notification!");
     //User.find()
     send.sendNotification(coursename);
+
+    
   }); 
+  var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
+  console.log("key is " + key); 
+  map.set(key, task); 
+
   return task;
 }
 
@@ -62,14 +80,14 @@ exports.addSchedule = addSchedule;
 exports.startSchedule = startSchedule;
 exports.stopSchedule = stopSchedule;
 
-//function deleteSchedule(time,coursename){
+// function deleteSchedule(time,coursename){
 //  var minute = time.minute;
 //  var hour = time.hour;
 //  var dayOfMon = time.dayOfMon;
 //  var month = time.month;
 //  var dayOfWeek = time.dayOfWeek;
 //    console.log("want to delete schedule ");
-//
+
 //  if(time == null){console.log("time null"); return 1;}
 //  if(time.minute == null){
 //      minute = '*'
@@ -90,10 +108,10 @@ exports.stopSchedule = stopSchedule;
 //    console.log("will not excecute anymore ")
 //    //User.find()
 //    send.sendNotification(coursename);
-//
+
 //  },
 //    {
 //    scheduled: false
 //    });
 //  return 0
-//}
+// }
