@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private EditText username;
     private EditText password;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
                 JSONObject postdata = new JSONObject();
@@ -111,67 +112,74 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-        class MyAsyncTaskMain extends AsyncTask<Request, Void, Response> {
+    class MyAsyncTaskMain extends AsyncTask<Request, Void, Response> {
 
-            @Override
-            protected Response doInBackground(Request... requests) {
-                Response response = null;
-                try {
-                    response = client.newCall(requests[0]).execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return response;
+        @Override
+        protected Response doInBackground(Request... requests) {
+            Response response = null;
+            try {
+                response = client.newCall(requests[0]).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            return response;
+        }
 
-            @Override
-            protected void onPostExecute(Response response) {
+        @Override
+        protected void onPostExecute(Response response) {
 
+            try {
+                if (response == null) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()){
+                    showToast();
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                String jsonData = response.body().string();
+                Log.i("idf", jsonData);
                 try {
-                    if (response == null) throw new IOException("Unexpected code " + response);
-                    if (!response.isSuccessful())
-                        throw new IOException("Unexpected code " + response);
 
-                    String jsonData = response.body().string();
-                    Log.i("idf", jsonData);
-                    try {
+                    JSONObject Jobject = new JSONObject(jsonData);
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                    String token = Jobject.getString("token");
+                    MySingletonClass.getInstance().setToken(token);
 
-                        String token = Jobject.getString("token");
-                        MySingletonClass.getInstance().setToken(token);
+                    String isTeacher = Jobject.getString("isTeacher");
+                    Boolean isTeacher_bool = Boolean.parseBoolean(isTeacher);
+                    MySingletonClass.getInstance().setIsteacher(isTeacher_bool);
 
-                        String isTeacher = Jobject.getString("isTeacher");
-                        Boolean isTeacher_bool = Boolean.parseBoolean(isTeacher);
-                        MySingletonClass.getInstance().setIsteacher(isTeacher_bool);
+                    String userName = Jobject.getString("username");
+                    MySingletonClass.getInstance().setName(userName);
 
-                        String userName = Jobject.getString("username");
-                        MySingletonClass.getInstance().setName(userName);
+                    String userId = Jobject.getString("_id");
+                    MySingletonClass.getInstance().setId(userId);
 
-                        String userId = Jobject.getString("_id");
-                        MySingletonClass.getInstance().setId(userId);
-
-                        JSONArray classes = Jobject.getJSONArray("courses");
-                        ArrayList<String> classList = new ArrayList<String>();
-                        if (classes != null) {
-                            int len = classes.length();
-                            for (int i = 0; i < len; i++) {
-                                classList.add(classes.get(i).toString());
-                            }
+                    JSONArray classes = Jobject.getJSONArray("courses");
+                    ArrayList<String> classList = new ArrayList<String>();
+                    if (classes != null) {
+                        int len = classes.length();
+                        for (int i = 0; i < len; i++) {
+                            classList.add(classes.get(i).toString());
                         }
-
-                        MySingletonClass.getInstance().setClasses(classList);
-                        navMainScreen();
-                    } catch (Exception e) {
                     }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.i("idf", e.getLocalizedMessage());
+                    MySingletonClass.getInstance().setClasses(classList);
+                    navMainScreen();
+                } catch (Exception e) {
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
             }
         }
     }
+
+    public void showToast() {
+        Toast.makeText(this, "Wrong username or password!", Toast.LENGTH_LONG).show();
+    }
+
+}
 
 
 

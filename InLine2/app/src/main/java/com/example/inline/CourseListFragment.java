@@ -94,8 +94,7 @@ public class CourseListFragment extends Fragment {
                 Intent intent = new Intent(CourseListFragment.this.getActivity(), queueActivity.class);
                 startActivity(intent);
 
-
-               //String coursename = getCourseInfo(position);
+                //String coursename = getCourseInfo(position);
                 //Log.e(TAG, "onItemClick: courseInfo lalala");
                 //registerCourse(coursename, MySingletonClass.getInstance().getName());
                 //Log.e(TAG, "onItemClick: registerCourse lalala" + MySingletonClass.getInstance().getName());
