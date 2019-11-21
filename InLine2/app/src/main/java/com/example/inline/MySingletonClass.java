@@ -9,6 +9,7 @@ public class MySingletonClass {
     private String mToken; //This is for push notificaitons
     private String token;
     private ArrayList<String> classes;
+    private ArrayList<String> allClasses;
     private boolean isteacher;
     private String userId;
 
@@ -47,4 +48,7 @@ public class MySingletonClass {
     private String coursename_settime;
     public void setCourseSettime(String coursename_settime) { this.coursename_settime = coursename_settime;}
     public String getCourseSettime(){return this.coursename_settime;}
+
+    public void setAllClasses(ArrayList<String> allClasses){ this.allClasses = allClasses;}
+    public ArrayList<String> getAllClasses(){return this.allClasses;}
 }

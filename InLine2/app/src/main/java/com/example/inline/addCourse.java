@@ -11,17 +11,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class addCourse extends AppCompatActivity {
 
@@ -37,6 +41,12 @@ public class addCourse extends AppCompatActivity {
         setContentView(R.layout.activity_add_course);
 
         getCourseList(); //Get all the courses in the DB on starting the activity
+
+        Spinner spinner = (Spinner) findViewById(R.id.add_course_spinner);
+        ArrayList<String> options = MySingletonClass.getInstance().getClasses();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,options);
+        spinner.setAdapter(adapter);
 
         courseName = findViewById(R.id.courseName);
 
@@ -73,9 +83,7 @@ public class addCourse extends AppCompatActivity {
                             .build();
 
                     new registerCourseService().execute(request);
-
                 }
-
             }
         });
     }

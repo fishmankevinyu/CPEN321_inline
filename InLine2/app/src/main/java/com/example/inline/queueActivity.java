@@ -85,7 +85,6 @@ public class queueActivity extends AppCompatActivity {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 String jsonData = response.body().string();
 
-
                 Log.i("idf",jsonData);
             } catch (IOException e) {
                 e.printStackTrace();
