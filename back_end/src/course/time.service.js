@@ -84,11 +84,12 @@ async function deleteTime(req, res, next){
 
 // routes
 router.post("/add", addTime);
-router.get("/get", getTime);
+router.post("/get", getTime);
 router.delete("/", deleteTime);
 
 module.exports = {router,
                 addTime,
                 addTimeService,
-                db
+                db, 
+                getTimeService
 };

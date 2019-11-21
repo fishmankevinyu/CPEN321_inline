@@ -49,12 +49,6 @@ function addSchedule(newTime,coursename){
     
   }); 
   var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
-<<<<<<< HEAD
-  console.log("key is " + key); 
-  map.set(key, task); 
-
-  return task;
-=======
   console.log("add schedule: key is " + key); 
 
   if(map.has(key)){
@@ -64,7 +58,6 @@ function addSchedule(newTime,coursename){
     map.set(key, task); 
     return task; 
   }
->>>>>>> 41e84f3290dab8a961587ea39678701f2aa63953
 }
 
 function startSchedule(task){
@@ -120,42 +113,3 @@ exports.addSchedule = addSchedule;
 exports.deleteSchedule = deleteSchedule;
 exports.startSchedule = startSchedule;
 exports.stopSchedule = stopSchedule;
-<<<<<<< HEAD
-
-// function deleteSchedule(time,coursename){
-//  var minute = time.minute;
-//  var hour = time.hour;
-//  var dayOfMon = time.dayOfMon;
-//  var month = time.month;
-//  var dayOfWeek = time.dayOfWeek;
-//    console.log("want to delete schedule ");
-
-//  if(time == null){console.log("time null"); return 1;}
-//  if(time.minute == null){
-//      minute = '*'
-//  }
-//  if(time.hour == null){
-//    hour = '*'
-//  }
-//  if(time.dayOfMon == null){
-//    dayOfMon = '*'
-//  }
-//  if(time.month == null){
-//    month = '*'
-//  }
-//  if(time.dayOfWeek == null){
-//    dayOfWeek = '*'
-//  }
-// cron.schedule(minute + ' ' + hour + ' ' + dayOfMon + ' ' + month + ' ' + dayOfWeek, ()=>{
-//    console.log("will not excecute anymore ")
-//    //User.find()
-//    send.sendNotification(coursename);
-
-//  },
-//    {
-//    scheduled: false
-//    });
-//  return 0
-// }
-=======
->>>>>>> 41e84f3290dab8a961587ea39678701f2aa63953
