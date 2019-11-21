@@ -1,11 +1,17 @@
 package com.example.inline;
 
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -23,31 +31,74 @@ import okhttp3.Response;
 public class setOfficeTime extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private String coursename;
-    private EditText minute, hour, dayOfWeek;
+   // private EditText minute, hour, dayOfWeek;
 
+    private TimePicker picker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_course_time);
         Button btnSetTime;
 
+        picker = findViewById(R.id.time_picker);
+        picker.setIs24HourView(true);
+
         coursename = MySingletonClass.getInstance().getCourseSettime();
-        minute = (EditText)findViewById(R.id.edit_coursetime_minute);
-        hour = (EditText)findViewById(R.id.edit_coursetime_hour);
-        dayOfWeek = (EditText)findViewById(R.id.edit_coursetime_day);
+//        minute = (EditText)findViewById(R.id.edit_coursetime_minute);
+//        hour = (EditText)findViewById(R.id.edit_coursetime_hour);
+//        dayOfWeek = (EditText)findViewById(R.id.edit_coursetime_day);
+
+        Spinner day_spinner = (Spinner) findViewById(R.id.edit_coursetime_day);
+        List<String> dayList = new ArrayList<String>();
+        dayList.add("MON");
+        dayList.add("TUE");
+        dayList.add("WED");
+        dayList.add("THU");
+        dayList.add("FRI");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, dayList);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        day_spinner.setAdapter(dataAdapter);
+
+
+        Spinner spinner = (Spinner) findViewById(R.id.course_address_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.address_array, android.R.layout.simple_spinner_item);
+        spinner.setAdapter(adapter);
 
         btnSetTime = (Button) findViewById(R.id.setCourseTimeButton);
         btnSetTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("setOfficeTime","Response setOfficeHour");
+                String hour = String.valueOf(picker.getHour());
+                String minute = String.valueOf(picker.getMinute());
+
+                String dayOfWeek = "";
+                switch (String.valueOf(day_spinner.getSelectedItem())) {
+                    case "MON":
+                        dayOfWeek = String.valueOf(1);
+                        break;
+                    case "TUE":
+                        dayOfWeek = String.valueOf(2);
+                        break;
+                    case "WED":
+                        dayOfWeek = String.valueOf(3);
+                        break;
+                    case "THU":
+                        dayOfWeek = String.valueOf(4);
+                        break;
+                    case "FRI":
+                        dayOfWeek = String.valueOf(5);
+                        break;
+                    default: break;
+                }
                 MediaType MEDIA_TYPE = MediaType.parse("application/json");
                 JSONObject postdata1 = new JSONObject();
                 try {
                     postdata1.put("coursename", coursename);
-                    postdata1.put("minute", minute.getText().toString());
-                    postdata1.put("hour", hour.getText().toString());
-                    postdata1.put("dayOfWeek", dayOfWeek.getText().toString());
+                    postdata1.put("minute", minute);
+                    postdata1.put("hour", hour);
+                    postdata1.put("dayOfWeek", dayOfWeek);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -66,6 +117,7 @@ public class setOfficeTime extends AppCompatActivity {
 
                 Log.i("setOfficeTime","Response setOfficeHour");
                 new MyAsyncTask().execute(request);
+                navUser();
             }
         });
     }
@@ -90,6 +142,7 @@ public class setOfficeTime extends AppCompatActivity {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                 Log.i("idf", "Set time response is successful");
+                showToast();
                 String jsonData = response.body().string();
                 Log.i("idf", jsonData);
                 try{
@@ -103,5 +156,14 @@ public class setOfficeTime extends AppCompatActivity {
                 Log.i("idf", e.getLocalizedMessage());
             }
         }
+    }
+
+    public void showToast() {
+        Toast.makeText(this, "set successfully", Toast.LENGTH_LONG).show();
+    }
+
+    public void navUser() {
+        Intent intent = new Intent(this, HomeScreenActivity.class);
+        startActivity(intent);
     }
 }

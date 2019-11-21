@@ -5,4 +5,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
+
+    <string-array name="address_array">
+        <item>MCLD</item>
+        <item>ESB</item>
+        <item>MATH</item>
+    </string-array>
 </resources>

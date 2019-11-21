@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,15 +28,12 @@ public class HomeScreenActivity extends AppCompatActivity {
             = (item) -> {
         switch (item.getItemId()) {
             case R.id.navigation_course_list:
-                //toolbar.setTitle("CourseList");
                 loadFragment (new CourseListFragment());
                 return true;
             case R.id.navigation_map:
-                //toolbar.setTitle("Map");
                 loadFragment (new MapFragment());
                 return true;
             case R.id.navigation_user:
-                //toolbar.setTitle("User");
                 loadFragment (new UserFragment());
                 return true;
             default:
@@ -50,18 +48,19 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home_screen);
 
         toolbar = getSupportActionBar();
         BottomNavigationView navigation = findViewById(R.id.nav_view);
+        if (MySingletonClass.getInstance().getIsteacher()){
+            navigation.inflateMenu(R.menu.bottom_nav_menu_teacher);
+        }
+        else {
+            navigation.inflateMenu(R.menu.bottom_nav_menu);
+        }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //toolbar.setTitle("CourseList");
         loadFragment(new CourseListFragment());
-
-
-
     }
 
     public String getCourseInfo(int position) {

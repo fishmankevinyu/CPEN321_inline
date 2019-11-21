@@ -45,6 +45,8 @@ function addSchedule(newTime,coursename){
     console.log("time to send notification!");
     //User.find()
     send.sendNotification(coursename);
+
+    
   }); 
   var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
   console.log("add schedule: key is " + key); 
