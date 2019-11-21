@@ -100,6 +100,7 @@ function deleteSchedule(time,coursename){
    var task = map.get(key); 
    stopSchedule(task); 
    map.delete(key); 
+   return 0; 
  }
  else{
    throw "time does not exist"; 
