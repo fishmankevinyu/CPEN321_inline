@@ -8,6 +8,8 @@ const queues = require("../queue/queue.service");
 const mongoose = require("mongoose");
 const topic = require("../fcm/send2");
 const regToken = require("../fcm/regToken");
+const times = require("./time.service"); 
+const schedule = require("../schedule/scheduling.service"); 
 
 /*function that should be only use inside addCourse, do not use it outside*/
 async function addUser(req, res, next, userParam, courseParam){
@@ -49,8 +51,6 @@ async function addCourse(req, res, next){
         await user.save();
         await course.save();
     }
-
-
 }
 
 
@@ -130,13 +130,74 @@ async function updateCourse(req,res,next){
   }
 }
 
+async function deleteHelper(course){
+  var studentArray = course.students; 
+  // Course.aggregate()
+  // .match({coursename: course.coursename})
+  // .project({
+  //   userSize: {$size: "$students"}
+  // })
+  // .exec(async function(err,userSize){
+
+  //   console.log("size: " + userSize); 
+  //   var i; 
+  //   for(i = 0; i<userSize; i++){
+  //     user = course.students[i]; 
+  //     console.log(user.username); 
+  //     var token = await regToken.getToken(user.username);
+  //     user.updateOne({$pull: {"courses": course.coursename}})
+  //     .then(await topic.unsubscribe(token, course.coursename))
+  //     .catch((err) => next(err));
+  //     console.log("updated"); 
+  //     await user.save(); 
+  //   }
+  // }); 
+
+
+  // var userSize = course.students.length;
+
+  // Course.virtual('userSize').get(function(){
+  //   return this.students.length; 
+  // }); 
+
+  // console.log("size: " + course.userSize); 
+  var i; 
+  console.log(course.students); 
+  console.log(course.students[0]); 
+  for(i = 0; course.students[i] != null; i++){
+    user = await User.findOne({username: course.students[i]}); 
+    console.log(user.username); 
+    var token = await regToken.getToken(user.username);
+    user.updateOne({$pull: {"courses": course.coursename}})
+    .then(await topic.unsubscribe(token, course.coursename))
+    .catch((err) => next(err));
+    console.log("updated"); 
+    await user.save(); 
+
+  }
+
+  console.log("delete the course in user database"); 
+
+  var timeArray = await times.getTimeService(course.coursename); 
+
+  console.log(timeArray); 
+  if(timeArray[0]!=null){
+    console.log("time found"); 
+    await schedule.deleteSchedule(timeArray[0], course.coursename); 
+  }
+  console.log(course.coursename); 
+  await Course.findByIdAndDelete(mongoose.Types.ObjectId(course._id)); 
+
+}
+
 /*
 delete request, need courseid in url
 /courses/:id
 delete a specific course
 */
 async function deleteCourse(req,res,next){
-  var course = await Course.findByIdAndDelete(mongoose.Types.ObjectId(req.params.id))
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.id)); 
+  await deleteHelper(course)
   .then(() => {res.json({message:"deleted"}); }).catch((err) => next(err));
 }
 
@@ -155,6 +216,40 @@ async function getByName(req, res, next){
 
 }
 
+async function dropUser(req, res, next, userParam, courseParam){
+  courseParam.updateOne({$pull: {"students": userParam.username}})
+  .then(res.json({message: "dropped",
+                 "username": userParam.username,
+                 "coursename":courseParam.coursename}))
+  .catch((err) => next(err));
+}
+
+async function dropCourse(req, res, next){
+  var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));
+  var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
+
+  if(!user){
+    res.status(404).json({message:"no user found"});
+}
+else if(!course){
+    res.status(404).json({message:"no course found"});
+}
+else{
+  console.log("found"); 
+  console.log("user.username"); 
+  console.log("course.coursename"); 
+  var token = await regToken.getToken(user.username);
+  console.log(token); 
+  user.updateOne({$pull: {"courses": course.coursename}})
+  .then(dropUser(req, res, next, user, course))
+  .then(await topic.unsubscribe(token, course.coursename))
+  .catch((err) => next(err));}
+
+  await user.save(); 
+  await course.save(); 
+  
+}
+
 // routes
 router.post("/new", newCourse);
 router.post("/add/:userid&:courseid", addCourse);
@@ -164,6 +259,7 @@ router.put("/:id", updateCourse);
 router.delete("/:id", deleteCourse);
 router.get("/students/:id", getStudents);
 router.post("/name", getByName);
+router.post("/drop/:userid&:courseid", dropCourse); 
 
 module.exports = {router,
                 newCourse,
@@ -171,5 +267,6 @@ module.exports = {router,
                 updateCourse,
                 getByName,
                 getAll,
-                addCourse
+                addCourse, 
+                dropCourse
 };

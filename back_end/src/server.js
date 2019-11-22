@@ -9,6 +9,7 @@ const queue = require("./queue/queue.service");
 const user = require("./users/users.controller");
 const course = require("./course/course.service");
 const time = require("./course/time.service"); 
+const location = require("./location/location");
 
 var admin = require("firebase-admin");
 var serviceAccount = require("./fcm/privatekey.json");  //put the generated private key path here
@@ -32,6 +33,7 @@ app.use("/users", user.router);
 app.use("/courses", course.router);
 app.use("/queue", queue.router);
 app.use("/time", time.router);
+app.use("/location", location.router);
 
 // global error handler
 app.use(errorHandler);

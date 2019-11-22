@@ -6,31 +6,28 @@ const Mongoose = require("mongoose");
 const config = require("../../src/config.json");
 const Db = require("../../src/_helpers/db");
 const estime = require("../../src/queue/estime");
-
-jest.mock("../../src/queue/estime");
 describe("queue service testing", () =>{
     var connection;
-    beforeAll(async ()=>{
-        await MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
-            if(err) {throw err;}
-            queue_service.db = _db.db("queue");
-            queue_service.client = _db;
-        });
+    beforeAll( async ()=>{
+        queue_service.client = await MongoClient.connect("mongodb://localhost:27017/queue",{useUnifiedTopology:true});
+        queue_service.db = await queue_service.client.db("queue");
         connection = await Mongoose.connect(process.env.MONGODB_URI || config.connectionString, { useCreateIndex: true, useNewUrlParser: true });
         Mongoose.Promise = global.Promise;
     });
 
-    afterAll(async () =>{
-        connection.close();
-        queue_service.db.close();
-        queue_service.client.close();
+    afterAll(async (done) =>{
+        // await connection.close();
+        // await queue_service.db.close();
+        // await queue_service.client.close();
+        // done();
     });
 
     test("create db instance", ()=>{
         expect(queue_service.db).toBeInstanceOf(Mongodb);
+        expect(connection).toBeDefined();
     });
 
-    test("enque not a user", async () =>{
+    test("enque not a user", async done =>{
         const req = mock.mockRequest({
             username: "xxx",
             coursename: "xxx"
@@ -39,41 +36,61 @@ describe("queue service testing", () =>{
         var next = jest.fn();
 
         await expect(queue_service.db).toBeInstanceOf(Mongodb);
+        await queue_service.enque(req, res, next);
 
-        await queue_service.enque(req, res, next).then((x)=>{
-            expect(res.status).toHaveBeenCalledWith(400);
-        });
+        expect(res.status).toHaveBeenCalledWith(400);
 
+        done();
     });
 
-    test("enque kevin", async() =>{
+    test("enque kevin", async done =>{
+        estime.calEST = jest.fn(()=>{return new Promise((resolve,reject)=>{
+                resolve(0);
+            });
+        });
         const req = mock.mockRequest({
             username: "kevin",
-            coursename: "CEPN433"
+            coursename: "CPEN433"
         });
         var res = mock.mockResponse();
         var next = jest.fn();
 
+        expect(connection).toBeDefined();
+
         await queue_service.enque(req, res, next).then((x)=>{
+            expect(res.json).toHaveBeenCalledWith({EST: 0, success:"you are in queue"});
             expect(res.status).toHaveBeenCalledWith(200);
             expect(estime.calEST).toHaveBeenCalled();
         });
+
+        await queue_service.db.collection(req.body.coursename).findOneAndDelete({username: req.body.username});
+        done();
     });
 
-    test("deque a user", async () =>{
+    test("deque a user", async (done) =>{
+        estime.updateAHT = jest.fn();
         const req = mock.mockRequest({
-            coursename: "CEPN433"
+            coursename: "CPEN433"
         });
         var res = mock.mockResponse();
         var next = jest.fn();
+        await queue_service.db.collection(req.body.coursename).insertOne({
+            username:"kevin",
+            entime: Date.now(),
+            start: true,
+            estime: 0
+        })
 
         await queue_service.deque(req, res, next).then((x)=>{
             expect(res.status).toHaveBeenCalledWith(200);
             expect(estime.updateAHT).toHaveBeenCalled();
         });
+
+        done();
     });
 
-    test("create a new queue", async () =>{
+    test("create a new queue", async (done) =>{
+        estime.newCourseTime = jest.fn(()=>{return 1;});
         const req = mock.mockRequest({
             coursename: "CEPN433",
             AA: "1"
@@ -85,18 +102,28 @@ describe("queue service testing", () =>{
         .then((x)=>{
             expect(res.json).toHaveBeenCalledWith({"message":"success"});
         });
+        done();
     });
 
-    test("delete a queue", async()=>{
+    test("delete a queue", async(done)=>{
         const req = mock.mockRequest({
             coursename: "ABC000"
         });
         var res = mock.mockResponse();
         var next = jest.fn();
 
-        await queue_service.queueDelete(req,res,next).then((x)=>{
-            expect(queue_service.db.collection("ABC000")).toBeUndefined();
+        await queue_service.db.collection(req.body.coursename).insertOne({
+            username:"kevin",
+            entime: Date.now(),
+            start: true,
+            estime: 0
         });
+
+        await queue_service.queueDelete(req,res,next).then((x)=>{
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({success: "deleted"});
+        });
+        done();
     });
 
 
