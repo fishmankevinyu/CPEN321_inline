@@ -10,12 +10,11 @@ const estime = require("../../src/queue/estime");
 describe("estime", () =>{
     var connection;
     beforeAll(async ()=>{
-        await MongoClient.connect("mongodb://localhost:27017/Est",function(err,_db){
-            if(err) {throw err;}
-            estime.db = _db.db("ESTs");
-            estime.client = _db;
-            estime.ests = estime.db.collection("ests");
+        estime.client = await MongoClient.connect("mongodb://localhost:27017/Est",{
+            useUnifiedTopology:true
         });
+        estime.db = await estime.client.db("ESTs");
+        estime.ests = await estime.db.collection("ests");
         connection = await Mongoose.connect(process.env.MONGODB_URI || config.connectionString, { useCreateIndex: true, useNewUrlParser: true });
         Mongoose.Promise = global.Promise;
     });
@@ -30,7 +29,7 @@ describe("estime", () =>{
         expect(estime.db).toBeInstanceOf(Mongodb);
     });
 
-    test("newCourseTime test", async () =>{
+    test("newCourseTime test", async (done) =>{
 
         await estime.newCourseTime("ABC000","1").then((x)=>{
             estime.ests.findOne({coursename: "ABC000"}).then((x)=>{
@@ -38,20 +37,37 @@ describe("estime", () =>{
             });
         });
 
+        await estime.ests.findOneAndDelete({
+            coursename: "ABC000"
+        });
+        done();
+
     });
 
-    test("updateAHT test", async ()=>{
-        var oldtime = estime.ests.findOne({coursename: "ABC000"})
+    test("updateAHT test", async (done)=>{
+        estime.ests.insertOne({
+            coursename: "update_aht",
+            AHT: 2,
+            count: 1,
+            AA: 1
+          })
+
+        var oldtime = estime.ests.findOne({coursename: "update_aht"})
         .then((result)=>{
             return result.AHT;
         });
 
-        await estime.updateAHT("ABC000", "1").then((x)=>{
-            return estime.ests.findOne({coursename: "ABC000"});
+        await estime.updateAHT("update_aht", "4").then((x)=>{
+            return estime.ests.findOne({coursename: "update_aht"});
         })
         .then((result)=>{
-            expect(result.AHT).not.toBe(oldtime);
+            expect(result.AHT).toBe(3);
         });
+
+        await estime.ests.findOneAndDelete({
+            coursename: "update_aht"
+        });
+        done();
     });
 
     test("calEST test", async()=>{

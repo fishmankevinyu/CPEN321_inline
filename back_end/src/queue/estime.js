@@ -38,12 +38,12 @@ async function updateAHT(coursename,aht){
   console.log(typeof count);
   var newAht;
 
-  if(oldAht == null){
+  if(oldAht == 0){
     newAht = aht;
-    count = aht - aht;
+    count = 0;
   }
   else{
-    newAht = (oldAht + aht*count)/(count+1);
+    newAht = (oldAht*count + aht)/(count+1);
     console.log(count);
 
   }
