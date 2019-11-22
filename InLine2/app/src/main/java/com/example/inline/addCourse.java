@@ -30,8 +30,10 @@ import java.util.Set;
 public class addCourse extends AppCompatActivity {
 
     //private OkHttpClient client = new OkHttpClient();
-    private EditText courseName;
+    //private EditText courseName;
+    private String courseName;
     private Button addCourseButton;
+    ArrayList<String> unRegCourse;
 
     HashMap<String, String> courseListAddCourse; //courseList hashmap
 
@@ -40,15 +42,24 @@ public class addCourse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_course);
 
+        unRegCourse = new ArrayList<String>();
+        for (int k = 0; k < MySingletonClass.getInstance().getAllClasses().size(); k++) {
+            if (!MySingletonClass.getInstance().getClasses().contains(MySingletonClass.getInstance().getAllClasses().get(k))){
+                unRegCourse.add(MySingletonClass.getInstance().getAllClasses().get(k));
+            }
+        }
+        MySingletonClass.getInstance().setUnRegClasses(unRegCourse);
+
         getCourseList(); //Get all the courses in the DB on starting the activity
 
         Spinner spinner = (Spinner) findViewById(R.id.add_course_spinner);
-        ArrayList<String> options = MySingletonClass.getInstance().getClasses();
+        ArrayList<String> options = MySingletonClass.getInstance().getUnRegClasses();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,options);
         spinner.setAdapter(adapter);
 
-        courseName = findViewById(R.id.courseName);
+        //courseName = findViewById(R.id.courseName);
+        courseName = String.valueOf(spinner.getSelectedItem());
 
         //On click register for the course
         addCourseButton = (Button) findViewById(R.id.addCourseButton);
@@ -63,7 +74,7 @@ public class addCourse extends AppCompatActivity {
                 Iterator it = courseListAddCourse.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry pair = (Map.Entry)it.next();
-                    if(pair.getKey().toString().toUpperCase().trim().equals(courseName.getText().toString().toUpperCase().trim())){
+                    if(pair.getKey().toString().toUpperCase().trim().equals(courseName.toString().toUpperCase().trim())){
                         hasCourse = true;
                         courseToRegisterId = pair.getValue().toString();
                     }

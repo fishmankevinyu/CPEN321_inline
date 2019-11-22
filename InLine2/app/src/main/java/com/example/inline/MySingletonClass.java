@@ -10,6 +10,7 @@ public class MySingletonClass {
     private String token;
     private ArrayList<String> classes;
     private ArrayList<String> allClasses;
+    private ArrayList<String> unRegClass;
     private boolean isteacher;
     private String userId;
 
@@ -51,4 +52,7 @@ public class MySingletonClass {
 
     public void setAllClasses(ArrayList<String> allClasses){ this.allClasses = allClasses;}
     public ArrayList<String> getAllClasses(){return this.allClasses;}
+
+    public void setUnRegClasses(ArrayList<String> unRegClass){ this.unRegClass = unRegClass;}
+    public ArrayList<String> getUnRegClasses(){return this.unRegClass;}
 }
