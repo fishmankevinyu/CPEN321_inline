@@ -167,9 +167,9 @@ async function deleteHelper(course){
   for(i = 0; course.students[i] != null; i++){
     user = await User.findOne({username: course.students[i]}); 
     console.log(user.username); 
-    //var token = await regToken.getToken(user.username);
+    var token = await regToken.getToken(user.username);
     user.updateOne({$pull: {"courses": course.coursename}})
-    //.then(await topic.unsubscribe(token, course.coursename))
+    .then(await topic.unsubscribe(token, course.coursename))
     .catch((err) => next(err));
     console.log("updated"); 
     await user.save(); 
@@ -181,7 +181,7 @@ async function deleteHelper(course){
   var timeArray = await times.getTimeService(course.coursename); 
 
   console.log(timeArray); 
-  if(timeArray.$size > 0){
+  if(timeArray[0]!=null){
     console.log("time found"); 
     await schedule.deleteSchedule(timeArray[0], course.coursename); 
   }
