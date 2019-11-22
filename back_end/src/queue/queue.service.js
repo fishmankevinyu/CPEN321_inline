@@ -11,7 +11,8 @@ const Course = mongoosedb.course;
 var db;
 var client;
 
-MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
+MongoClient.connect("mongodb://localhost:27017/queue",{useUnifiedTopology:true},
+  function(err,_db){
     if(err) {throw err;}
     db = _db.db("queue");
     client = _db;
@@ -19,8 +20,8 @@ MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
 
 /*private */
 async function enqueCheck(username,coursename){
-  var user = await User.findOne({username, courses: coursename});
-  var course = await Course.findOne({coursename, students: username});
+  var user = await User.findOne({username, courses: coursename}).then((x)=>{return x;}).catch((err)=>{return err;});
+  var course = await Course.findOne({coursename, students: username}).then((x)=>{return x;}).catch((err)=>{return err;});
   if(user == null || course == null){
     return false;
   }
@@ -59,7 +60,7 @@ async function enque(req,res,next){
 
     var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime; });
 
-    console.log("enque/ESTime: " + ESTime);
+    console.log("enque/ESTim  e: " + ESTime);
 
     var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
     .then(function(newUser){
@@ -140,8 +141,12 @@ async function newQueue(coursename,aa){
 }
 
 /*private*/
-async function _delete(coursename){
-  await db.collection(coursename).drop();
+function _delete(coursename){
+  return db.collection(coursename).drop().then((result) => {
+    return result;
+  }).catch((err) =>{
+    return err;
+  })
 }
 
 /*
@@ -151,8 +156,11 @@ url /queue/delete
 json({"coursename":""})
 this could be merge into course.service deleted, but not yet
 */
-function queueDelete(req,res,next){
-  _delete(req.body.coursename);
+async function queueDelete(req, res, next){
+  let deleted = await _delete(req.body.coursename);
+  console.log("deleted: " + deleted);
+  (deleted) ?  res.status(200).json({success: "deleted"})
+  : res.status(400).json({faliure: "not deleted!"});
 }
 
 /*
@@ -194,7 +202,6 @@ module.exports =
 { 
   router,
   newQueue,
-  delete: _delete,
   enque,
   deque,
   newQueue2,

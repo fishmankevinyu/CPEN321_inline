@@ -17,9 +17,12 @@
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": ["html"]
+    "coverageReporters": [
+      "html"
+    ]
   },
   "dependencies": {
+    "@google/maps": "^1.0.2",
     "@jest/console": "^24.9.0",
     "@jest/fake-timers": "^24.9.0",
     "bcryptjs": "^2.4.3",
