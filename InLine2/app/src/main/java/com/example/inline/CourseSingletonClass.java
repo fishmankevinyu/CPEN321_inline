@@ -3,6 +3,8 @@ package com.example.inline;
 public class CourseSingletonClass {
     private static CourseSingletonClass instance;
 
+    private String coursename;
+
     public static CourseSingletonClass getInstance() {
         if (instance == null)
             instance = new CourseSingletonClass();
@@ -12,7 +14,6 @@ public class CourseSingletonClass {
     private CourseSingletonClass() {
     }
 
-    private String coursename;
 
     public String getCourse() { return coursename; }
 

@@ -27,8 +27,8 @@ MongoClient.connect("mongodb://localhost:27017/time",function(err,_db){
 
 async function addTimeService(time, coursename){
     if(await times.insertOne(time)){
-        await schedule.addSchedule(time, coursename);
-        //await schedule.startSchedule(task);
+        var task = await schedule.addSchedule(time, coursename);
+        await schedule.startSchedule(task);
         //await send.sendNotification(coursename);
     }
     else
@@ -68,7 +68,7 @@ async function deleteTimeService(time){
         await schedule.deleteSchedule(time, time.coursename);
     }
     else
-        throw "delete failure";
+        throw "cannot find the time in database";
     
     
 }
@@ -84,11 +84,12 @@ async function deleteTime(req, res, next){
 
 // routes
 router.post("/add", addTime);
-router.get("/get", getTime);
+router.post("/get", getTime);
 router.delete("/", deleteTime);
 
 module.exports = {router,
                 addTime,
                 addTimeService,
-                db
+                db, 
+                getTimeService
 };
