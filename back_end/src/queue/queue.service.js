@@ -4,6 +4,7 @@ const MongoClient = require("mongodb").MongoClient;
 const Est = require("./estime");
 const mongoosedb = require("../_helpers/db");
 const mongoose = require("mongoose");
+const time_service = require("../../src/course/time.service");
 const User = mongoosedb.user;
 const Course = mongoosedb.course;
 

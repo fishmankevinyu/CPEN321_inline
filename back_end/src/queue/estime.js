@@ -17,11 +17,10 @@ MongoClient.connect("mongodb://localhost:27017/EST",function(err,_db){
 async function newCourseTime(coursename,aa){
   await ests.insertOne({
     coursename,
-    AHT: 0,
+    AHT: 300000,
     count: 0,
     AA: aa
   }).then((x) => x).catch((err) => console.log(err));
-  console.log(aa);
 }
 
 async function updateAHT(coursename,aht){
@@ -59,7 +58,6 @@ async function calEST(coursename,username){
   });
   var piQ = parseInt(count,10);
   var est = await ests.findOne({coursename})
-
   .then(function(newest){
     return newest;
   },function(err){console.log("err: " + err); });
