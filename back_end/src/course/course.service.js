@@ -71,7 +71,7 @@ async function newCourse(req, res ,next){
     var queue = await queues.newQueue(req.body.coursename,req.body.AA);
     //console.log("after calling queue"); 
     var course = new Course(req.body);
-    res.json(course);
+    res.status(200).json(course);
     await course.save();
     //console.log(course.coursename);
   }
