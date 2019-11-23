@@ -85,11 +85,11 @@ async function defaultNewLocation(req, res, next){
 }
 
 async function getLocation(req, res, next){
-    if(req.body.coursename == null){
-        res.status(400).json({failure : "coursenmae is null"});
+    if(req.params.coursename == null){
+        res.status(400).json({failure : "coursename is null"});
         return null;
     }
-    await locations.findOne({coursename : req.body.coursename}).then((result)=>{
+    await locations.findOne({coursename : req.params.coursename}).then((result)=>{
         res.status(200).json({lat: result.lat, lng: result.lng});
     }).catch((err)=>{res.status(400).json({failure : "not successful"});});
 }
@@ -163,7 +163,7 @@ deleteLocation: delete the doucment
 delete request: json parameters - coursename
 endpoint: /location/
 */
-router.get("/latlng", getLocation);
+router.get("/latlng/:coursename", getLocation);
 router.get("/", chooseLocation);
 router.post("/default", defaultNewLocation);
 //router.post("/", insertLocation);

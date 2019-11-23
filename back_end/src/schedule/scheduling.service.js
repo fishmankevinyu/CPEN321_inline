@@ -100,16 +100,6 @@ function deleteSchedule(time,coursename){
 
  var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
  console.log("delete schedule: key is " + key); 
-<<<<<<< HEAD
-  if(map.has(key)){
-    var task = map.get(key);
-    stopSchedule(task); 
-    map.delete(key); 
-  }
-  else{
-    throw "time does not exist"; 
-  }
-=======
  if(map.has(key)){
    var task = map.get(key); 
    stopSchedule(task); 
@@ -119,7 +109,6 @@ function deleteSchedule(time,coursename){
  else{
    throw "time does not exist"; 
  }
->>>>>>> cae8367c98646de5fe723db1744a863e36f64146
 
 }
 

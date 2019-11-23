@@ -70,7 +70,11 @@ describe("chooseLocation", ()=>{
 
 describe("getLocation", ()=>{
     test("get CPEN433", async (done)=>{
-        let req = mock.mockRequest({coursename: "CPEN433"});
+        let req = {params:
+            {
+                coursename: "CPEN433"
+            }
+        };
         let res = mock.mockResponse();
         let next = jest.fn();
         await location.getLocation(req,res,next);
@@ -80,7 +84,11 @@ describe("getLocation", ()=>{
     });
 
     test("get null", async (done)=>{
-        let req = mock.mockRequest({coursename: null});
+        let req = {params:
+            {
+                coursename: null
+            }
+        };
         let res = mock.mockResponse();
         let next = jest.fn();
         await location.getLocation(req,res,next);
