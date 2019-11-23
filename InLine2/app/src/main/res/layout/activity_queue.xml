@@ -21,6 +21,21 @@
         app:layout_constraintVertical_bias="0.413" />
 
     <TextView
+        android:id="@+id/officeHourTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="aaaaaaaa"
+        android:textColor="#03A9F4"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toTopOf="@+id/enqueButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enqueCourseName"
+        app:layout_constraintVertical_bias="0.12" />
+
+    <TextView
         android:id="@+id/courseWaitTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +47,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enqueCourseName" />
+        app:layout_constraintTop_toBottomOf="@+id/enqueCourseName"
+        app:layout_constraintVertical_bias="0.744" />
 
     <Button
         android:id="@+id/enqueButton"

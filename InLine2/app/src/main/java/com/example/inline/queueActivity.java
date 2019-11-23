@@ -26,26 +26,30 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import xdroid.toaster.Toaster;
 
 public class queueActivity extends AppCompatActivity {
+
     private OkHttpClient client = new OkHttpClient();
     private Button enqueCourseButton;
     private Button dequeCourseButton;
     private Button deleteCourseButton;
     private String courseid;
 
-    private TextView courseName;
-    private TextView estimatedTime;
+    TextView courseTextView;
+    TextView waitTimeTextView;
+
+    //private TextView courseName;
+    //private TextView estimatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue);
 
-        TextView courseTextView = (TextView) findViewById(R.id.enqueCourseName);
-        TextView waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
+        courseTextView = (TextView) findViewById(R.id.enqueCourseName);
+        waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
 
-        //courseTextView.setText(MySingletonClass.getInstance().getCourseQueue());
 
         courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
         waitTimeTextView.setText("Please Enque");
@@ -78,6 +82,43 @@ public class queueActivity extends AppCompatActivity {
                 }
 
         });
+
+        //For self deque
+
+        dequeCourseButton = (Button) findViewById(R.id.dequeButton);
+        dequeCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+                Log.i("idf",CourseSingletonClass.getInstance().getCourse());
+
+                Log.i("idf", MySingletonClass.getInstance().getName());
+
+                JSONObject postEnqueue = new JSONObject();
+                try {
+                    postEnqueue.put("coursename", CourseSingletonClass.getInstance().getCourse());
+                    postEnqueue.put("username", MySingletonClass.getInstance().getName());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(MEDIA_TYPE, postEnqueue.toString());
+                Request request = new Request.Builder()
+                        .url("http://40.117.195.60:4000/queue/selfdeque")
+                        .put(body)
+                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                        .header("Accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .build();
+
+                new dequeCourseService().execute(request);
+            }
+
+        });
+
+
 
         /////////////////////////////////////////////////////////////////////////////////
         deleteCourseButton = (Button) findViewById(R.id.deleteCourseButton);
@@ -118,10 +159,45 @@ public class queueActivity extends AppCompatActivity {
         protected void onPostExecute(Response response) {
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response + response.message());
+                String jsonData = response.body().string();
+
+
+                Log.i("idf",jsonData);
+
+                try{
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    String estimatedTimeString = Jobject.getString("EST") + " Milliseconds";
+                    waitTimeTextView.setText(estimatedTimeString);
+                }
+                catch(Exception e){
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+
+            }
+        }
+    }
+
+
+    //No need to parse response body after registering for course
+    //Maybe show success message here
+    public class dequeCourseService extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response response) {
+            try {
+                if(response == null) throw new IOException("Unexpected code " + response);
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 String jsonData = response.body().string();
 
+
                 Log.i("idf",jsonData);
+                String text = "Please Enque";
+                waitTimeTextView.setText(text);
+
+                //waitTimeTextView
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
@@ -172,7 +248,7 @@ public class queueActivity extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-                    new queueActivity.MyAsyncTask().execute(delete_request);
+                    new queueActivity.deleteCourseAsyncTask().execute(delete_request);
                     ///////////////////////////////////////////
                 }
                 catch(Exception e){
@@ -187,7 +263,7 @@ public class queueActivity extends AppCompatActivity {
 
     }
 
-    class MyAsyncTask extends AsyncTask<Request, Void, Response> {
+    class deleteCourseAsyncTask extends AsyncTask<Request, Void, Response> {
 
         @Override
         protected Response doInBackground(Request... requests) {
@@ -219,7 +295,8 @@ public class queueActivity extends AppCompatActivity {
                     ArrayList<String> tempClassList = MySingletonClass.getInstance().getClasses();
                     tempClassList.remove(deleteCourse);
                     MySingletonClass.getInstance().setClasses(tempClassList);
-                    showToast();
+                    Toaster.toast("Course deleted successfully");
+                    //showToast();
                     navUser();
                 }
                 catch(Exception e){
