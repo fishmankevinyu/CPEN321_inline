@@ -132,8 +132,8 @@ describe("updateLocation", ()=>{
 
 describe("deleteLocation",()=>{
     test("delete TEST123", async (done)=>{
-        location.locations.insertOne({coursename: "TEST123", lat: 123, lng: 123});
-        let req = mock.mockRequest({coursename: "TEST"});
+        location.locations.insertOne({coursename: "TEST123", lat: 123, lng: 321});
+        let req = mock.mockRequest({coursename: "TEST123"});
         let res = mock.mockResponse();
         let next = jest.fn();
         await location.deleteLocation(req,res,next);

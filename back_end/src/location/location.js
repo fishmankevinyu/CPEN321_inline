@@ -106,7 +106,7 @@ async function updateLocation(req, res, next){
         await locations.findOneAndUpdate({
             coursename: req.body.coursename
         },{
-            $set: {lat: response.json.results[0].geometry.location.lat, lng: response.json.results[0].geometry.location.lat}
+            $set: {lat: response.json.results[0].geometry.location.lat, lng: response.json.results[0].geometry.location.lng}
         }).then((result) =>{
             res.status(200).json({
                 coursename: result.coursename,
@@ -114,13 +114,11 @@ async function updateLocation(req, res, next){
                 lng: result.lng
             });
         }).catch((err)=>{
-            console.log(err);
             res.status(400).json({
                 failure: err
             });
         });
     }).catch((err)=>{
-        console.log(err);
         res.status(400).json({failure: err});
     })
 }
@@ -144,8 +142,8 @@ async function deleteLocation(req, res, next){
 
 /*
 getLocation: get the lat and lng of the course
-get request: json parameters - coursename
-endpoint: /location/latlng
+req params - coursename
+endpoint: /location/latlng/:coursename
 
 chooseLocation: get all the similar results of the given address
 get request: json parameters - address
