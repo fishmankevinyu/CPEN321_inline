@@ -259,7 +259,7 @@ router.put("/:id", updateCourse);
 router.delete("/:id", deleteCourse);
 router.get("/students/:id", getStudents);
 router.post("/name", getByName);
-router.post("/drop/:userid&:courseid", dropCourse); 
+router.delete("/drop/:userid&:courseid", dropCourse); 
 
 module.exports = {router,
                 newCourse,
