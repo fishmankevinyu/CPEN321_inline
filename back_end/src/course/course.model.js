@@ -6,7 +6,8 @@ const schema = new Schema({
   teachers: {type:[{type:String, required: true}]},
   createdDate: { type: Date, default: Date.now },
   AA: {type: Number, default: 1},
-  students: {type:[{type: String}]}
+  students: {type:[{type: String}]}, 
+  studentSize: {}
 });
 
 schema.set("toJSON",{virtuals: true});

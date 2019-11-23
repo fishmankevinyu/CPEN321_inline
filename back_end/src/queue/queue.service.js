@@ -129,7 +129,7 @@ async function updateEST(req, res, next){
 
 /*private for backend*/
 async function newQueue(coursename,aa){
-  console.log(coursename);
+  console.log("you didn't mock");
   var queue = await db.collection(coursename);
   var estime = await Est.newCourseTime(coursename,aa);
   if(queue && estime ){

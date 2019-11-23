@@ -1,1 +1,3 @@
-module.exports = {testEnvironment: 'node'};
+module.exports = {  collectCoverage: true,
+    coverageReporters: ['text', 'html'],
+    testEnvironment: 'node'};

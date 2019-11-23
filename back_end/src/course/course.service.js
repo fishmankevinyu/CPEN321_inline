@@ -30,7 +30,7 @@ async function addCourse(req, res, next){
   var user = await User.findById(mongoose.Types.ObjectId(req.params.userid));
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.courseid));
 
-    console.log("found");
+    //console.log("found");
 
     if(!user){
         res.status(404).json({message:"no user found"});
@@ -39,10 +39,12 @@ async function addCourse(req, res, next){
         res.status(404).json({message:"no course found"});
     }
     else{
-        console.log(user.username);
-        console.log(course.coursename);
+        //console.log(user.username);
+        //console.log(course.coursename);
+        //console.log("enter else"); 
         var token = await regToken.getToken(user.username);
-        console.log(token);
+        //console.log("mock get token"); 
+        //console.log(token);
         user.updateOne({$addToSet: {"courses": course.coursename}})
           .then(addUser(req, res, next, user, course))
           .then(await topic.subscribe(token, course.coursename))
@@ -65,11 +67,13 @@ async function newCourse(req, res ,next){
     res.status(400).json({message:"course " + req.body.coursename + " exists"});
   }
   else{
+    //console.log("before call queue"); 
     var queue = await queues.newQueue(req.body.coursename,req.body.AA);
+    //console.log("after calling queue"); 
     var course = new Course(req.body);
     res.json(course);
     await course.save();
-    console.log(course.coursename);
+    //console.log(course.coursename);
   }
 }
 
@@ -132,46 +136,19 @@ async function updateCourse(req,res,next){
 
 async function deleteHelper(course){
   var studentArray = course.students; 
-  // Course.aggregate()
-  // .match({coursename: course.coursename})
-  // .project({
-  //   userSize: {$size: "$students"}
-  // })
-  // .exec(async function(err,userSize){
 
-  //   console.log("size: " + userSize); 
-  //   var i; 
-  //   for(i = 0; i<userSize; i++){
-  //     user = course.students[i]; 
-  //     console.log(user.username); 
-  //     var token = await regToken.getToken(user.username);
-  //     user.updateOne({$pull: {"courses": course.coursename}})
-  //     .then(await topic.unsubscribe(token, course.coursename))
-  //     .catch((err) => next(err));
-  //     console.log("updated"); 
-  //     await user.save(); 
-  //   }
-  // }); 
-
-
-  // var userSize = course.students.length;
-
-  // Course.virtual('userSize').get(function(){
-  //   return this.students.length; 
-  // }); 
-
-  // console.log("size: " + course.userSize); 
   var i; 
-  console.log(course.students); 
+  console.log(course.students + " in " + course.coursename); 
   console.log(course.students[0]); 
   for(i = 0; course.students[i] != null; i++){
     user = await User.findOne({username: course.students[i]}); 
-    console.log(user.username); 
+    //console.log(user.username); 
     var token = await regToken.getToken(user.username);
+    console.log("before update one"); 
     user.updateOne({$pull: {"courses": course.coursename}})
     .then(await topic.unsubscribe(token, course.coursename))
     .catch((err) => next(err));
-    console.log("updated"); 
+    //console.log("updated"); 
     await user.save(); 
 
   }
@@ -182,10 +159,10 @@ async function deleteHelper(course){
 
   console.log(timeArray); 
   if(timeArray[0]!=null){
-    console.log("time found"); 
+    //console.log("time found"); 
     await schedule.deleteSchedule(timeArray[0], course.coursename); 
   }
-  console.log(course.coursename); 
+  //console.log(course.coursename); 
   await Course.findByIdAndDelete(mongoose.Types.ObjectId(course._id)); 
 
 }
@@ -198,7 +175,8 @@ delete a specific course
 async function deleteCourse(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id)); 
   await deleteHelper(course)
-  .then(() => {res.json({message:"deleted"}); }).catch((err) => next(err));
+  .then(() => {res.json({message:"deleted"}); })
+  .catch((err) => next(err));
 }
 
 /*
@@ -243,10 +221,10 @@ else{
   user.updateOne({$pull: {"courses": course.coursename}})
   .then(dropUser(req, res, next, user, course))
   .then(await topic.unsubscribe(token, course.coursename))
-  .catch((err) => next(err));}
+  .catch((err) => next(err));
 
   await user.save(); 
-  await course.save(); 
+  await course.save(); }
   
 }
 
@@ -259,7 +237,7 @@ router.put("/:id", updateCourse);
 router.delete("/:id", deleteCourse);
 router.get("/students/:id", getStudents);
 router.post("/name", getByName);
-router.post("/drop/:userid&:courseid", dropCourse); 
+router.delete("/drop/:userid&:courseid", dropCourse); 
 
 module.exports = {router,
                 newCourse,
@@ -268,5 +246,10 @@ module.exports = {router,
                 getByName,
                 getAll,
                 addCourse, 
-                dropCourse
+                dropCourse, 
+                dropUser, 
+                addUser, 
+                getCourseById, 
+                getStudents, 
+                deleteHelper
 };
