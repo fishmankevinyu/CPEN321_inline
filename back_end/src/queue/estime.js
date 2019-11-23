@@ -1,7 +1,5 @@
-const express = require("express");
-const Queue = require("./queue.service");
+const queue_service = require("./queue.service.js");
 const MongoClient = require("mongodb").MongoClient;
-const mongodb = require("mongodb");
 var db;
 var client;
 var ests;
@@ -55,7 +53,7 @@ async function updateAHT(coursename,aht){
 }
 
 async function calEST(coursename,username){
-  var count = await Queue.checkIndex(coursename,username)
+  var count = await queue_service.checkIndex(coursename,username)
   .then(function(newcount){
     return newcount;
   });

@@ -161,4 +161,14 @@ describe("deleteLocation",()=>{
         expect(res.status).toHaveBeenCalledWith(400);
         done();
     });
+
+    test("delete non-existed", async (done)=>{
+        let req = mock.mockRequest({coursename: "DUMB123"});
+        let res = mock.mockResponse();
+        let next = jest.fn();
+        await location.deleteLocation(req,res,next);
+        expect(res.json).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(404);
+        done();
+    })
 });
