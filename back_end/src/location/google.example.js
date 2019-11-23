@@ -3,12 +3,12 @@ const googleMapsClient = require('@google/maps').createClient({
 });
 
 googleMapsClient.geocode({
-    address: 'Macleod Bldg, Vancouver, BC'
+    address: 'Kaiser building, Vancouver, BC'
   }, function(err, response) {
     if (!err) {
       console.log(response.json.results);      
-      //console.log(response.json.results[0].geometry.location.lat);
-
+      console.log(response.json.results[0].geometry.location.lat);
+      console.log(response.json.results[0].geometry.location.lng);
     }
     else{
       console.log(err);

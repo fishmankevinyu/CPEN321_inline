@@ -42,8 +42,11 @@ url: /queue/enque
 need json ({"coursename":"","username":""})
 */
 async function enque(req,res,next){
+  if(req.body.coursename == null){
+    res.status(400).json({failure : "coursename null"});
+    return null;
+  }
   var user = await db.collection(req.body.coursename).findOne({
-    
     username:req.body.username
   }).then((x) => x);
 
@@ -69,13 +72,13 @@ async function enque(req,res,next){
       return newUser;
     }, () => res.status(400).json({messge:"not successful"}));
   }
-  else if(user != null ){
-    res.status(200).json({failure: "you are in queue"}); 
+  else if(user != null){
+    res.status(400).json({failure: "you are in queue already"}); 
   }
   else
   {
     //console.log("in queue/not in course"); 
-  res.status(200).json({failure:"you are not a student of this course"});
+    res.status(400).json({failure:"you are not a student of this course"});
   }
 }
 /*look at the next one that is about to be dequed*/
@@ -94,10 +97,19 @@ url: /queue/deque
 need json {"coursename":""}
 */
 async function deque(req,res,next){
-  await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
+  let check = await db.collection(req.body.coursename).findOne({start:true},{sort:{entime:1}},function(err, user){
     if (err) {throw err;}
+    if(user == null){
+      res.status(400).json({failure: "the queue is empty"});
+      return false;
+    }
     Est.updateAHT(req.body.coursename, Date.now() - user.entime);
+    return true;
   });
+
+  if(check == false){
+    return 0;
+  }
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},
     {sort:{entime: 1}})
@@ -115,7 +127,15 @@ async function selfDeque(req,res,next){
   await db.collection(req.body.coursename).findOneAndDelete(
     {username:req.body.username},
     {sort:{entime: 1}})
-    .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
+    .then( (user) => {
+      console.log(user);
+      if(user.value != null){
+        res.status(200).json({messge:"dequed"});
+      }
+      else{
+        res.status(400).json({failure: "can not find username"});
+      }
+    });
 }
 
 async function updateEST(req, res, next){
@@ -157,6 +177,10 @@ json({"coursename":""})
 this could be merge into course.service deleted, but not yet
 */
 async function queueDelete(req, res, next){
+  if(req.body.coursename == null){
+    res.status(400).json({failure: "coursename null"});
+    return 0;
+  }
   let deleted = await _delete(req.body.coursename);
   console.log("deleted: " + deleted);
   (deleted) ?  res.status(200).json({success: "deleted"})
@@ -173,10 +197,8 @@ already merge into course service, but still can use sepearately
 
 async function newQueue2(req,res,next){
   await newQueue(req.body.coursename,req.body.AA)
-  .then((queue) => (queue) ? res.json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
+  .then((queue) => (queue) ? res.status(200).json({"message":"success"}) : res.sendStatus(400)).catch((err) => next(err));
 }
-
-
 
 /*private*/
 function checkIndex(coursename,username){
@@ -204,8 +226,11 @@ module.exports =
   newQueue,
   enque,
   deque,
+  selfDeque,
+  updateEST,
   newQueue2,
   queueDelete,
+  checkIndex,
   db,
   client
 };

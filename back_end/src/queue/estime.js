@@ -1,7 +1,5 @@
-const express = require("express");
-const Queue = require("./queue.service");
+const queue_service = require("./queue.service.js");
 const MongoClient = require("mongodb").MongoClient;
-const mongodb = require("mongodb");
 var db;
 var client;
 var ests;
@@ -47,14 +45,15 @@ async function updateAHT(coursename,aht){
     console.log(count);
 
   }
-  await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
-
-    if(err) {throw err;}
+  await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}}).then((result)=>{
+    return result;
+  }).catch((err)=>{
+    throw err;
   });
 }
 
 async function calEST(coursename,username){
-  var count = await Queue.checkIndex(coursename,username)
+  var count = await queue_service.checkIndex(coursename,username)
   .then(function(newcount){
     return newcount;
   });

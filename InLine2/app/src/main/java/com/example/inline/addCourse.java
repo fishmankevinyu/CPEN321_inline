@@ -7,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -92,11 +94,11 @@ public class addCourse extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-
                     new registerCourseService().execute(request);
                 }
             }
         });
+
     }
 
     //Function to get course list from db
@@ -158,11 +160,31 @@ public class addCourse extends AppCompatActivity {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 String jsonData = response.body().string();
                 Log.i("idf",jsonData);
+
+                try{
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    String newCourse = Jobject.getString("coursename");
+                    ArrayList<String> tempClassList = MySingletonClass.getInstance().getClasses();
+                    tempClassList.add(newCourse);
+                    MySingletonClass.getInstance().setClasses(tempClassList);
+                    showToast();
+                    navUser();
+                }
+                catch(Exception e){
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
-
             }
         }
+    }
+
+    public void showToast() {
+        Toast.makeText(this, "Add successfully", Toast.LENGTH_LONG).show();
+    }
+
+    public void navUser() {
+        Intent intent = new Intent(this, HomeScreenActivity.class);
+        startActivity(intent);
     }
 }
