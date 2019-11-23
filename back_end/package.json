@@ -15,12 +15,7 @@
   "devDependencies": {
     "jest": "^24.9.0"
   },
-  "jest": {
-    "collectCoverage": true,
-    "coverageReporters": [
-      "html"
-    ]
-  },
+  
   "dependencies": {
     "@google/maps": "^1.0.2",
     "@jest/console": "^24.9.0",

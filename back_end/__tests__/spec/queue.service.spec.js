@@ -37,7 +37,7 @@ describe("queue service testing", () =>{
         await expect(queue_service.db).toBeInstanceOf(Mongodb);
         await queue_service.enque(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(200);
 
         done();
     });
