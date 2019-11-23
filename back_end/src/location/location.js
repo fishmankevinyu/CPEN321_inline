@@ -69,9 +69,9 @@ async function defaultNewLocation(req, res, next){
             lng: lng
         }},{upsert:true}).then((result) =>{
             res.status(200).json({
-                coursename: result.coursename,
-                lat: result.lat,
-                lng: result.lng
+                coursename: result.value.coursename,
+                lat: result.value.lat,
+                lng: result.value.lng
             });
         }).catch((err)=>{
             res.status(400).json({
@@ -108,11 +108,18 @@ async function updateLocation(req, res, next){
         },{
             $set: {lat: response.json.results[0].geometry.location.lat, lng: response.json.results[0].geometry.location.lng}
         }).then((result) =>{
-            res.status(200).json({
-                coursename: result.coursename,
-                lat: result.lat,
-                lng: result.lng
-            });
+            if(result.value != null){
+                res.status(200).json({
+                    coursename: result.value.coursename,
+                    lat: result.value.lat,
+                    lng: result.value.lng
+                });
+            }
+            else{
+                res.status(404).json({
+                    failure: "course not found"
+                })
+            }
         }).catch((err)=>{
             res.status(400).json({
                 failure: err
@@ -130,9 +137,16 @@ async function deleteLocation(req, res, next){
     await locations.findOneAndDelete({
         coursename: req.body.coursename
     }).then((result) =>{
-        res.status(200).json({
-            success: "deleted"
-        });
+        if(result.value != null){
+            res.status(200).json({
+                success: "deleted"
+            });
+        }
+        else{
+            res.status(404).json({
+                failure: "course not found"
+            })
+        };
     }).catch((err)=>{
         res.status(400).json({
             failure: err

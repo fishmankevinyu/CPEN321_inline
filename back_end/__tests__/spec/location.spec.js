@@ -128,6 +128,16 @@ describe("updateLocation", ()=>{
         expect(res.status).toHaveBeenCalledWith(400);
         done();
     });
+
+    test("update non-existed course", async(done)=>{
+        let req = mock.mockRequest({coursename: "NEXT123", address: "Kaiser building, Vancouver, BC"});
+        let res = mock.mockResponse();
+        let next = jest.fn();
+        await location.updateLocation(req,res,next);
+        expect(res.json).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(404);
+        done();
+    });
 });
 
 describe("deleteLocation",()=>{
