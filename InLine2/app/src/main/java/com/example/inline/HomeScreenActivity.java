@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -14,6 +15,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class HomeScreenActivity extends AppCompatActivity {
@@ -23,6 +31,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     public JSONArray classList;
     private ActionBar toolbar;
+    ArrayList<String> onlyCourseList;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = (item) -> {
@@ -49,6 +58,9 @@ public class HomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+        getCourseList();
+
+
 
         toolbar = getSupportActionBar();
         BottomNavigationView navigation = findViewById(R.id.nav_view);
@@ -89,6 +101,59 @@ public class HomeScreenActivity extends AppCompatActivity {
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    //Function to get course list from db
+    protected void getCourseList(){
+
+        Request request = new Request.Builder()
+                .get()
+                .url("http://40.117.195.60:4000/courses")
+                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        new HomeScreenActivity.getCourseService().execute(request);
+
+    }
+
+    public class getCourseService extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response response) {
+
+            try {
+                if (response == null) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                String jsonData = response.body().string();
+
+                try {
+                    JSONArray mJsonArray = new JSONArray(jsonData);
+
+                    onlyCourseList = new ArrayList<String>();
+
+
+                    for (int i = 0; i < mJsonArray.length(); i++) {
+
+                        String teacherName = mJsonArray.getJSONObject(i).getString("teachers");
+                        String courseName = mJsonArray.getJSONObject(i).getString("coursename");
+                        String courseId = mJsonArray.getJSONObject(i).getString("id");
+
+                        onlyCourseList.add(courseName);
+
+                        MySingletonClass.getInstance().setAllClasses(onlyCourseList);
+
+                    }
+                } catch (Exception e) {
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+        }
     }
 
 }

@@ -7,6 +7,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +32,10 @@ import java.util.Set;
 public class addCourse extends AppCompatActivity {
 
     //private OkHttpClient client = new OkHttpClient();
-    private EditText courseName;
+    //private EditText courseName;
+    private String courseName;
     private Button addCourseButton;
+    ArrayList<String> unRegCourse;
 
     HashMap<String, String> courseListAddCourse; //courseList hashmap
 
@@ -40,15 +44,24 @@ public class addCourse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_course);
 
+        unRegCourse = new ArrayList<String>();
+        for (int k = 0; k < MySingletonClass.getInstance().getAllClasses().size(); k++) {
+            if (!MySingletonClass.getInstance().getClasses().contains(MySingletonClass.getInstance().getAllClasses().get(k))){
+                unRegCourse.add(MySingletonClass.getInstance().getAllClasses().get(k));
+            }
+        }
+        MySingletonClass.getInstance().setUnRegClasses(unRegCourse);
+
         getCourseList(); //Get all the courses in the DB on starting the activity
 
         Spinner spinner = (Spinner) findViewById(R.id.add_course_spinner);
-        ArrayList<String> options = MySingletonClass.getInstance().getClasses();
+        ArrayList<String> options = MySingletonClass.getInstance().getUnRegClasses();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,options);
         spinner.setAdapter(adapter);
 
-        courseName = findViewById(R.id.courseName);
+        //courseName = findViewById(R.id.courseName);
+        courseName = String.valueOf(spinner.getSelectedItem());
 
         //On click register for the course
         addCourseButton = (Button) findViewById(R.id.addCourseButton);
@@ -63,7 +76,7 @@ public class addCourse extends AppCompatActivity {
                 Iterator it = courseListAddCourse.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry pair = (Map.Entry)it.next();
-                    if(pair.getKey().toString().toUpperCase().trim().equals(courseName.getText().toString().toUpperCase().trim())){
+                    if(pair.getKey().toString().toUpperCase().trim().equals(courseName.toString().toUpperCase().trim())){
                         hasCourse = true;
                         courseToRegisterId = pair.getValue().toString();
                     }
@@ -81,11 +94,11 @@ public class addCourse extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-
                     new registerCourseService().execute(request);
                 }
             }
         });
+
     }
 
     //Function to get course list from db
@@ -147,11 +160,31 @@ public class addCourse extends AppCompatActivity {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 String jsonData = response.body().string();
                 Log.i("idf",jsonData);
+
+                try{
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    String newCourse = Jobject.getString("coursename");
+                    ArrayList<String> tempClassList = MySingletonClass.getInstance().getClasses();
+                    tempClassList.add(newCourse);
+                    MySingletonClass.getInstance().setClasses(tempClassList);
+                    showToast();
+                    navUser();
+                }
+                catch(Exception e){
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
-
             }
         }
+    }
+
+    public void showToast() {
+        Toast.makeText(this, "Add successfully", Toast.LENGTH_LONG).show();
+    }
+
+    public void navUser() {
+        Intent intent = new Intent(this, HomeScreenActivity.class);
+        startActivity(intent);
     }
 }

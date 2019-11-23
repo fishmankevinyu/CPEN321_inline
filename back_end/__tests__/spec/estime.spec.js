@@ -1,3 +1,4 @@
+jest.mock("../../src/queue/queue.service");
 const queue_service = require("../../src/queue/queue.service");
 const mock = require("../../__mocks__/mock_api_request");
 const Mongodb = require("mongodb").Db;
@@ -52,12 +53,12 @@ describe("estime", () =>{
             AA: 1
           })
 
-        var oldtime = estime.ests.findOne({coursename: "update_aht"})
+        var oldtime = await estime.ests.findOne({coursename: "update_aht"})
         .then((result)=>{
             return result.AHT;
         });
 
-        await estime.updateAHT("update_aht", "4").then((x)=>{
+        await estime.updateAHT("update_aht", 4).then((x)=>{
             return estime.ests.findOne({coursename: "update_aht"});
         })
         .then((result)=>{
@@ -70,10 +71,16 @@ describe("estime", () =>{
         done();
     });
 
-    test("calEST test", async()=>{
+    test("calEST test", async(done)=>{
+        queue_service.checkIndex = jest.fn(()=>{
+            return new Promise((resolve, reject) =>{
+                resolve(1);
+            });
+        });
         await estime.calEST("CPEN433", "kevin").then((x)=>{
             expect(x).toBeDefined();
         });
+        done();
     });
 
 

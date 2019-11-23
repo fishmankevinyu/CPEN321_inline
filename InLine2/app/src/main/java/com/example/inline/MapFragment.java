@@ -1,5 +1,8 @@
 package com.example.inline;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,9 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.wrappers.PackageManagerWrapper;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -17,12 +23,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
+import com.google.android.gms.tasks.Task;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnPoiClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private MapView mMapView;
+    FusedLocationProviderClient fusedLocationProviderClient;
     //private GoogleMap mMap;
 
     @Override
@@ -34,6 +42,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
 
+        //fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        //GetLastLocation();
+
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
@@ -43,7 +54,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMapView.getMapAsync(this);
         return v;
     }
+/*
+    private void GetLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] {
 
+            });
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+    }
+*/
     @Override
     public void onPoiClick(PointOfInterest poi) {
         Toast.makeText(getActivity().getApplicationContext(), "Clicked: " +
