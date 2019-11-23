@@ -1,3 +1,4 @@
+const course_service = require("../../src/course/course.service");
 const queue_service = require("../../src/queue/queue.service");
 const estime = require("../../src/queue/estime");
 const mock = require("../../__mocks__/mock_api_request");
@@ -12,48 +13,61 @@ describe("enque then deque", ()=>{
     var connection;
     beforeAll(async ()=>{
         
-        await MongoClient.connect("mongodb://localhost:27017/Est",function(err,_db){
-            if(err) {throw err;}
-            estime.db = _db.db("ESTs");
-            estime.client = _db;
-            estime.ests = estime.db.collection("ests");
-        });
+        estime.client = await MongoClient.connect("mongodb://localhost:27017/Est",{useUnifiedTopology:true});
+        estime.db = await estime.client.db("ESTs");
+        estime.ests = await estime.db.collection("ests");
 
-        await MongoClient.connect("mongodb://localhost:27017/queue",function(err,_db){
-            if(err) {throw err;}
-            queue_service.db = _db.db("queue");
-            queue_service.client = _db;
-        });
+        queue_service.client = await MongoClient.connect("mongodb://localhost:27017/queue",{useUnifiedTopology:true});
+        queue_service.db = await queue_service.client.db("queue");
         connection = await Mongoose.connect(process.env.MONGODB_URI || config.connectionString, { useCreateIndex: true, useNewUrlParser: true });
         Mongoose.Promise = global.Promise;
     });
 
     afterAll(async () =>{
         connection.close();
-        queue_service.db.close();
         queue_service.client.close();
-        estime.db.close();
         estime.client.close();
     });
 
     test("enque then deque",async ()=>{
 
-        const req = mock.mockRequest({
-            username: "kevin",
-            coursename: "CPEN433"
+        const req1 = mock.mockRequest({
+            coursename: "TEST789",
+            teachers: ["TEST TEACHER"],
+            AA: 1
         });
-        var res = mock.mockResponse();
+        var req2 = {
+            body:{},
+            params:{id: 0}
+        };
+        var res = {
+            status: jest.fn(),
+            json: jest.fn((course)=>{return course}),
+
+        };
         var next = jest.fn();
 
-        await expect(queue_service.db).toBeInstanceOf(Mongodb);
+        await course_service.newCourse(req1, res, next);
+        expect(res.status).toHaveBeenCalledWith(200);
 
-        await queue_service.enque(req, res, next).then((x)=>{
-            expect(res.status).toHaveBeenCalledWith(200);
 
-            return queue_service.deque(req, res, next);
-        }).then((result)=>{
-            expect(res.status).toHaveBeenCalledWith(200);
-        });
+        let admin = {
+            messaging: jest.fn(
+                ()=>{
+                    return {
+                        subscribetotopic: jest.fn()
+                    } 
+                }
+            )
+        };
+
+        // await queue_service.enque(req, res, next).then((x)=>{
+        //     expect(res.status).toHaveBeenCalledWith(200);
+
+        //     return queue_service.deque(req, res, next);
+        // }).then((result)=>{
+        //     expect(res.status).toHaveBeenCalledWith(200);
+        // });
     });
 
 
