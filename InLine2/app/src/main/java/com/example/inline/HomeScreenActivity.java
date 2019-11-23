@@ -58,7 +58,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-        getCourseList();
+
 
 
 
@@ -73,6 +73,8 @@ public class HomeScreenActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         loadFragment(new CourseListFragment());
+
+        //getCourseList();
     }
 
     public String getCourseInfo(int position) {
@@ -82,9 +84,11 @@ public class HomeScreenActivity extends AppCompatActivity {
             String courseName = classInformation.getString("id");
             String courseID = classInformation.getString("section");
             String navigateTo = courseName + courseID;
+
+            /*
             Toast.makeText(getApplicationContext(),
                     "CourseName is " + navigateTo, Toast.LENGTH_LONG)
-                    .show();
+                    .show();*/
 
             return navigateTo;
 
@@ -104,6 +108,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     }
 
     //Function to get course list from db
+    /*
     protected void getCourseList(){
 
         Request request = new Request.Builder()
@@ -114,7 +119,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                 .header("Content-Type", "application/json")
                 .build();
 
-        new HomeScreenActivity.getCourseService().execute(request);
+        new getCourseService().execute(request);
 
     }
 
@@ -136,10 +141,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
 
                     for (int i = 0; i < mJsonArray.length(); i++) {
-
-                        String teacherName = mJsonArray.getJSONObject(i).getString("teachers");
                         String courseName = mJsonArray.getJSONObject(i).getString("coursename");
-                        String courseId = mJsonArray.getJSONObject(i).getString("id");
 
                         onlyCourseList.add(courseName);
 
@@ -154,6 +156,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                 Log.i("idf", e.getLocalizedMessage());
             }
         }
-    }
+    }*/
 
 }

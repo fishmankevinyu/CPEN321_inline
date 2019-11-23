@@ -164,7 +164,57 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     MySingletonClass.getInstance().setClasses(classList);
+                    getCourseList();
                     navMainScreen();
+                } catch (Exception e) {
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+        }
+    }
+
+    protected void getCourseList(){
+
+        Request request = new Request.Builder()
+                .get()
+                .url("http://40.117.195.60:4000/courses")
+                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        new getCourseService().execute(request);
+
+    }
+
+    public class getCourseService extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response response) {
+
+            try {
+                if (response == null) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                String jsonData = response.body().string();
+
+                try {
+                    JSONArray mJsonArray = new JSONArray(jsonData);
+
+                    ArrayList<String> onlyCourseList = new ArrayList<String>();
+
+
+                    for (int i = 0; i < mJsonArray.length(); i++) {
+                        String courseName = mJsonArray.getJSONObject(i).getString("coursename");
+
+                        onlyCourseList.add(courseName);
+
+                        MySingletonClass.getInstance().setAllClasses(onlyCourseList);
+
+                    }
                 } catch (Exception e) {
                 }
 

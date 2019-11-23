@@ -61,13 +61,15 @@ public class addCourse extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         //courseName = findViewById(R.id.courseName);
-        courseName = String.valueOf(spinner.getSelectedItem());
+        //courseName = String.valueOf(spinner.getSelectedItem());
 
         //On click register for the course
         addCourseButton = (Button) findViewById(R.id.addCourseButton);
         addCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                courseName = String.valueOf(spinner.getSelectedItem());
 
                 Boolean hasCourse = false;
                 String courseToRegisterId = "";
