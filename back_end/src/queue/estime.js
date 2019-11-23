@@ -47,9 +47,10 @@ async function updateAHT(coursename,aht){
     console.log(count);
 
   }
-  await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}},function(err, est){
-
-    if(err) {throw err;}
+  await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}}).then((result)=>{
+    return result;
+  }).catch((err)=>{
+    throw err;
   });
 }
 

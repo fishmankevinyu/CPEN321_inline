@@ -3,26 +3,26 @@ const MongoClient = require("mongodb").MongoClient;
 const mongodb = require("mongodb");
 
 var db;
-var db2;
+var client;
 var tokens;
 
 
 
-MongoClient.connect("mongodb://localhost:27017/Token",function(err,_db){
+MongoClient.connect("mongodb://localhost:27017/Token",{useUnifiedTopology:true},function(err,_db){
    if(err) {
        throw err;
     }
+    client = _db;
     db = _db.db("RegTokens");
     tokens = db.collection("regTokens");
-    db2 = _db;
 });
 
 async function addToken(username,token){
-    await tokens.findOneAndUpdate({username}, {$set:{token}},{upsert: true})
+    await tokens.findOneAndUpdate({username: username}, {$set:{token: token}},{upsert: true})
     .then(function(regToken){
-      console.log("success: ");
-    }, function(err){
-      console.log("failed: ");
+      console.log("success");
+    }).catch(function(err){
+      throw "addToken error";
     });
 }
 
@@ -31,12 +31,18 @@ async function deleteToken(username,token){
 }
 
 async function getToken(username){
-  var regToken = await tokens.findOne({username});
+  var regToken = await tokens.findOne({username: username}).then((result)=>{
+    console.log(result);
+    return result;
+  });
   return regToken.token; 
 }
 
 module.exports = {
   addToken,
   deleteToken,
-  getToken
+  getToken,
+  db,
+  client,
+  tokens
 };
