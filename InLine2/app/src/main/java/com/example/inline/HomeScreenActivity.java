@@ -76,7 +76,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         loadFragment(new CourseListFragment());
 
-        getCourseList();
+        //getCourseList();
     }
 
     public String getCourseInfo(int position) {
@@ -111,6 +111,8 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     //Function to get course list from db
 
+
+    /*
 
     protected void getCourseList(){
 
@@ -167,6 +169,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                 Log.i("idf", e.getLocalizedMessage());
             }
         }
-    }
+    }*/
 
 }

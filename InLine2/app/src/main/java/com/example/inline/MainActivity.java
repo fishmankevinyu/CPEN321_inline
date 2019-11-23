@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
                 finally{
                     response.body().close();
-                    navMainScreen();
+                    getCourseList();
                 }
 
             } catch (IOException e) {
@@ -182,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
     protected void getCourseList(){
 
         Request request = new Request.Builder()
@@ -193,31 +193,23 @@ public class MainActivity extends AppCompatActivity {
                 .header("Content-Type", "application/json")
                 .build();
 
-        new getCourseServiceFromMain().execute(request);
 
-    }*/
+        new getCourseServiceForHomeScreen().execute(request);
 
-    public class getCourseServiceFromMain extends AsyncTask<Request, Void, Response> {
+    }
 
-        @Override
-        protected Response doInBackground(Request... requests) {
-            Response response = null;
-            try {
-                response = client.newCall(requests[0]).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return response;
-        }
+    public class getCourseServiceForHomeScreen extends OkHTTPService {
 
         @Override
-        protected void onPostExecute(Response response) {
+        protected void onPostExecute(Response Aresponse) {
 
             try {
-                if (response == null) throw new IOException("Unexpected code " + response);
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
+                if (!Aresponse.isSuccessful()) throw new IOException("Unexpected code " + Aresponse);
 
-                String jsonData = response.body().string();
+                Log.i("idf", Aresponse.toString());
+
+                String jsonData = Aresponse.body().string();
 
                 try {
                     JSONArray mJsonArray = new JSONArray(jsonData);
@@ -225,15 +217,26 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<String> onlyCourseList = new ArrayList<String>();
 
 
+                    HashMap<String,String> courseListAddCourse = new HashMap<String, String>();
+
+
                     for (int i = 0; i < mJsonArray.length(); i++) {
                         String courseName = mJsonArray.getJSONObject(i).getString("coursename");
-
                         onlyCourseList.add(courseName);
-
-                        MySingletonClass.getInstance().setAllClasses(onlyCourseList);
-
+                        String courseId = mJsonArray.getJSONObject(i).getString("id");
+                        courseListAddCourse.put(courseName, courseId);
                     }
+
+
+                    MySingletonClass.getInstance().setAllClasses(onlyCourseList);
+                    MySingletonClass.getInstance().setAllClassHashMap(courseListAddCourse);
                 } catch (Exception e) {
+                }
+
+                finally{
+                    Aresponse.body().close();
+
+                    navMainScreen();
                 }
 
             } catch (IOException e) {
@@ -242,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     public void showToast() {
         Toast.makeText(this, "Wrong username or password!", Toast.LENGTH_LONG).show();
     }

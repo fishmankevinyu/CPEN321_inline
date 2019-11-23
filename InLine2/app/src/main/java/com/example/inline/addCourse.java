@@ -186,10 +186,13 @@ public class addCourse extends AppCompatActivity {
                     ArrayList<String> tempClassList = MySingletonClass.getInstance().getClasses();
                     tempClassList.add(newCourse);
                     MySingletonClass.getInstance().setClasses(tempClassList);
-                    showToast();
-                    navUser();
+                    //showToast();
                 }
                 catch(Exception e){
+                }
+
+                finally{
+                    navUser();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
