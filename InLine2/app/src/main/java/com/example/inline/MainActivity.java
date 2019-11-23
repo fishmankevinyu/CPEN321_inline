@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.editText1);
         password = (EditText) findViewById(R.id.editText2);
 
+
+
         MySingletonClass.getInstance().setName(username.getText().toString());
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, new OnSuccessListener<InstanceIdResult>() {
@@ -164,9 +166,13 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     MySingletonClass.getInstance().setClasses(classList);
-                    getCourseList();
-                    navMainScreen();
+
                 } catch (Exception e) {
+                }
+
+                finally{
+                    response.body().close();
+                    navMainScreen();
                 }
 
             } catch (IOException e) {
@@ -176,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
     protected void getCourseList(){
 
         Request request = new Request.Builder()
@@ -186,11 +193,22 @@ public class MainActivity extends AppCompatActivity {
                 .header("Content-Type", "application/json")
                 .build();
 
-        new getCourseService().execute(request);
+        new getCourseServiceFromMain().execute(request);
 
-    }
+    }*/
 
-    public class getCourseService extends OkHTTPService {
+    public class getCourseServiceFromMain extends AsyncTask<Request, Void, Response> {
+
+        @Override
+        protected Response doInBackground(Request... requests) {
+            Response response = null;
+            try {
+                response = client.newCall(requests[0]).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
 
         @Override
         protected void onPostExecute(Response response) {

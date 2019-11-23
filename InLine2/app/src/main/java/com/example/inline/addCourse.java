@@ -52,7 +52,7 @@ public class addCourse extends AppCompatActivity {
         }
         MySingletonClass.getInstance().setUnRegClasses(unRegCourse);
 
-        getCourseList(); //Get all the courses in the DB on starting the activity
+        //getCourseList(); //Get all the courses in the DB on starting the activity
 
         Spinner spinner = (Spinner) findViewById(R.id.add_course_spinner);
         ArrayList<String> options = MySingletonClass.getInstance().getUnRegClasses();
@@ -75,7 +75,9 @@ public class addCourse extends AppCompatActivity {
                 String courseToRegisterId = "";
 
                 //Iterate through courses to find match
-                Iterator it = courseListAddCourse.entrySet().iterator();
+                Iterator it = MySingletonClass.getInstance().getAllClassHashMap().entrySet().iterator();
+
+
                 while (it.hasNext()) {
                     Map.Entry pair = (Map.Entry)it.next();
                     if(pair.getKey().toString().toUpperCase().trim().equals(courseName.toString().toUpperCase().trim())){
@@ -83,6 +85,17 @@ public class addCourse extends AppCompatActivity {
                         courseToRegisterId = pair.getValue().toString();
                     }
                 }
+
+
+                /*
+                ArrayList<String> allClasses = MySingletonClass.getInstance().getAllClasses();
+
+                for(int i = 0; i < allClasses.size(); i++){
+                    if(allClasses.get(i).toUpperCase().trim().equals(courseName.toString().toUpperCase().trim())){
+                        hasCourse = true;
+                        courseTo
+                    }
+                }*/
 
                 if(hasCourse == true){
 
@@ -103,7 +116,10 @@ public class addCourse extends AppCompatActivity {
 
     }
 
+
     //Function to get course list from db
+
+    /*
     protected void getCourseList(){
 
         Request request = new Request.Builder()
@@ -117,6 +133,7 @@ public class addCourse extends AppCompatActivity {
         new getCourseService().execute(request);
 
     }
+
 
     public class getCourseService extends OkHTTPService {
 
@@ -150,7 +167,7 @@ public class addCourse extends AppCompatActivity {
                 Log.i("idf", e.getLocalizedMessage());
             }
         }
-    }
+    }*/
 
     //No need to parse response body after registering for course
     //Maybe show success message here
