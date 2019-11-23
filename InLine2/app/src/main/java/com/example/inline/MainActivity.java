@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                 finally{
                     response.body().close();
+                    response.close();
                     getCourseList();
                 }
 
@@ -207,9 +209,12 @@ public class MainActivity extends AppCompatActivity {
                 if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
                 if (!Aresponse.isSuccessful()) throw new IOException("Unexpected code " + Aresponse);
 
-                Log.i("idf", Aresponse.toString());
+                //Log.i("idf", Aresponse.toString());
 
-                String jsonData = Aresponse.body().string();
+
+                ResponseBody responseBodyCopy = Aresponse.peekBody(Long.MAX_VALUE);
+                String jsonData = responseBodyCopy.string();
+                //String jsonData = Aresponse.body().string();
 
                 try {
                     JSONArray mJsonArray = new JSONArray(jsonData);
@@ -235,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
 
                 finally{
                     Aresponse.body().close();
-
                     navMainScreen();
                 }
 
