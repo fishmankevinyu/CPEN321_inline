@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         username = (EditText) findViewById(R.id.editText1);
         password = (EditText) findViewById(R.id.editText2);
+
+
 
         MySingletonClass.getInstance().setName(username.getText().toString());
 
@@ -164,8 +168,14 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     MySingletonClass.getInstance().setClasses(classList);
-                    navMainScreen();
+
                 } catch (Exception e) {
+                }
+
+                finally{
+                    response.body().close();
+                    response.close();
+                    getCourseList();
                 }
 
             } catch (IOException e) {
@@ -175,6 +185,70 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected void getCourseList(){
+
+        Request request = new Request.Builder()
+                .get()
+                .url("http://40.117.195.60:4000/courses")
+                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+
+        new getCourseServiceForHomeScreen().execute(request);
+
+    }
+
+    public class getCourseServiceForHomeScreen extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response Aresponse) {
+
+            try {
+                if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
+                if (!Aresponse.isSuccessful()) throw new IOException("Unexpected code " + Aresponse);
+
+                //Log.i("idf", Aresponse.toString());
+
+
+                ResponseBody responseBodyCopy = Aresponse.peekBody(Long.MAX_VALUE);
+                String jsonData = responseBodyCopy.string();
+                //String jsonData = Aresponse.body().string();
+
+                try {
+                    JSONArray mJsonArray = new JSONArray(jsonData);
+
+                    ArrayList<String> onlyCourseList = new ArrayList<String>();
+
+
+                    HashMap<String,String> courseListAddCourse = new HashMap<String, String>();
+
+
+                    for (int i = 0; i < mJsonArray.length(); i++) {
+                        String courseName = mJsonArray.getJSONObject(i).getString("coursename");
+                        onlyCourseList.add(courseName);
+                        String courseId = mJsonArray.getJSONObject(i).getString("id");
+                        courseListAddCourse.put(courseName, courseId);
+                    }
+
+
+                    MySingletonClass.getInstance().setAllClasses(onlyCourseList);
+                    MySingletonClass.getInstance().setAllClassHashMap(courseListAddCourse);
+                } catch (Exception e) {
+                }
+
+                finally{
+                    Aresponse.body().close();
+                    navMainScreen();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+        }
+    }
     public void showToast() {
         Toast.makeText(this, "Wrong username or password!", Toast.LENGTH_LONG).show();
     }
