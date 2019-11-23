@@ -7,8 +7,8 @@ function sendNotification(topicTemp){
 
     var message = {
           notification: {
-            title: "topic test",
-            body: "hahahahahaha"
+            title: "Office hour: " + topicTemp,
+            body: "Time for lining up! "
           },
       topic: topicTemp
     };

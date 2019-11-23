@@ -48,15 +48,20 @@ async function addTime(req, res, next){
     
 }
 
+// async function getTimeService(coursename){
+//     var timeArray = await times.find({coursename}).toArray();
+//     return timeArray;
+// }
+
 async function getTimeService(coursename){
-    var timeArray = await times.find({coursename}).toArray();
-    return timeArray;
+    var time = await times.find({coursename});
+    return time;
 }
 
 async function getTime(req, res, next){
-    var timeArray = await getTimeService(req.body.coursename);
-    if(timeArray){
-        res.json(timeArray);
+    var time = await getTimeService(req.body.coursename);
+    if(time){
+        res.json(time);
     }
     else{
         res.status(400).json({message: "cannot get time"});
