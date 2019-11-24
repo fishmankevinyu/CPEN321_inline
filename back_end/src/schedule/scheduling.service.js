@@ -43,12 +43,17 @@ function addSchedule(newTime,coursename){
   if(newTime.dayOfWeek == null){
     dayOfWeek = "*";
   }
+
+  console.log("task is " + minute + " " + hour + " " + dayOfMon + " " + month + " " + dayOfWeek); 
+
   var task = cron.schedule(minute + " " + hour + " " + dayOfMon + " " + month + " " + dayOfWeek, () => {
     console.log("time to send notification!");
     //User.find()
     send.sendNotification(coursename);
 
     
+  }, {
+    timezone: "America/Los_Angeles"
   }); 
   var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
   console.log("add schedule: key is " + key); 
@@ -57,6 +62,7 @@ function addSchedule(newTime,coursename){
     throw "time already exists"; 
   }
   else{
+    console.log("set map"); 
     map.set(key, task); 
     return task; 
   }
