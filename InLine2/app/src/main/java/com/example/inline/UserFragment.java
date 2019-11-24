@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import okhttp3.OkHttpClient;
-
 
 public class UserFragment extends Fragment {
 

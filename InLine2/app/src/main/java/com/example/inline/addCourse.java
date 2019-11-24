@@ -22,15 +22,13 @@ import java.util.Map;
 
 public class addCourse extends AppCompatActivity {
 
-    private ArrayList<String> unRegCourse;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_course);
 
         Button addCourseButton;
-        unRegCourse = new ArrayList<String>();
+        ArrayList<String> unRegCourse = new ArrayList<String>();
         for (int k = 0; k < MySingletonClass.getInstance().getAllClasses().size(); k++) {
             if (!MySingletonClass.getInstance().getClasses().contains(MySingletonClass.getInstance().getAllClasses().get(k))){
                 unRegCourse.add(MySingletonClass.getInstance().getAllClasses().get(k));
