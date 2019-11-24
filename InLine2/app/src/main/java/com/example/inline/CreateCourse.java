@@ -116,23 +116,12 @@ public class CreateCourse extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Response response) {
-            //super.onPostExecute(response); what does this line do
-
-            //TODO have a spinner when waiting for asynch wait
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                Log.i("idf", "Response is successful");
                 String jsonData = response.body().string();
                 Log.i("idf", jsonData);
-
-                try{
-                    JSONObject Jobject = new JSONObject(jsonData);
-                    //courseid = Jobject.getString("id");
-                }
-                catch(Exception e){
-                }
             }
             catch (IOException e) {
                 e.printStackTrace();

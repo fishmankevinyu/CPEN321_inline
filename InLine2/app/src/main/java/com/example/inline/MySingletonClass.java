@@ -16,6 +16,7 @@ public class MySingletonClass {
     private String userId;
     private HashMap<String,String> courseHashMap;
     private ArrayList<courseCoordinates> courseListCoord;
+    private String coursename_settime;
 
 
     public static MySingletonClass getInstance() {
@@ -47,11 +48,7 @@ public class MySingletonClass {
     public ArrayList<String> getClasses(){return this.classes;}
 
     ////////////////Course Operation///////////////////////////
-    private String coursename_queue;
-    public void setCourseQueue(String coursename_queue) { this.coursename_queue = coursename_queue;}
-    public String getCourseQueue(){return this.coursename_queue;}
 
-    private String coursename_settime;
     public void setCourseSettime(String coursename_settime) { this.coursename_settime = coursename_settime;}
     public String getCourseSettime(){return this.coursename_settime;}
 

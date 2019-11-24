@@ -6,20 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.MediaType;
@@ -29,64 +22,26 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import xdroid.toaster.Toaster;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public class queueActivity extends AppCompatActivity {
 
     private OkHttpClient client = new OkHttpClient();
     private Button enqueCourseButton;
-    private Button dequeCourseButton;
-    private Button deleteCourseButton;
-    private String courseid;
 
-    TextView courseTextView;
-    TextView waitTimeTextView;
-    TextView officeHourTimeView;
+    public TextView courseTextView;
+    public TextView waitTimeTextView;
+    public TextView officeHourTimeView;
 
-    //private TextView courseName;
-    //private TextView estimatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue);
 
-        courseTextView = (TextView) findViewById(R.id.enqueCourseName);
-        waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
-        officeHourTimeView = (TextView) findViewById(R.id.officeHourTime) ;
+        Button dequeCourseButton;
+        Button deleteCourseButton;
 
-        courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
-
-        officeHourTimeView.setText(CourseSingletonClass.getInstance().getOfficeHourTime());
-
-        waitTimeTextView.setText("Please Enque");
-
-        enqueCourseButton = (Button) findViewById(R.id.enqueButton);
-        ///////////////////////////////////////////////////////////////////
-        Calendar cal = Calendar.getInstance();
-        Date currentTime = cal.getTime();
-
-        String dayOfWeek = (""+currentTime.toString().charAt(0)+currentTime.toString().charAt(1)+currentTime.toString().charAt(2)).toUpperCase();
-        String hourStr = ""+currentTime.toString().charAt(11)+currentTime.toString().charAt(12);
-        int hour = Integer.parseInt(hourStr);
-        String minuteStr = ""+currentTime.toString().charAt(14)+currentTime.toString().charAt(15);
-        int minute = Integer.parseInt(minuteStr);
-        Log.i("ex_hour", String.valueOf(hour));
-        Log.i("ex_minute", String.valueOf(minute));
-        int time = 60 * hour + minute;
-        int ep_hour = Integer.parseInt(CourseSingletonClass.getInstance().getHour());
-        int ep_minute = Integer.parseInt(CourseSingletonClass.getInstance().getminute());
-        Log.i("ep_hour", String.valueOf(ep_hour));
-        Log.i("ep_minute",String.valueOf(ep_minute));
-        int ep_time = 60 * ep_hour + ep_minute;
-        Log.i("ep_time", String.valueOf(ep_time));
-        Log.i("ex_time",String.valueOf(time));
-
-        if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
-            enqueCourseButton.setEnabled(false);
-        }
-
-        ///////////////////////////////////////////////////////////////////
+        onCreateInitialization();
 
         enqueCourseButton = (Button) findViewById(R.id.enqueButton);
         enqueCourseButton.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +71,6 @@ public class queueActivity extends AppCompatActivity {
         });
 
         //For self deque
-
         dequeCourseButton = (Button) findViewById(R.id.dequeButton);
         dequeCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,9 +104,6 @@ public class queueActivity extends AppCompatActivity {
 
         });
 
-
-
-        /////////////////////////////////////////////////////////////////////////////////
         deleteCourseButton = (Button) findViewById(R.id.deleteCourseButton);
         deleteCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +131,6 @@ public class queueActivity extends AppCompatActivity {
                 new queueActivity.DeleteAsyncTask().execute(request);
             }
         });
-        //////////////////////////////////////////////////////////////////////////
     }
 
     //No need to parse response body after registering for course
@@ -255,7 +205,7 @@ public class queueActivity extends AppCompatActivity {
         protected void onPostExecute(Response response) {
             //super.onPostExecute(response); what does this line do
 
-            //TODO have a spinner when waiting for asynch wait
+            String courseid;
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -345,5 +295,33 @@ public class queueActivity extends AppCompatActivity {
     public void navUser() {
         Intent intent = new Intent(this, HomeScreenActivity.class);
         startActivity(intent);
+    }
+
+    public void onCreateInitialization(){
+
+        courseTextView = (TextView) findViewById(R.id.enqueCourseName);
+        waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
+        officeHourTimeView = (TextView) findViewById(R.id.officeHourTime) ;
+        courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
+        officeHourTimeView.setText(CourseSingletonClass.getInstance().getOfficeHourTime());
+        waitTimeTextView.setText("Please Enque");
+        enqueCourseButton = (Button) findViewById(R.id.enqueButton);
+
+        Calendar cal = Calendar.getInstance();
+        Date currentTime = cal.getTime();
+        String dayOfWeek = (""+currentTime.toString().charAt(0)+currentTime.toString().charAt(1)+currentTime.toString().charAt(2)).toUpperCase();
+        String hourStr = ""+currentTime.toString().charAt(11)+currentTime.toString().charAt(12);
+        int hour = Integer.parseInt(hourStr);
+        String minuteStr = ""+currentTime.toString().charAt(14)+currentTime.toString().charAt(15);
+        int minute = Integer.parseInt(minuteStr);
+        int time = 60 * hour + minute;
+        int ep_hour = Integer.parseInt(CourseSingletonClass.getInstance().getHour());
+        int ep_minute = Integer.parseInt(CourseSingletonClass.getInstance().getminute());
+        int ep_time = 60 * ep_hour + ep_minute;
+
+        if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
+            enqueCourseButton.setEnabled(false);
+        }
+
     }
 }
