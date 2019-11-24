@@ -229,7 +229,10 @@ describe("course service testing", () =>{
     });
 });
 
-    topic.subscribe = jest.fn(); 
+    topic.subscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+        resolve(0);
+    });
+});
 
         await courseService.addCourse(req, res, next).then((x)=>{
             expect(topic.subscribe).toHaveBeenCalledTimes(1); 
@@ -340,7 +343,10 @@ courseService.dropUser = jest.fn(()=>{return new Promise((resolve,reject)=>{
 });
 });
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
     await courseService.dropCourse(req, res, next).then((x)=>{
         expect(topic.unsubscribe).toHaveBeenCalledTimes(1); 
@@ -515,7 +521,10 @@ time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
 });
 });
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
     const helper = {
     
@@ -585,7 +594,10 @@ time.getTimeService = jest.fn(()=>{return [{coursename: "123"}]}
 schedule.deleteSchedule = jest.fn(); 
 
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
 await courseService.deleteCourse(req, res, next).then((x)=>{
     
@@ -640,7 +652,10 @@ time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
 schedule.deleteSchedule = jest.fn(); 
 
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
 await courseService.deleteCourse(req, res, next).then((x)=>{
     
