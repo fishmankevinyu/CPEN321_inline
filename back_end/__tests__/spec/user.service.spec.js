@@ -100,6 +100,69 @@ test("authenticate - user not found", async ()=>{
 
 });
 
+test("update - user not found", async ()=>{
+
+    const userParam = ({
+                                 firstName: "lalala",
+                                 lastName: "hahaha",
+                                 isTeacher: true,
+                                 username: "12321",
+                                 password: "dididi"
+                                 
+          });
+
+    var id = "5dd7ac2b15979b2eb7df7241"; 
+   var errMng; 
+   try{
+       await userService.update(id, userParam); 
+   }
+   catch(e){
+       errMng = e; 
+   }
+   await expect(errMng).toBe("User not found"); 
+
+});
+
+test("update - already taken", async ()=>{
+
+    const userParam = ({
+                                 firstName: "lalala",
+                                 lastName: "hahaha",
+                                 isTeacher: true,
+                                 username: "1234321",
+                                 password: "dididi"
+                                 
+          });
+
+    var id = "5ddb016ef491c272b623cf99"; 
+   var errMng; 
+   try{
+       await userService.update(id, userParam); 
+   }
+   catch(e){
+       errMng = e; 
+   }
+   await expect(errMng).toBe("Username " + userParam.username + " is already taken"); 
+
+});
+
+test("update - already taken", async ()=>{
+
+    const userParam = ({
+                                 firstName: "lalala",
+                                 lastName: "hahaha",
+                                 isTeacher: true,
+                                 username: "12321",
+                                 password: "dididi"
+                                 
+          });
+
+    var id = "5ddb016ef491c272b623cf99"; 
+    await userService.update(id, userParam); 
+
+});
+
+
 
    test("getByID", async ()=>{
 
