@@ -1,23 +1,21 @@
 const config = require("../../src/config.json");
-var admin = require("firebase-admin");
+jest.mock("firebase-admin"); 
 var serviceAccount = require("../../src/fcm/privatekey.json"); //put the generated private key path here
-const {MongoClient} = require('mongodb');
-var send2 = require("../../src/fcm/send2.js")
+var send2 = require("../../src/fcm/send2.js"); 
 
-const mockRequest = (data) =>{
-    return data;
-};
+// jest.mock('firebase-admin', () => {
+//     return {
+//       messaging: jest.fn().mockReturnThis(),
+//       subscribeToTopic: jest.fn()
+//     };
+//   });
 
-
-const mockResponse = () => {
-    const res = {};
-    res.status = jest.fn().mockReturnValue(res);
-    res.json = jest.fn().mockReturnValue(res);
-    return res;
-}
+  //var admin = require("firebase-admin"); 
 
 
 describe("fcm", () =>{
+
+    let adminStub, api;
          
          global.console = {
            log: jest.fn(),
@@ -25,78 +23,90 @@ describe("fcm", () =>{
            error: jest.fn()
          }
 
-         beforeAll(() => {
-                   
-        admin.initializeApp({
-              credential: admin.credential.cert(serviceAccount),
-              databaseURL: "https://inline-f628d.firebaseio.com"
-        });
-        });
+    //admin.messaging = jest.fn(); 
+
+        //admin.initializeApp = jest.fn(); 
+
+    //     beforeAll(() => {
+    //     admin.initializeApp({
+    //         credential: admin.credential.cert(serviceAccount),
+    //         databaseURL: "https://inline-f628d.firebaseio.com"
+    //   });
+    // })
+
+        // adminStub = jest.spyOn(admin, "initializeApp");
+        // });
 
          
-    test("subscribe", ()=>{
+    test("subscribe",async ()=>{
+         const token = "1234";
+         const topic = "xxx";
 
-         token = "1234";
-         topic = "xxx";
-         
-         const subscribe = {
-            test(token, topic){
-                send2.subscribe(token, topic);
-            },
-         
-         adminSubscribe(token, topic){
-            admin.messaging().subscribeToTopic(token, topic);
-         }
-         };
+         let admin = {
+            messaging: jest.fn(
+                ()=>{
+                    return {
+                        subscribetotopic: jest.fn()
+                    } 
+                }
+            )
+        }
 
-        const spyTest = jest.spyOn(subscribe, 'test');
-         subscribe.test(token, topic);
-         
-         const spy = jest.spyOn(subscribe, 'adminSubscribe');
-         //subscribe.adminSubscribe(token, topic);
+    // admin.messaging = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    //         resolve(0);
+    //     });
+    // });
 
-         expect(spyTest).toHaveBeenCalledWith(token, topic);
-         expect(global.console.log).toHaveBeenCalledTimes(1);
+    //      admin.messaging().subscribeToTopic = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    //         resolve(0);
+    //     });
+    // });
+    //     admin.messaging().unsubscribeFromTopic = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    //         resolve(0);
+    //     });
+    // });
+
+        await send2.subscribe(token,topic); 
+        expect(admin.messaging().subscribeToTopic).toHaveBeenCalled();
          
          });
          
-         test("unsubscribe", ()=>{
+        //  test("unsubscribe", ()=>{
 
-              token = "1234";
-              topic = "xxx";
+        //       token = "1234";
+        //       topic = "xxx";
               
-              const unsubscribe = {
-                 test(token, topic){
-                     send2.unsubscribe(token, topic);
-                 }
-              };
+        //       const unsubscribe = {
+        //          test(token, topic){
+        //              send2.unsubscribe(token, topic);
+        //          }
+        //       };
 
-             const spyTest = jest.spyOn(unsubscribe, 'test');
-              unsubscribe.test(token, topic);
+        //      const spyTest = jest.spyOn(unsubscribe, 'test');
+        //       unsubscribe.test(token, topic);
 
 
-              expect(spyTest).toHaveBeenCalledWith(token, topic);
-              expect(global.console.log).toHaveBeenCalledTimes(1);
+        //       expect(spyTest).toHaveBeenCalledWith(token, topic);
+        //       expect(global.console.log).toHaveBeenCalledTimes(1);
               
-              });
+        //       });
 
          
-         test("sendNotification", ()=>{
-              topic = "xxx";
+        //  test("sendNotification", ()=>{
+        //       topic = "xxx";
               
-              const send = {
-                 test(topic){
-                     send2.sendNotification(topic);
-                 }
-              };
+        //       const send = {
+        //          test(topic){
+        //              send2.sendNotification(topic);
+        //          }
+        //       };
 
-             const spyTest = jest.spyOn(send, 'test');
-              send.test(topic);
+        //      const spyTest = jest.spyOn(send, 'test');
+        //       send.test(topic);
 
-              expect(spyTest).toHaveBeenCalledWith(topic);
-              expect(global.console.log).toHaveBeenCalledTimes(1);
+        //       expect(spyTest).toHaveBeenCalledWith(topic);
+        //       expect(global.console.log).toHaveBeenCalledTimes(1);
               
-              });
+        //       });
          
-});
-
+        });

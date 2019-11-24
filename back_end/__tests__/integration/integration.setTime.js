@@ -1,11 +1,12 @@
-const queue_service = require("../../src/queue/queue.service");
-const mock = require("../../__mocks__/mock_api_request");
+jest.mock("../../src/schedule/scheduling.service"); 
+const config = require("../../src/config.json");
+const Mongoose = require("mongoose");
+const Course = require("../../src/course/course.model");
+const timeService = require("../../src/course/time.service"); 
 const Mongodb = require("mongodb").Db;
 const MongoClient = require("mongodb").MongoClient;
-const Mongoose = require("mongoose");
-const config = require("../../src/config.json");
-const Db = require("../../src/_helpers/db");
-const time_service = require("../../src/course/time.service");
+const schedule = require("../../src/schedule/scheduling.service"); 
+const courseService = require("../../src/course/course.service"); 
 
 const mockRequest = (data) =>{
     return data;
@@ -18,61 +19,77 @@ const mockResponse = () => {
     return res;
 }
 
-describe("set time", () =>{
+describe("time service testing", () =>{
+
+
     var connection;
-    beforeAll(async ()=>{
-        await MongoClient.connect("mongodb://localhost:27017/time",function(err,_db){
-            if(err) {throw err;}
-            time_service.db = _db.db("time");
-            time_service.client = _db;
-        });
-        connection = await Mongoose.connect(process.env.MONGODB_URI || config.connectionString, { useCreateIndex: true, useNewUrlParser: true })
+    beforeAll( async ()=>{
+        timeService.client = await MongoClient.connect("mongodb://localhost:27017/time",{useUnifiedTopology:true});
+        timeService.db = await timeService.client.db("time");
+        connection = await Mongoose.connect(process.env.MONGODB_URI || config.connectionString, { useCreateIndex: true, useNewUrlParser: true });
         Mongoose.Promise = global.Promise;
     });
 
-    afterAll(async () =>{
-        connection.close();
-        time_service.db.close();
-        time_service.client.close();
+    
+
+
+   test("new course - add time - delete time", async ()=>{
+
+    const req_ = mockRequest({body: {
+        coursename: "testTimeService",
+        teachers: "123"
+        }
     });
+    var res_ = mockResponse();
+    const next_ = jest.fn();
 
-    test("set time integration",async ()=>{
-        expect(time_service.db).toBeInstanceOf(Mongodb);
-         
-         const req = mockRequest({body: {
-                                 coursename: "lalala",
-                                 dayOfWeek: "1",
-                                 hour: "15",
-                                 minute: "30"
-                                 }
-          });
-          var res = mockResponse();
-          const next = jest.fn();
-         
+    
 
-          const newTime = {
-          
-             async test(req, res, next){
-                 await time_service.addTime(req, res, next);
-             },
-          
-          async find(req){
-             return await time_service.db.findOne({coursename: req.body.coursename});
-          }
-          };
+    await courseService.newCourse(req_, res_, next_)
 
-         const spyTest = jest.spyOn(newTime, 'test');
+    
+      
+      var course = await Course.findOne({coursename: "testTimeService"});
+      
+      console.log(course);
 
-         await newTime.test(req, res, next);
+    const req_add = mockRequest({body: {
+        coursename: "testTimeService"
+        }
+});
+    var res_add = mockResponse();
+    const next_add = jest.fn();
 
-         const spy = jest.spyOn(newTime, 'find');
-          const time = await newTime.find(req);
-          
-          await expect(spyTest).toHaveBeenCalledWith(req, res, next);
-//         await expect(res.status).toHaveBeenCalledWit(400);
-          await expect(res.json).toHaveBeenCalledTimes(1);
-          await expect(res.json).toHaveBeenCalledWith({message: "successully added"});
-          
-    });
+    schedule.addSchedule = jest.fn(()=>{return 0; }); 
+    schedule.startSchedule = jest.fn(()=>{return 0; });
+
+    await timeService.addTime(req_add, res_add, next_add).then(()=>{
+        expect(res_add.json).toHaveBeenCalledTimes(1); 
+        expect(res_add.json).toHaveBeenCalledWith({message: "successully added"}); 
+    }); 
+
+    const req_delete = mockRequest({body: {
+        coursename: "testTimeService"
+        }
+});
+    var res_delete = mockResponse();
+    const next_delete = jest.fn();
+    schedule.deleteSchedule = jest.fn(()=>{return 0; });
+
+    await timeService.deleteTime(req_delete, res_delete, next_delete).then(()=>{
+        expect(res_delete.json).toHaveBeenCalledTimes(1); 
+        expect(res_delete.json).toHaveBeenCalledWith({message:"deleted"}); 
+        //expect(timeService.getTimeService).toHaveBeenCalledTimes(1);  
+    }); 
+
+        var deleted = await Course.findOneAndDelete({coursename: "testTimeService"}); 
+        await expect(deleted).toBeDefined(); 
+
+}); 
+
+
+
+
+
 
 });
