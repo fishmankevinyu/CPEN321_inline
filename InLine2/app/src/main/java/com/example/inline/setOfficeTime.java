@@ -1,6 +1,5 @@
 package com.example.inline;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -31,6 +29,7 @@ import okhttp3.Response;
 public class setOfficeTime extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private String coursename;
+    private Spinner spinner;
    // private EditText minute, hour, dayOfWeek;
 
     private TimePicker picker;
@@ -61,7 +60,7 @@ public class setOfficeTime extends AppCompatActivity {
         day_spinner.setAdapter(dataAdapter);
 
 
-        Spinner spinner = (Spinner) findViewById(R.id.course_address_spinner);
+        spinner = (Spinner) findViewById(R.id.course_address_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.address_array, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
@@ -94,7 +93,7 @@ public class setOfficeTime extends AppCompatActivity {
                         dayOfWeek = String.valueOf(6);
                         break;
                     case "SUN":
-                        dayOfWeek = String.valueOf(7);
+                        dayOfWeek = String.valueOf(0);
                         break;
                     default: break;
                 }
@@ -123,7 +122,7 @@ public class setOfficeTime extends AppCompatActivity {
 
                 Log.i("setOfficeTime","Response setOfficeHour");
                 new MyAsyncTask().execute(request);
-                navUser();
+                //navUser();
             }
         });
     }
@@ -151,13 +150,52 @@ public class setOfficeTime extends AppCompatActivity {
                 showToast();
                 String jsonData = response.body().string();
                 Log.i("idf", jsonData);
-                try{
-                    JSONObject Jobject = new JSONObject(jsonData);
+
+                String courseAddress = String.valueOf(spinner.getSelectedItem());
+                
+                MediaType MEDIA_TYPE = MediaType.parse("application/json");
+                JSONObject postdata1 = new JSONObject();
+                try {
+                    postdata1.put("coursename", coursename);
+                    postdata1.put("address", courseAddress);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                catch(Exception e){
-                }
+
+                RequestBody body = RequestBody.create(MEDIA_TYPE, postdata1.toString());
+
+                Request request = new Request.Builder()
+                        .url("http://40.117.195.60:4000/location/default")
+                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                        .post(body)
+                        .header("Accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .build();
+                new setCourseLocation().execute(request);
+
             }
             catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+        }
+    }
+
+    public class setCourseLocation extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response Aresponse) {
+
+            try {
+                if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
+                if (!Aresponse.isSuccessful()) {
+                    navUser();
+                    throw new IOException("Unexpected code " + Aresponse);
+                }
+                navUser();
+
+
+            } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
             }

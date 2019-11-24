@@ -1,7 +1,5 @@
 package com.example.inline;
 
-import java.util.HashMap;
-
 public class CourseSingletonClass {
     private static CourseSingletonClass instance;
 

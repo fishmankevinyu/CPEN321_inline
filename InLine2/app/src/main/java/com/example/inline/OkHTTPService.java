@@ -2,14 +2,7 @@ package com.example.inline;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,10 +31,6 @@ public class OkHTTPService extends AsyncTask<Request, Void, Response>{
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 String jsonData = response.body().string();
                 Log.i("idf", jsonData);
-
-                try {
-                } catch(Exception e){
-                }
 
                 } catch (IOException e) {
                 e.printStackTrace();

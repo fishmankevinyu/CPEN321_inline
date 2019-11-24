@@ -203,7 +203,8 @@ describe("course service testing", () =>{
 
         test("addCourse - valid", async ()=>{
               
-            const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: "5dd73008cbca511a742b65b7"}});
+            var courseTemp = await Course.findOne({coursename: "123"}); 
+            const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: courseTemp.id}});
             var res = mockResponse();
             const next = jest.fn();
 
@@ -229,7 +230,10 @@ describe("course service testing", () =>{
     });
 });
 
-    topic.subscribe = jest.fn(); 
+    topic.subscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+        resolve(0);
+    });
+});
 
         await courseService.addCourse(req, res, next).then((x)=>{
             expect(topic.subscribe).toHaveBeenCalledTimes(1); 
@@ -314,7 +318,8 @@ describe("course service testing", () =>{
 
     test("dropCourse - valid", async ()=>{
           
-        const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: "5dd73008cbca511a742b65b7"}});
+        var courseTemp = await Course.findOne({coursename: "123"}); 
+        const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: courseTemp.id}});
         var res = mockResponse();
         const next = jest.fn();
 
@@ -340,7 +345,10 @@ courseService.dropUser = jest.fn(()=>{return new Promise((resolve,reject)=>{
 });
 });
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
     await courseService.dropCourse(req, res, next).then((x)=>{
         expect(topic.unsubscribe).toHaveBeenCalledTimes(1); 
@@ -515,7 +523,10 @@ time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
 });
 });
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
     const helper = {
     
@@ -585,7 +596,10 @@ time.getTimeService = jest.fn(()=>{return [{coursename: "123"}]}
 schedule.deleteSchedule = jest.fn(); 
 
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
 await courseService.deleteCourse(req, res, next).then((x)=>{
     
@@ -640,7 +654,10 @@ time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
 schedule.deleteSchedule = jest.fn(); 
 
 
-topic.unsubscribe = jest.fn(); 
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
 await courseService.deleteCourse(req, res, next).then((x)=>{
     

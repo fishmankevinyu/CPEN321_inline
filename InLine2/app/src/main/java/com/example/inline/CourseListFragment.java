@@ -19,15 +19,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static android.content.ContentValues.TAG;
 
 public class CourseListFragment extends Fragment {
     private OkHttpClient client = new OkHttpClient();
@@ -192,7 +189,7 @@ public class CourseListFragment extends Fragment {
                         case "6":
                             dayOfWeek = "SAT";
                             break;
-                        case "7":
+                        case "0":
                             dayOfWeek = "SUN";
                             break;
                         default:break;
