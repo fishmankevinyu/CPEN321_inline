@@ -113,9 +113,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             Log.i("idf", "asdasdf");
 
             for(int i = 0; i < courseList.size(); i++){
-                LatLng tempCord = new LatLng(courseList.get(i).lat, courseList.get(i).lng);
 
-                mMap.addMarker(new MarkerOptions().position(tempCord).title(courseList.get(i).courseName));
+                Log.i("idf", "lets see if it breaks");
+
+                if(courseList.get(i).equals("null")) {
+
+
+                } else {
+                    LatLng tempCord = new LatLng(courseList.get(i).lat, courseList.get(i).lng);
+
+                    mMap.addMarker(new MarkerOptions().position(tempCord).title(courseList.get(i).courseName));
+                }
             }
 
             LatLng macleodMarker = new LatLng(49.261885, -123.248379);
@@ -193,13 +201,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                             Log.i("idf", arrayOfClassInfo.get(i).toString());
 
-                            Double latitude = arrayOfClassInfo.getJSONObject(i).getDouble("lat");
-                            Double longitude = arrayOfClassInfo.getJSONObject(i).getDouble("lng");
-                            String courseName = arrayOfClassInfo.getJSONObject(i).getString("coursename");
+                            if(!arrayOfClassInfo.get(i).toString().equals("null")) {
 
-                            courseCordinates temp = new courseCordinates(latitude,longitude,courseName);
+                                Double latitude = arrayOfClassInfo.getJSONObject(i).getDouble("lat");
+                                Double longitude = arrayOfClassInfo.getJSONObject(i).getDouble("lng");
+                                String courseName = arrayOfClassInfo.getJSONObject(i).getString("coursename");
 
-                            courseList.add(temp);
+                                courseCordinates temp = new courseCordinates(latitude, longitude, courseName);
+
+                                courseList.add(temp);
+                            }
 
 
                         }
