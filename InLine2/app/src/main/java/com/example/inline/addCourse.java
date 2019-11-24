@@ -17,14 +17,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class addCourse extends AppCompatActivity {
 
-    private String courseName;
-    ArrayList<String> unRegCourse;
+    private ArrayList<String> unRegCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +51,7 @@ public class addCourse extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                courseName = String.valueOf(spinner.getSelectedItem());
+                String courseName = String.valueOf(spinner.getSelectedItem());
 
                 Boolean hasCourse = false;
                 String courseToRegisterId = "";

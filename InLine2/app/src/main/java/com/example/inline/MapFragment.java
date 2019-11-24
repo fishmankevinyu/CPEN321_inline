@@ -1,8 +1,6 @@
 package com.example.inline;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +14,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import com.google.android.gms.common.wrappers.PackageManagerWrapper;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -39,7 +35,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private MapView mMapView;
-    FusedLocationProviderClient fusedLocationProviderClient;
+
     //private GoogleMap mMap;
 
 

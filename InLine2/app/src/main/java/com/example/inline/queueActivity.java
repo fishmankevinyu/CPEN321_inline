@@ -28,9 +28,9 @@ public class queueActivity extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private Button enqueCourseButton;
 
-    TextView courseTextView;
-    TextView waitTimeTextView;
-    TextView officeHourTimeView;
+    public TextView courseTextView;
+    public TextView waitTimeTextView;
+    public TextView officeHourTimeView;
 
 
     @Override
@@ -71,7 +71,6 @@ public class queueActivity extends AppCompatActivity {
         });
 
         //For self deque
-
         dequeCourseButton = (Button) findViewById(R.id.dequeButton);
         dequeCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,9 +104,6 @@ public class queueActivity extends AppCompatActivity {
 
         });
 
-
-
-        /////////////////////////////////////////////////////////////////////////////////
         deleteCourseButton = (Button) findViewById(R.id.deleteCourseButton);
         deleteCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +131,6 @@ public class queueActivity extends AppCompatActivity {
                 new queueActivity.DeleteAsyncTask().execute(request);
             }
         });
-        //////////////////////////////////////////////////////////////////////////
     }
 
     //No need to parse response body after registering for course

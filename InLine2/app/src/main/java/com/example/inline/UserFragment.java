@@ -14,7 +14,6 @@ import okhttp3.OkHttpClient;
 
 
 public class UserFragment extends Fragment {
-    private OkHttpClient client = new OkHttpClient();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
