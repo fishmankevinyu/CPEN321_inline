@@ -49,7 +49,7 @@ function addSchedule(newTime,coursename){
     send.sendNotification(coursename);
 
     
-  }); 
+  },{scheduled:true, timezone: "Canada/Pacific"}); 
   var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
   console.log("add schedule: key is " + key); 
 

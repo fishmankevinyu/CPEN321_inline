@@ -23,6 +23,7 @@ MongoClient.connect("mongodb://localhost:27017/queue",{useUnifiedTopology:true},
 async function enqueCheck(username,coursename){
   var user = await User.findOne({username, courses: coursename}).then((x)=>{return x;}).catch((err)=>{return err;});
   var course = await Course.findOne({coursename, students: username}).then((x)=>{return x;}).catch((err)=>{return err;});
+  var time = await time_service.getTimeService(coursename);
   if(user == null || course == null){
     return false;
   }
