@@ -7,8 +7,12 @@
     <string name="title_activity_maps">Map</string>
 
     <string-array name="address_array">
-        <item>MCLD</item>
-        <item>ESB</item>
-        <item>MATH</item>
+        <!--
+        <item>MCLD</item>-->
+
+        <item>Macleod Bldg 2356 Main Mall</item>
+        <item>Earth Sciences Building, 2207 Main Mall</item>
+        <item>Math Building 1984 Mathematics Road</item>
+        <item>Hennings Bldg, Vancouver, BC V6T 1Z1</item>
     </string-array>
 </resources>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import com.google.android.gms.common.wrappers.PackageManagerWrapper;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -25,6 +29,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnPoiClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -33,14 +44,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     FusedLocationProviderClient fusedLocationProviderClient;
     //private GoogleMap mMap;
 
+    ArrayList<courseCordinates> courseList;
+    Boolean hackyWait;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        getCourseLocations();
+
         // inflat and return the layout
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
+
 
         //fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         //GetLastLocation();
@@ -79,6 +97,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap mMap;
         mMap = googleMap;
         googleMap.setOnPoiClickListener(this);
+
+        /*
         LatLng CPEN321 = new LatLng(49.261885, -123.248379);
         LatLng MATH100 = new LatLng(49.266326, -123.254789);
         LatLng CHEM200 = new LatLng(49.266012, -123.253058);
@@ -86,7 +106,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap.addMarker(new MarkerOptions().position(CPEN321).title("CPEN321").snippet("MCLD"));
         mMap.addMarker(new MarkerOptions().position(MATH100).title("MATH100").snippet("MATH"));
         mMap.addMarker(new MarkerOptions().position(CHEM200).title("CHEM200").snippet("CHEM"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(CPEN321));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(CPEN321));*/
+
+        if (courseList != null){
+
+            Log.i("idf", "asdasdf");
+
+            for(int i = 0; i < courseList.size(); i++){
+                LatLng tempCord = new LatLng(courseList.get(i).lat, courseList.get(i).lng);
+
+                mMap.addMarker(new MarkerOptions().position(tempCord).title(courseList.get(i).courseName));
+            }
+
+            LatLng macleodMarker = new LatLng(49.261885, -123.248379);
+
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(macleodMarker));
+
+        }
     }
 
 
@@ -113,4 +149,86 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
+    protected void getCourseLocations(){
+
+        Request request = new Request.Builder()
+                .get()
+                .url("http://40.117.195.60:4000/location/all/" + MySingletonClass.getInstance().getName())
+                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+
+        new getCourseLocations().execute(request);
+
+    }
+
+    public class getCourseLocations extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response Aresponse) {
+
+            try {
+                if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
+                if (!Aresponse.isSuccessful()) throw new IOException("Unexpected code " + Aresponse);
+
+
+
+                ResponseBody responseBodyCopy = Aresponse.peekBody(Long.MAX_VALUE);
+                String jsonData = responseBodyCopy.string();
+
+                Log.i("idf", jsonData);
+                //String jsonData = Aresponse.body().string();
+
+                courseList = new ArrayList<courseCordinates>();
+
+                try {
+                    JSONObject Jobject = new JSONObject(jsonData);
+
+                    JSONArray arrayOfClassInfo = Jobject.getJSONArray("array");
+
+                        for(int i = 0; i < arrayOfClassInfo.length(); i++){
+
+                            Log.i("idf", arrayOfClassInfo.get(i).toString());
+
+                            Double latitude = arrayOfClassInfo.getJSONObject(i).getDouble("lat");
+                            Double longitude = arrayOfClassInfo.getJSONObject(i).getDouble("lng");
+                            String courseName = arrayOfClassInfo.getJSONObject(i).getString("coursename");
+
+                            courseCordinates temp = new courseCordinates(latitude,longitude,courseName);
+
+                            courseList.add(temp);
+
+
+                        }
+
+
+                } catch (Exception e) {
+                }
+
+                finally{
+                    hackyWait = true;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+        }
+    }
+
+    public class courseCordinates {
+        public Double lat;
+        public Double lng;
+        public String courseName;
+
+        public courseCordinates(Double lat, Double lng, String courseName) {
+            this.lat = lat;
+            this.lng = lng;
+            this.courseName = courseName;
+        }
+    }
+
 }

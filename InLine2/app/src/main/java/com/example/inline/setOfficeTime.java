@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,10 +28,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class setOfficeTime extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private String coursename;
+    private Spinner spinner;
    // private EditText minute, hour, dayOfWeek;
 
     private TimePicker picker;
@@ -61,7 +64,7 @@ public class setOfficeTime extends AppCompatActivity {
         day_spinner.setAdapter(dataAdapter);
 
 
-        Spinner spinner = (Spinner) findViewById(R.id.course_address_spinner);
+        spinner = (Spinner) findViewById(R.id.course_address_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.address_array, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
@@ -123,7 +126,7 @@ public class setOfficeTime extends AppCompatActivity {
 
                 Log.i("setOfficeTime","Response setOfficeHour");
                 new MyAsyncTask().execute(request);
-                navUser();
+                //navUser();
             }
         });
     }
@@ -156,8 +159,64 @@ public class setOfficeTime extends AppCompatActivity {
                 }
                 catch(Exception e){
                 }
+
+                finally{
+
+
+                    String courseAddress = String.valueOf(spinner.getSelectedItem());
+
+                    /*
+                    <item>MCLD</item>
+        <item>ESB</item>
+        <item>MATH</item>*/
+
+
+                    MediaType MEDIA_TYPE = MediaType.parse("application/json");
+                    JSONObject postdata1 = new JSONObject();
+                    try {
+                        postdata1.put("coursename", coursename);
+                        postdata1.put("address", courseAddress);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    RequestBody body = RequestBody.create(MEDIA_TYPE, postdata1.toString());
+
+                    Request request = new Request.Builder()
+                            .url("http://40.117.195.60:4000/location/default")
+                            .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                            .post(body)
+                            .header("Accept", "application/json")
+                            .header("Content-Type", "application/json")
+                            .build();
+                    new setCourseLocation().execute(request);
+
+                }
             }
             catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+        }
+    }
+
+    public class setCourseLocation extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response Aresponse) {
+
+            try {
+                if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
+                if (!Aresponse.isSuccessful()) {
+                    navUser();
+                    throw new IOException("Unexpected code " + Aresponse);
+                }
+
+
+                navUser();
+
+
+            } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
             }
