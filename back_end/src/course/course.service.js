@@ -135,10 +135,10 @@ async function updateCourse(req,res,next){
 }
 
 async function deleteHelper(course){
-  var studentArray = course.students; 
+  //var studentArray = course.students; 
 
   var i; 
-  console.log(course.students + " in " + course.coursename); 
+  //console.log(course.students + " in " + course.coursename); 
   console.log(course.students[0]); 
   for(i = 0; course.students[i] != null; i++){
     user = await User.findOne({username: course.students[i]}); 

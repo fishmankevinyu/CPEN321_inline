@@ -6,8 +6,6 @@ const userService = require("./user.service");
 const regToken = require("../fcm/regToken");
 
 function authenticate(req, res, next) {
-    console.log("enter login"); 
-    console.log(req.body.registrationToken);
     userService.authenticate({username: req.body.username , password: req.body.password})
         .then((user) => user ? res.json(user) : res.status(400).json({ message: "Username or password is incorrect" }))
         .catch((err) => next(err));
@@ -18,7 +16,7 @@ function authenticate(req, res, next) {
 function getCourses(req, res, next){
 
     userService.getById(req.params.id)
-        .then((user) => user ? res.json(user.courses) : res.sendStatus(404))
+        .then((user) => json(user.courses))
         .catch((err) => next(err));
 }
 
@@ -76,10 +74,14 @@ router.delete("/:id", _delete);
 router.get("/courses/:id", getCourses);
 
 
-module.exports = { router,
+module.exports = {router,
   getAll,
   register,
-  authenticate
-
-};
+  authenticate, 
+  getCurrent, 
+  getById, 
+  update, 
+  getCourses, 
+  delete: _delete
+}; 
 //module.exports = router;

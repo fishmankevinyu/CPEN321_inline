@@ -4,6 +4,7 @@ const topic = require("../../src/fcm/send2.js");
 var admin = require("firebase-admin");
 var serviceAccount = require("../../src/fcm/privatekey.json");  //put the generated private key path here
 
+console.log = jest.fn(); 
 
 describe("fcm", () =>{
 
@@ -22,7 +23,7 @@ describe("fcm", () =>{
          const topicTemp = "xxx";
 
         await topic.subscribe(tokenTemp,topicTemp); 
-        //expect(admin.messaging().subscribeToTopic).toHaveBeenCalled();
+        expect(console.log).toHaveBeenCalledTimes(3);
          
          });
 
@@ -31,7 +32,7 @@ describe("fcm", () =>{
             const topicTemp = "xxx";
    
            await topic.unsubscribe(tokenTemp,topicTemp); 
-           //expect(admin.messaging().subscribeToTopic).toHaveBeenCalled();
+           expect(console.log).toHaveBeenCalledTimes(6);
             
             });
 
@@ -40,7 +41,7 @@ describe("fcm", () =>{
                 const topicTemp = "xxx";
        
                await topic.sendNotification(topicTemp); 
-               //expect(admin.messaging().subscribeToTopic).toHaveBeenCalled();
+               expect(console.log).toHaveBeenCalledTimes(7);
                 
                 });
    

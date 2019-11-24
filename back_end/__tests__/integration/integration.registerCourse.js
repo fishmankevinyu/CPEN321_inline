@@ -45,8 +45,8 @@ describe("course integration testing", () =>{
 
          const newCourse = {
 
-         async find(req){
-            return await Course.findOne({coursename: req.body.coursename});
+         async find(req_new){
+            return await Course.findOne({coursename: req_new.body.coursename});
          }
          };
          jest.spyOn(newCourse, 'find');
@@ -64,7 +64,12 @@ describe("course integration testing", () =>{
 
         // var deleted = await Course.findOneAndDelete({coursename: req.body.coursename}); 
         // await expect(deleted).toBeDefined(); 
-        const req_add = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: "5dd73008cbca511a742b65b7"}});
+
+
+
+
+        var courseTemp = await Course.findOne({coursename: "123"}); 
+        const req_add = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: courseTemp.id}});
         var res_add = mockResponse();
         const next_add = jest.fn();
 
@@ -77,63 +82,87 @@ describe("course integration testing", () =>{
 
     Course.findByID = jest.fn(()=>{return new Promise((resolve,reject)=>{
         resolve(0);
-        });
     });
+});
 
-    userParam.updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
-    });
+userParam.updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
+courseService.addUser = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
-    topic.subscribe = jest.fn(); 
+topic.subscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
 
     await courseService.addCourse(req_add, res_add, next_add).then((x)=>{
         expect(topic.subscribe).toHaveBeenCalledTimes(1); 
     });
 
-    const req_drop = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: "5dd73008cbca511a742b65b7"}});
+
+    const req_drop = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: courseTemp.id}});
     var res_drop = mockResponse();
     const next_drop = jest.fn();
 
-    topic.unsubscribe = jest.fn(); 
+
+
+topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+  });
+  });
 
     await courseService.dropCourse(req_drop, res_drop, next_drop).then((x)=>{
         expect(topic.unsubscribe).toHaveBeenCalledTimes(1); 
     });
 
-    const req_delete = mockRequest({params: {id: "5dd73008cbca511a742b65b7"}});
+
+
+    const req_delete = mockRequest({params: {id: course.id}});
     var res_delete = mockResponse();
     const next_delete = jest.fn();
 
-
     User.findOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
+      resolve(0);
+  });
 });
 
-    var i = 0; 
-    User.findOne({username: course.students[i]}).updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
+  var i = 0; 
+  User.findOne({username: course.students[i]}).updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
+      resolve(0);
+  });
 });
 
-    regToken.getToken = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
+  regToken.getToken = jest.fn(()=>{return new Promise((resolve,reject)=>{
+      resolve(0);
+  });
 });
 
 time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
-    resolve(0);
+  resolve(0);
 });
 });
-schedule.deleteSchedule = jest.fn();
+schedule.deleteSchedule = jest.fn(); 
+
 
 await courseService.deleteCourse(req_delete, res_delete, next_delete).then((x)=>{
-    
-    expect(res_delete.json).toHaveBeenCalledTimes(1);
-    expect(res_delete.json).toHaveBeenCalledWith({message:"deleted"}); 
+  
+  expect(res_delete.json).toHaveBeenCalledTimes(1);
+  expect(res_delete.json).toHaveBeenCalledWith({message:"deleted"}); 
 });
+
+
+
+
+
+
+
+
+    
  });    
 
     });
