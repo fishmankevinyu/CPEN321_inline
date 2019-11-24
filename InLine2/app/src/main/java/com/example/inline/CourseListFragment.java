@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -65,6 +66,8 @@ public class CourseListFragment extends Fragment {
             }
         }
 
+        //getCourseList();
+
         JSONObject json_data;
 
         ArrayList<String> classListNames = new ArrayList<String>();
@@ -91,8 +94,30 @@ public class CourseListFragment extends Fragment {
                 String coursename = getCourseInfo(position);
                 CourseSingletonClass.getInstance().setCourse(coursename);
 
+                MediaType MEDIA_TYPE = MediaType.parse("application/json");
+                JSONObject postdata1 = new JSONObject();
+                try {
+                    postdata1.put("coursename", coursename);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(MEDIA_TYPE, postdata1.toString());
+
+                Request request = new Request.Builder()
+                        .url("http://40.117.195.60:4000/time/get")
+                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                        .post(body)
+                        .header("Accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .build();
+
+                new CourseListFragment.MyAsyncTask().execute(request);
+
+
+                /*
                 Intent intent = new Intent(CourseListFragment.this.getActivity(), queueActivity.class);
-                startActivity(intent);
+                startActivity(intent);*/
 
                 //String coursename = getCourseInfo(position);
                 //Log.e(TAG, "onItemClick: courseInfo lalala");
@@ -114,31 +139,6 @@ public class CourseListFragment extends Fragment {
         } catch (JSONException e) {
             return null;
         }
-    }
-
-    /*
-    private void registerCourse(String coursename, String username) {
-        MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
-        JSONObject postdata = new JSONObject();
-        try {
-            postdata.put("coursename", coursename);
-            Log.e(TAG, ""+coursename);
-            postdata.put("username", username);
-        } catch(JSONException e){
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-        Request request = new Request.Builder()
-                .url("http://40.117.195.60:4000/queue/enque")
-                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
-                .post(body)
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/json")
-                .build();
-
-        new CourseListFragment.MyAsyncTask().execute(request);
     }
 
     class MyAsyncTask extends AsyncTask<Request, Void, Response> {
@@ -164,19 +164,62 @@ public class CourseListFragment extends Fragment {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                 Log.i("idf", "Response is successful");
-
                 String jsonData = response.body().string();
-
                 Log.i("idf", jsonData);
 
-            } catch (IOException e) {
+                try{
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    String hour = Jobject.getString("hour");
+                    String minite = Jobject.getString("minute");
+                    String day = Jobject.getString("dayOfWeek");
+                    String dayOfWeek = "";
+                    switch (day) {
+                        case "1":
+                            dayOfWeek = "MON";
+                            break;
+                        case "2":
+                            dayOfWeek = "TUE";
+                            break;
+                        case "3":
+                            dayOfWeek = "WED";
+                            break;
+                        case "4":
+                            dayOfWeek = "THU";
+                            break;
+                        case "5":
+                            dayOfWeek = "FRI";
+                            break;
+                        case "6":
+                            dayOfWeek = "SAT";
+                            break;
+                        case "7":
+                            dayOfWeek = "SUN";
+                            break;
+                        default:break;
+                    }
+                    if(minite.length() < 2){ //For case where minute are a single digit
+                        minite = "0" + minite;
+                    }
+                    String officeHourTime = hour+":"+minite+" "+dayOfWeek;
+                    CourseSingletonClass.getInstance().setdayOfWeek(dayOfWeek);
+                    CourseSingletonClass.getInstance().setHour(hour);
+                    CourseSingletonClass.getInstance().setminute(minite);
+                    CourseSingletonClass.getInstance().setOfficeHourTime(officeHourTime);
+                }
+                catch(Exception e){
+                }
+
+                finally{
+                    Intent intent = new Intent(CourseListFragment.this.getActivity(), queueActivity.class);
+                    startActivity(intent);
+                }
+            }
+            catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
-
             }
-
         }
 
-    }*/
+    }
 
 }

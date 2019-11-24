@@ -30,8 +30,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -139,7 +137,10 @@ public class MainActivity extends AppCompatActivity {
                     throw new IOException("Unexpected code " + response);
                 }
 
-                String jsonData = response.body().string();
+                ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+                String jsonData = responseBodyCopy.string();
+
+                //String jsonData = response.body().string();
                 Log.i("idf", jsonData);
                 try {
 
@@ -174,8 +175,21 @@ public class MainActivity extends AppCompatActivity {
 
                 finally{
                     response.body().close();
-                    response.close();
-                    getCourseList();
+                    //response.close();
+                    //getCourseList();
+                    //navMainScreen();
+
+
+                    Request request = new Request.Builder()
+                            .get()
+                            .url("http://40.117.195.60:4000/courses")
+                            .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                            //.header("Accept", "application/json")
+                            //.header("Content-Type", "application/json")
+                            .build();
+
+
+                    new getCourseServiceForHomeScreen().execute(request);
                 }
 
             } catch (IOException e) {
@@ -184,6 +198,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     protected void getCourseList(){
 
@@ -249,6 +265,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
     public void showToast() {
         Toast.makeText(this, "Wrong username or password!", Toast.LENGTH_LONG).show();
     }

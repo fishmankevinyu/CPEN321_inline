@@ -44,9 +44,7 @@ public class setOfficeTime extends AppCompatActivity {
         picker.setIs24HourView(true);
 
         coursename = MySingletonClass.getInstance().getCourseSettime();
-//        minute = (EditText)findViewById(R.id.edit_coursetime_minute);
-//        hour = (EditText)findViewById(R.id.edit_coursetime_hour);
-//        dayOfWeek = (EditText)findViewById(R.id.edit_coursetime_day);
+
 
         Spinner day_spinner = (Spinner) findViewById(R.id.edit_coursetime_day);
         List<String> dayList = new ArrayList<String>();
@@ -55,6 +53,8 @@ public class setOfficeTime extends AppCompatActivity {
         dayList.add("WED");
         dayList.add("THU");
         dayList.add("FRI");
+        dayList.add("SAT");
+        dayList.add("SUN");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, dayList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -89,6 +89,12 @@ public class setOfficeTime extends AppCompatActivity {
                         break;
                     case "FRI":
                         dayOfWeek = String.valueOf(5);
+                        break;
+                    case "SAT":
+                        dayOfWeek = String.valueOf(6);
+                        break;
+                    case "SUN":
+                        dayOfWeek = String.valueOf(7);
                         break;
                     default: break;
                 }
