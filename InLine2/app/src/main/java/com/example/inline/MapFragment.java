@@ -44,15 +44,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     FusedLocationProviderClient fusedLocationProviderClient;
     //private GoogleMap mMap;
 
-    ArrayList<courseCordinates> courseList;
-    Boolean hackyWait;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        getCourseLocations();
-
+        if(MySingletonClass.getInstance().getAllCourseCoordinates() == null) {
+            getCourseLocations();
+        }
         // inflat and return the layout
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) v.findViewById(R.id.mapView);
@@ -98,15 +97,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         googleMap.setOnPoiClickListener(this);
 
-        /*
+
         LatLng CPEN321 = new LatLng(49.261885, -123.248379);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(CPEN321));
+        /*
         LatLng MATH100 = new LatLng(49.266326, -123.254789);
         LatLng CHEM200 = new LatLng(49.266012, -123.253058);
 
         mMap.addMarker(new MarkerOptions().position(CPEN321).title("CPEN321").snippet("MCLD"));
         mMap.addMarker(new MarkerOptions().position(MATH100).title("MATH100").snippet("MATH"));
         mMap.addMarker(new MarkerOptions().position(CHEM200).title("CHEM200").snippet("CHEM"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(CPEN321));*/
+        */
+
+        ArrayList<courseCoordinates> courseList = MySingletonClass.getInstance().getAllCourseCoordinates();
 
         if (courseList != null){
 
@@ -190,7 +193,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 Log.i("idf", jsonData);
                 //String jsonData = Aresponse.body().string();
 
-                courseList = new ArrayList<courseCordinates>();
+                ArrayList<courseCoordinates> courseList = new ArrayList<courseCoordinates>();
 
                 try {
                     JSONObject Jobject = new JSONObject(jsonData);
@@ -207,7 +210,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                                 Double longitude = arrayOfClassInfo.getJSONObject(i).getDouble("lng");
                                 String courseName = arrayOfClassInfo.getJSONObject(i).getString("coursename");
 
-                                courseCordinates temp = new courseCordinates(latitude, longitude, courseName);
+                                courseCoordinates temp = new courseCoordinates(latitude, longitude, courseName);
 
                                 courseList.add(temp);
                             }
@@ -215,30 +218,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                         }
 
+                        MySingletonClass.getInstance().setAllCourseCoordinates(courseList);
+
 
                 } catch (Exception e) {
                 }
-
-                finally{
-                    hackyWait = true;
-                }
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
             }
-        }
-    }
-
-    public class courseCordinates {
-        public Double lat;
-        public Double lng;
-        public String courseName;
-
-        public courseCordinates(Double lat, Double lng, String courseName) {
-            this.lat = lat;
-            this.lng = lng;
-            this.courseName = courseName;
         }
     }
 
