@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,6 +28,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import xdroid.toaster.Toaster;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class queueActivity extends AppCompatActivity {
 
@@ -38,6 +41,7 @@ public class queueActivity extends AppCompatActivity {
 
     TextView courseTextView;
     TextView waitTimeTextView;
+    TextView officeHourTimeView;
 
     //private TextView courseName;
     //private TextView estimatedTime;
@@ -49,18 +53,46 @@ public class queueActivity extends AppCompatActivity {
 
         courseTextView = (TextView) findViewById(R.id.enqueCourseName);
         waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
-
+        officeHourTimeView = (TextView) findViewById(R.id.officeHourTime) ;
 
         courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
+
+        officeHourTimeView.setText(CourseSingletonClass.getInstance().getOfficeHourTime());
+
         waitTimeTextView.setText("Please Enque");
+
+        enqueCourseButton = (Button) findViewById(R.id.enqueButton);
+        ///////////////////////////////////////////////////////////////////
+        Calendar cal = Calendar.getInstance();
+        Date currentTime = cal.getTime();
+
+        String dayOfWeek = (""+currentTime.toString().charAt(0)+currentTime.toString().charAt(1)+currentTime.toString().charAt(2)).toUpperCase();
+        String hourStr = ""+currentTime.toString().charAt(11)+currentTime.toString().charAt(12);
+        int hour = Integer.parseInt(hourStr);
+        String minuteStr = ""+currentTime.toString().charAt(14)+currentTime.toString().charAt(15);
+        int minute = Integer.parseInt(minuteStr);
+        Log.i("ex_hour", String.valueOf(hour));
+        Log.i("ex_minute", String.valueOf(minute));
+        int time = 60 * hour + minute;
+        int ep_hour = Integer.parseInt(CourseSingletonClass.getInstance().getHour());
+        int ep_minute = Integer.parseInt(CourseSingletonClass.getInstance().getminute());
+        Log.i("ep_hour", String.valueOf(ep_hour));
+        Log.i("ep_minute",String.valueOf(ep_minute));
+        int ep_time = 60 * ep_hour + ep_minute;
+        Log.i("ep_time", String.valueOf(ep_time));
+        Log.i("ex_time",String.valueOf(time));
+
+        if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
+            enqueCourseButton.setEnabled(false);
+        }
+
+        ///////////////////////////////////////////////////////////////////
 
         enqueCourseButton = (Button) findViewById(R.id.enqueButton);
         enqueCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                     MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
                     JSONObject postEnqueue = new JSONObject();
                     try {
                         postEnqueue.put("coursename", CourseSingletonClass.getInstance().getCourse());
@@ -167,7 +199,7 @@ public class queueActivity extends AppCompatActivity {
 
                 try{
                     JSONObject Jobject = new JSONObject(jsonData);
-                    String estimatedTimeString = Jobject.getString("EST") + " Milliseconds";
+                    String estimatedTimeString = String.valueOf(Jobject.getInt("EST")/60000) + " Min. estimated wait time";
                     waitTimeTextView.setText(estimatedTimeString);
                 }
                 catch(Exception e){
@@ -296,7 +328,6 @@ public class queueActivity extends AppCompatActivity {
                     tempClassList.remove(deleteCourse);
                     MySingletonClass.getInstance().setClasses(tempClassList);
                     Toaster.toast("Course deleted successfully");
-                    //showToast();
                     navUser();
                 }
                 catch(Exception e){
@@ -309,10 +340,6 @@ public class queueActivity extends AppCompatActivity {
 
         }
 
-    }
-
-    public void showToast() {
-        Toast.makeText(this, "Delete successfully", Toast.LENGTH_LONG).show();
     }
 
     public void navUser() {
