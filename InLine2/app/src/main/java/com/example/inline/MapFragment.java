@@ -49,9 +49,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(MySingletonClass.getInstance().getAllCourseCoordinates() == null) {
-            getCourseLocations();
-        }
+        //if(MySingletonClass.getInstance().getAllCourseCoordinates() == null) {
+        getCourseLocations();
+        //}
         // inflat and return the layout
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         mMapView = (MapView) v.findViewById(R.id.mapView);
@@ -93,6 +93,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         GoogleMap mMap;
         mMap = googleMap;
         googleMap.setOnPoiClickListener(this);
@@ -117,21 +118,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             for(int i = 0; i < courseList.size(); i++){
 
-                Log.i("idf", "lets see if it breaks");
-
-                if(courseList.get(i).equals("null")) {
-
-
-                } else {
                     LatLng tempCord = new LatLng(courseList.get(i).lat, courseList.get(i).lng);
 
                     mMap.addMarker(new MarkerOptions().position(tempCord).title(courseList.get(i).courseName));
-                }
+
             }
-
-            LatLng macleodMarker = new LatLng(49.261885, -123.248379);
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(macleodMarker));
 
         }
     }
@@ -196,9 +187,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 ArrayList<courseCoordinates> courseList = new ArrayList<courseCoordinates>();
 
                 try {
-                    JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(jsonData);
 
-                    JSONArray arrayOfClassInfo = Jobject.getJSONArray("array");
+                        JSONArray arrayOfClassInfo = Jobject.getJSONArray("array");
 
                         for(int i = 0; i < arrayOfClassInfo.length(); i++){
 
@@ -214,8 +205,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
                                 courseList.add(temp);
                             }
-
-
                         }
 
                         MySingletonClass.getInstance().setAllCourseCoordinates(courseList);

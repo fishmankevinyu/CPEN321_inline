@@ -211,8 +211,6 @@ public class setOfficeTime extends AppCompatActivity {
                     navUser();
                     throw new IOException("Unexpected code " + Aresponse);
                 }
-
-
                 navUser();
 
 
