@@ -150,44 +150,29 @@ public class setOfficeTime extends AppCompatActivity {
                 showToast();
                 String jsonData = response.body().string();
                 Log.i("idf", jsonData);
-                try{
-                    JSONObject Jobject = new JSONObject(jsonData);
+
+                String courseAddress = String.valueOf(spinner.getSelectedItem());
+                
+                MediaType MEDIA_TYPE = MediaType.parse("application/json");
+                JSONObject postdata1 = new JSONObject();
+                try {
+                    postdata1.put("coursename", coursename);
+                    postdata1.put("address", courseAddress);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                catch(Exception e){
-                }
 
-                finally{
+                RequestBody body = RequestBody.create(MEDIA_TYPE, postdata1.toString());
 
+                Request request = new Request.Builder()
+                        .url("http://40.117.195.60:4000/location/default")
+                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                        .post(body)
+                        .header("Accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .build();
+                new setCourseLocation().execute(request);
 
-                    String courseAddress = String.valueOf(spinner.getSelectedItem());
-
-                    /*
-                    <item>MCLD</item>
-        <item>ESB</item>
-        <item>MATH</item>*/
-
-
-                    MediaType MEDIA_TYPE = MediaType.parse("application/json");
-                    JSONObject postdata1 = new JSONObject();
-                    try {
-                        postdata1.put("coursename", coursename);
-                        postdata1.put("address", courseAddress);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    RequestBody body = RequestBody.create(MEDIA_TYPE, postdata1.toString());
-
-                    Request request = new Request.Builder()
-                            .url("http://40.117.195.60:4000/location/default")
-                            .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
-                            .post(body)
-                            .header("Accept", "application/json")
-                            .header("Content-Type", "application/json")
-                            .build();
-                    new setCourseLocation().execute(request);
-
-                }
             }
             catch (IOException e) {
                 e.printStackTrace();

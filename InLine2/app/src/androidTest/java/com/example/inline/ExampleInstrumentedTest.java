@@ -31,7 +31,6 @@ import static org.hamcrest.core.IsNot.not;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
 
-    private String addCourseString;
     private String createCourseString;
     private String userNameString;
     private String firstNameString;
@@ -50,7 +49,6 @@ public class ExampleInstrumentedTest {
 
     @Before
     public void initValidString() {
-        addCourseString = "CPEN321";
         createCourseString = "CPEN331";
         firstNameString = "Bob";
         lastNameString = "Smith";

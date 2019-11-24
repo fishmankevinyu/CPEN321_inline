@@ -27,21 +27,19 @@ public class queueActivity extends AppCompatActivity {
 
     private OkHttpClient client = new OkHttpClient();
     private Button enqueCourseButton;
-    private Button dequeCourseButton;
-    private Button deleteCourseButton;
-    private String courseid;
 
     TextView courseTextView;
     TextView waitTimeTextView;
     TextView officeHourTimeView;
 
-    //private TextView courseName;
-    //private TextView estimatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue);
+
+        Button dequeCourseButton;
+        Button deleteCourseButton;
 
         onCreateInitialization();
 
@@ -212,7 +210,7 @@ public class queueActivity extends AppCompatActivity {
         protected void onPostExecute(Response response) {
             //super.onPostExecute(response); what does this line do
 
-            //TODO have a spinner when waiting for asynch wait
+            String courseid;
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
