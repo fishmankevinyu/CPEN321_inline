@@ -32,10 +32,6 @@ public class OkHTTPService extends AsyncTask<Request, Void, Response>{
                 String jsonData = response.body().string();
                 Log.i("idf", jsonData);
 
-                try {
-                } catch(Exception e){
-                }
-
                 } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());

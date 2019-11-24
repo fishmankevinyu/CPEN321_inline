@@ -43,42 +43,7 @@ public class queueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue);
 
-        courseTextView = (TextView) findViewById(R.id.enqueCourseName);
-        waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
-        officeHourTimeView = (TextView) findViewById(R.id.officeHourTime) ;
-
-        courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
-
-        officeHourTimeView.setText(CourseSingletonClass.getInstance().getOfficeHourTime());
-
-        waitTimeTextView.setText("Please Enque");
-
-        enqueCourseButton = (Button) findViewById(R.id.enqueButton);
-        ///////////////////////////////////////////////////////////////////
-        Calendar cal = Calendar.getInstance();
-        Date currentTime = cal.getTime();
-
-        String dayOfWeek = (""+currentTime.toString().charAt(0)+currentTime.toString().charAt(1)+currentTime.toString().charAt(2)).toUpperCase();
-        String hourStr = ""+currentTime.toString().charAt(11)+currentTime.toString().charAt(12);
-        int hour = Integer.parseInt(hourStr);
-        String minuteStr = ""+currentTime.toString().charAt(14)+currentTime.toString().charAt(15);
-        int minute = Integer.parseInt(minuteStr);
-        Log.i("ex_hour", String.valueOf(hour));
-        Log.i("ex_minute", String.valueOf(minute));
-        int time = 60 * hour + minute;
-        int ep_hour = Integer.parseInt(CourseSingletonClass.getInstance().getHour());
-        int ep_minute = Integer.parseInt(CourseSingletonClass.getInstance().getminute());
-        Log.i("ep_hour", String.valueOf(ep_hour));
-        Log.i("ep_minute",String.valueOf(ep_minute));
-        int ep_time = 60 * ep_hour + ep_minute;
-        Log.i("ep_time", String.valueOf(ep_time));
-        Log.i("ex_time",String.valueOf(time));
-
-        if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
-            enqueCourseButton.setEnabled(false);
-        }
-
-        ///////////////////////////////////////////////////////////////////
+        onCreateInitialization();
 
         enqueCourseButton = (Button) findViewById(R.id.enqueButton);
         enqueCourseButton.setOnClickListener(new View.OnClickListener() {
@@ -337,5 +302,33 @@ public class queueActivity extends AppCompatActivity {
     public void navUser() {
         Intent intent = new Intent(this, HomeScreenActivity.class);
         startActivity(intent);
+    }
+
+    public void onCreateInitialization(){
+
+        courseTextView = (TextView) findViewById(R.id.enqueCourseName);
+        waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
+        officeHourTimeView = (TextView) findViewById(R.id.officeHourTime) ;
+        courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
+        officeHourTimeView.setText(CourseSingletonClass.getInstance().getOfficeHourTime());
+        waitTimeTextView.setText("Please Enque");
+        enqueCourseButton = (Button) findViewById(R.id.enqueButton);
+
+        Calendar cal = Calendar.getInstance();
+        Date currentTime = cal.getTime();
+        String dayOfWeek = (""+currentTime.toString().charAt(0)+currentTime.toString().charAt(1)+currentTime.toString().charAt(2)).toUpperCase();
+        String hourStr = ""+currentTime.toString().charAt(11)+currentTime.toString().charAt(12);
+        int hour = Integer.parseInt(hourStr);
+        String minuteStr = ""+currentTime.toString().charAt(14)+currentTime.toString().charAt(15);
+        int minute = Integer.parseInt(minuteStr);
+        int time = 60 * hour + minute;
+        int ep_hour = Integer.parseInt(CourseSingletonClass.getInstance().getHour());
+        int ep_minute = Integer.parseInt(CourseSingletonClass.getInstance().getminute());
+        int ep_time = 60 * ep_hour + ep_minute;
+
+        if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
+            enqueCourseButton.setEnabled(false);
+        }
+
     }
 }
