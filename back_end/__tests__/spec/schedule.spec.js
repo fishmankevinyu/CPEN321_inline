@@ -57,13 +57,13 @@ describe("addschedule", ()=>{
         expect(()=>{schedule.addSchedule(newTime,"XXX");}).toThrowError("time already exists");
     });
 
-    test("null time  for addschedule", ()=>{
+    // test("null time  for addschedule", ()=>{
 
-        send2.sendNotification = jest.fn();
-        //schedule.addSchedule(newTime,"XXX");
+    //     send2.sendNotification = jest.fn();
+    //     //schedule.addSchedule(newTime,"XXX");
                     
-        expect(()=>{schedule.addSchedule(null,"XXX");}).toThrowError("newTime is null");
-    });
+    //     expect(()=>{schedule.addSchedule(null,"XXX");}).toThrowError("newTime is null");
+    // });
 
 });
 

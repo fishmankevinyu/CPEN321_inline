@@ -203,7 +203,8 @@ describe("course service testing", () =>{
 
         test("addCourse - valid", async ()=>{
               
-            const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: "5dd73008cbca511a742b65b7"}});
+            var courseTemp = await Course.findOne({coursename: "123"}); 
+            const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: courseTemp.id}});
             var res = mockResponse();
             const next = jest.fn();
 
@@ -317,7 +318,8 @@ describe("course service testing", () =>{
 
     test("dropCourse - valid", async ()=>{
           
-        const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: "5dd73008cbca511a742b65b7"}});
+        var courseTemp = await Course.findOne({coursename: "123"}); 
+        const req = mockRequest({params: {userid: "5dd73060cbca511a742b65ba", courseid: courseTemp.id}});
         var res = mockResponse();
         const next = jest.fn();
 
