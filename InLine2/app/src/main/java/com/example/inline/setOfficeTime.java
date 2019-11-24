@@ -1,6 +1,5 @@
 package com.example.inline;
 
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,14 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +25,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class setOfficeTime extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
@@ -97,7 +93,7 @@ public class setOfficeTime extends AppCompatActivity {
                         dayOfWeek = String.valueOf(6);
                         break;
                     case "SUN":
-                        dayOfWeek = String.valueOf(7);
+                        dayOfWeek = String.valueOf(0);
                         break;
                     default: break;
                 }
