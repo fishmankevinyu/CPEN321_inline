@@ -52,6 +52,8 @@ function addSchedule(newTime,coursename){
     send.sendNotification(coursename);
 
     
+  }, {
+    timezone: "America/Los_Angeles"
   }); 
   var key = coursename + minute + hour + dayOfMon + month + dayOfWeek; 
   console.log("add schedule: key is " + key); 
