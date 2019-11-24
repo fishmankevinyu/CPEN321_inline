@@ -1,6 +1,7 @@
 package com.example.inline;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MySingletonClass {
     private static MySingletonClass instance;
@@ -13,6 +14,7 @@ public class MySingletonClass {
     private ArrayList<String> unRegClass;
     private boolean isteacher;
     private String userId;
+    private HashMap<String,String> courseHashMap;
 
     public static MySingletonClass getInstance() {
         if (instance == null)
@@ -55,4 +57,7 @@ public class MySingletonClass {
 
     public void setUnRegClasses(ArrayList<String> unRegClass){ this.unRegClass = unRegClass;}
     public ArrayList<String> getUnRegClasses(){return this.unRegClass;}
+
+    public void setAllClassHashMap(HashMap<String,String> courseHashMap){ this.courseHashMap = courseHashMap;}
+    public HashMap<String,String> getAllClassHashMap(){return this.courseHashMap;}
 }

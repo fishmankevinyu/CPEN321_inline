@@ -26,6 +26,8 @@ import okhttp3.Response;
 
 public class HomeScreenActivity extends AppCompatActivity {
 
+    OkHTTPService client = new OkHTTPService();
+
     //Have a global array that receives the course
     //info for the registered user
 
@@ -58,7 +60,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-        getCourseList();
+
 
 
 
@@ -73,6 +75,8 @@ public class HomeScreenActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         loadFragment(new CourseListFragment());
+
+        //getCourseList();
     }
 
     public String getCourseInfo(int position) {
@@ -82,9 +86,11 @@ public class HomeScreenActivity extends AppCompatActivity {
             String courseName = classInformation.getString("id");
             String courseID = classInformation.getString("section");
             String navigateTo = courseName + courseID;
+
+            /*
             Toast.makeText(getApplicationContext(),
                     "CourseName is " + navigateTo, Toast.LENGTH_LONG)
-                    .show();
+                    .show();*/
 
             return navigateTo;
 
@@ -104,6 +110,10 @@ public class HomeScreenActivity extends AppCompatActivity {
     }
 
     //Function to get course list from db
+
+
+    /*
+
     protected void getCourseList(){
 
         Request request = new Request.Builder()
@@ -114,20 +124,23 @@ public class HomeScreenActivity extends AppCompatActivity {
                 .header("Content-Type", "application/json")
                 .build();
 
-        new HomeScreenActivity.getCourseService().execute(request);
+
+        new getCourseServiceForHomeScreen().execute(request);
 
     }
 
-    public class getCourseService extends OkHTTPService {
+    public class getCourseServiceForHomeScreen extends OkHTTPService {
 
         @Override
-        protected void onPostExecute(Response response) {
+        protected void onPostExecute(Response Aresponse) {
 
             try {
-                if (response == null) throw new IOException("Unexpected code " + response);
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                if (Aresponse == null) throw new IOException("Unexpected code " + Aresponse);
+                if (!Aresponse.isSuccessful()) throw new IOException("Unexpected code " + Aresponse);
 
-                String jsonData = response.body().string();
+                Log.i("idf", Aresponse.toString());
+
+                String jsonData = Aresponse.body().string();
 
                 try {
                     JSONArray mJsonArray = new JSONArray(jsonData);
@@ -135,17 +148,19 @@ public class HomeScreenActivity extends AppCompatActivity {
                     onlyCourseList = new ArrayList<String>();
 
 
+                    HashMap<String,String> courseListAddCourse = new HashMap<String, String>();
+
+
                     for (int i = 0; i < mJsonArray.length(); i++) {
-
-                        String teacherName = mJsonArray.getJSONObject(i).getString("teachers");
                         String courseName = mJsonArray.getJSONObject(i).getString("coursename");
-                        String courseId = mJsonArray.getJSONObject(i).getString("id");
-
                         onlyCourseList.add(courseName);
-
-                        MySingletonClass.getInstance().setAllClasses(onlyCourseList);
-
+                        String courseId = mJsonArray.getJSONObject(i).getString("id");
+                        courseListAddCourse.put(courseName, courseId);
                     }
+
+
+                    MySingletonClass.getInstance().setAllClasses(onlyCourseList);
+                    MySingletonClass.getInstance().setAllClassHashMap(courseListAddCourse);
                 } catch (Exception e) {
                 }
 
@@ -154,6 +169,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                 Log.i("idf", e.getLocalizedMessage());
             }
         }
-    }
+    }*/
 
 }

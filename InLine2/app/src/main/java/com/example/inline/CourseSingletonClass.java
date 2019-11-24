@@ -6,6 +6,10 @@ public class CourseSingletonClass {
     private static CourseSingletonClass instance;
 
     private String coursename;
+    private String officeHourTime;
+    private String hour;
+    private String minute;
+    private String dayOfWeek;
     //private HashMap<String, String> lat;
     //private HashMap<String, String> lng;
 
@@ -21,6 +25,18 @@ public class CourseSingletonClass {
 
     public String getCourse() { return coursename; }
     public void setCourse(String coursename) { this.coursename = coursename; }
+
+    public String getOfficeHourTime() { return officeHourTime; }
+    public void setOfficeHourTime(String officeHourTime) { this.officeHourTime = officeHourTime; }
+
+    public String getHour() { return hour; }
+    public void setHour(String hour) { this.hour = hour; }
+
+    public String getminute() { return minute; }
+    public void setminute(String minute) { this.minute = minute; }
+
+    public String getdayOfWeek() { return dayOfWeek; }
+    public void setdayOfWeek(String dayOfWeek) { this.dayOfWeek = dayOfWeek; }
 
     /*
     public String getCourseLat(String coursename) {

@@ -13,58 +13,71 @@
         android:text="aaaaaaaa"
         android:textColor="#03A9F4"
         android:textSize="50sp"
-        app:layout_constraintBottom_toTopOf="@+id/enqueButton"
+        app:layout_constraintBottom_toTopOf="@+id/officeHourTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.548"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.413" />
+        app:layout_constraintVertical_bias="0.732" />
+
+    <TextView
+        android:id="@+id/officeHourTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="aaaaaaaa"
+        android:textColor="#03A9F4"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/courseWaitTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/courseWaitTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="52dp"
         android:text="aaaaaaaa"
         android:textColor="#03A9F4"
-        android:textSize="50sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/enqueButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enqueCourseName" />
-
-    <Button
-        android:id="@+id/enqueButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="wait for office hour"
-        app:layout_constraintBottom_toTopOf="@+id/dequeButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
+        android:id="@+id/enqueButton"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/gradient_button"
+        android:text="wait for office hour"
+        app:layout_constraintBottom_toTopOf="@+id/dequeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/dequeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_width="220dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/gradient_button"
         android:text="cancel"
         app:layout_constraintBottom_toTopOf="@+id/deleteCourseButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/deleteCourseButton"
         android:layout_width="220dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="108dp"
-        android:background="@drawable/gradient_button"
+        android:layout_marginBottom="72dp"
+        android:background="@drawable/logout_button"
         android:text="Delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -94,6 +94,37 @@ async function getLocation(req, res, next){
     }).catch((err)=>{res.status(400).json({failure : "not successful"});});
 }
 
+async function getAllLocation(req,res,next){
+    if(req.params.username == null){
+        res.status(400).json({failure: "username null"});
+        return null;
+    }
+
+    await User.findOne({username: req.params.username}).then(async (user)=>{
+        if(user == null){
+            res.status(400).json({failure: "invalid username"});
+            return null;
+        }
+        let i = 0;
+        var pacakage = new Array();
+        while(user.courses[i] != null){
+            console.log(user.courses[i]);
+            await locations.findOne({coursename:user.courses[i]}).then((points)=>{
+                console.log(points);
+                pacakage.push(points);
+                console.log(pacakage);
+            });
+            i = i + 1;
+        }
+
+        if(pacakage == []){
+            res.status(400).json({array: pacakage});
+            return null;
+        }
+        res.status(200).json({array: pacakage});
+    });
+}
+
 async function updateLocation(req, res, next){
     if(req.body.coursename == null){
         res.status(400).json({failure: "course is null"});
@@ -181,7 +212,7 @@ router.post("/default", defaultNewLocation);
 //router.post("/", insertLocation);
 router.put("/", updateLocation);
 router.delete("/", deleteLocation);
-
+router.get("/all/:username", getAllLocation);
 module.exports = {
     router,
     getLocation,
@@ -190,6 +221,7 @@ module.exports = {
     //insertLocation,
     updateLocation,
     deleteLocation,
+    getAllLocation,
     client,
     locations
 };

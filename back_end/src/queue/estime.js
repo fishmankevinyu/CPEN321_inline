@@ -61,6 +61,9 @@ async function calEST(coursename,username){
   .then(function(newest){
     return newest;
   },function(err){console.log("err: " + err); });
+  console.log(piQ);
+  console.log(est.AHT);
+  console.log(est.AA);
   var ESTime = piQ*est.AHT/est.AA;
   return ESTime;
 }

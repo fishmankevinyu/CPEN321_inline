@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,37 +27,72 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import xdroid.toaster.Toaster;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class queueActivity extends AppCompatActivity {
+
     private OkHttpClient client = new OkHttpClient();
     private Button enqueCourseButton;
     private Button dequeCourseButton;
     private Button deleteCourseButton;
     private String courseid;
 
-    private TextView courseName;
-    private TextView estimatedTime;
+    TextView courseTextView;
+    TextView waitTimeTextView;
+    TextView officeHourTimeView;
+
+    //private TextView courseName;
+    //private TextView estimatedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue);
 
-        TextView courseTextView = (TextView) findViewById(R.id.enqueCourseName);
-        TextView waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
-
-        //courseTextView.setText(MySingletonClass.getInstance().getCourseQueue());
+        courseTextView = (TextView) findViewById(R.id.enqueCourseName);
+        waitTimeTextView = (TextView) findViewById(R.id.courseWaitTime);
+        officeHourTimeView = (TextView) findViewById(R.id.officeHourTime) ;
 
         courseTextView.setText(CourseSingletonClass.getInstance().getCourse());
+
+        officeHourTimeView.setText(CourseSingletonClass.getInstance().getOfficeHourTime());
+
         waitTimeTextView.setText("Please Enque");
+
+        enqueCourseButton = (Button) findViewById(R.id.enqueButton);
+        ///////////////////////////////////////////////////////////////////
+        Calendar cal = Calendar.getInstance();
+        Date currentTime = cal.getTime();
+
+        String dayOfWeek = (""+currentTime.toString().charAt(0)+currentTime.toString().charAt(1)+currentTime.toString().charAt(2)).toUpperCase();
+        String hourStr = ""+currentTime.toString().charAt(11)+currentTime.toString().charAt(12);
+        int hour = Integer.parseInt(hourStr);
+        String minuteStr = ""+currentTime.toString().charAt(14)+currentTime.toString().charAt(15);
+        int minute = Integer.parseInt(minuteStr);
+        Log.i("ex_hour", String.valueOf(hour));
+        Log.i("ex_minute", String.valueOf(minute));
+        int time = 60 * hour + minute;
+        int ep_hour = Integer.parseInt(CourseSingletonClass.getInstance().getHour());
+        int ep_minute = Integer.parseInt(CourseSingletonClass.getInstance().getminute());
+        Log.i("ep_hour", String.valueOf(ep_hour));
+        Log.i("ep_minute",String.valueOf(ep_minute));
+        int ep_time = 60 * ep_hour + ep_minute;
+        Log.i("ep_time", String.valueOf(ep_time));
+        Log.i("ex_time",String.valueOf(time));
+
+        if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
+            enqueCourseButton.setEnabled(false);
+        }
+
+        ///////////////////////////////////////////////////////////////////
 
         enqueCourseButton = (Button) findViewById(R.id.enqueButton);
         enqueCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                     MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
                     JSONObject postEnqueue = new JSONObject();
                     try {
                         postEnqueue.put("coursename", CourseSingletonClass.getInstance().getCourse());
@@ -78,6 +114,43 @@ public class queueActivity extends AppCompatActivity {
                 }
 
         });
+
+        //For self deque
+
+        dequeCourseButton = (Button) findViewById(R.id.dequeButton);
+        dequeCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+                Log.i("idf",CourseSingletonClass.getInstance().getCourse());
+
+                Log.i("idf", MySingletonClass.getInstance().getName());
+
+                JSONObject postEnqueue = new JSONObject();
+                try {
+                    postEnqueue.put("coursename", CourseSingletonClass.getInstance().getCourse());
+                    postEnqueue.put("username", MySingletonClass.getInstance().getName());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                RequestBody body = RequestBody.create(MEDIA_TYPE, postEnqueue.toString());
+                Request request = new Request.Builder()
+                        .url("http://40.117.195.60:4000/queue/selfdeque")
+                        .put(body)
+                        .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                        .header("Accept", "application/json")
+                        .header("Content-Type", "application/json")
+                        .build();
+
+                new dequeCourseService().execute(request);
+            }
+
+        });
+
+
 
         /////////////////////////////////////////////////////////////////////////////////
         deleteCourseButton = (Button) findViewById(R.id.deleteCourseButton);
@@ -118,10 +191,45 @@ public class queueActivity extends AppCompatActivity {
         protected void onPostExecute(Response response) {
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response + response.message());
+                String jsonData = response.body().string();
+
+
+                Log.i("idf",jsonData);
+
+                try{
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    String estimatedTimeString = String.valueOf(Jobject.getInt("EST")/60000) + " Min. estimated wait time";
+                    waitTimeTextView.setText(estimatedTimeString);
+                }
+                catch(Exception e){
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+
+            }
+        }
+    }
+
+
+    //No need to parse response body after registering for course
+    //Maybe show success message here
+    public class dequeCourseService extends OkHTTPService {
+
+        @Override
+        protected void onPostExecute(Response response) {
+            try {
+                if(response == null) throw new IOException("Unexpected code " + response);
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                 String jsonData = response.body().string();
 
+
                 Log.i("idf",jsonData);
+                String text = "Please Enque";
+                waitTimeTextView.setText(text);
+
+                //waitTimeTextView
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
@@ -172,7 +280,7 @@ public class queueActivity extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-                    new queueActivity.MyAsyncTask().execute(delete_request);
+                    new queueActivity.deleteCourseAsyncTask().execute(delete_request);
                     ///////////////////////////////////////////
                 }
                 catch(Exception e){
@@ -187,7 +295,7 @@ public class queueActivity extends AppCompatActivity {
 
     }
 
-    class MyAsyncTask extends AsyncTask<Request, Void, Response> {
+    class deleteCourseAsyncTask extends AsyncTask<Request, Void, Response> {
 
         @Override
         protected Response doInBackground(Request... requests) {
@@ -219,7 +327,7 @@ public class queueActivity extends AppCompatActivity {
                     ArrayList<String> tempClassList = MySingletonClass.getInstance().getClasses();
                     tempClassList.remove(deleteCourse);
                     MySingletonClass.getInstance().setClasses(tempClassList);
-                    showToast();
+                    Toaster.toast("Course deleted successfully");
                     navUser();
                 }
                 catch(Exception e){
@@ -232,10 +340,6 @@ public class queueActivity extends AppCompatActivity {
 
         }
 
-    }
-
-    public void showToast() {
-        Toast.makeText(this, "Delete successfully", Toast.LENGTH_LONG).show();
     }
 
     public void navUser() {
