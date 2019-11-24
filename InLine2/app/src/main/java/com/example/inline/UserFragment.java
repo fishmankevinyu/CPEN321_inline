@@ -78,6 +78,7 @@ public class UserFragment extends Fragment {
     }
 
     public void navLogin() {
+        //MySingletonClass.getInstance().setAllCourseCoordinates(null);
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
     }

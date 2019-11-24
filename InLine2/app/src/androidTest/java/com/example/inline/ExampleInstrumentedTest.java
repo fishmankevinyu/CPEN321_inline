@@ -1,10 +1,6 @@
 package com.example.inline;
 
-import android.util.Log;
-
-import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
-import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -12,14 +8,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import androidx.test.espresso.action.ViewActions;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
@@ -45,6 +39,11 @@ public class ExampleInstrumentedTest {
     private String passwordString;
     private String addCourseName;
 
+    private String stuUsername;
+    private String stuPassword;
+    private String teaUsername;
+    private String teaPassword;
+
     @Rule
     public ActivityTestRule<MainActivity> activityRule
             = new ActivityTestRule<>(MainActivity.class);
@@ -57,22 +56,27 @@ public class ExampleInstrumentedTest {
         lastNameString = "Smith";
         userNameString = "Batman";
         passwordString = "12345678";
-        addCourseName = "HAHA123";
+        addCourseName = "MATH100";
+
+        stuUsername = "test1";
+        stuPassword = "test1p";
+        teaUsername = "test2";
+        teaPassword = "test2p";
         Intents.init();
     }
 
     @Test
     public void loginTest() {
-        onView(withId(R.id.editText1)).perform(typeText("stu"), closeSoftKeyboard());
-        onView(withId(R.id.editText2)).perform(typeText("stu"), closeSoftKeyboard());
+        onView(withId(R.id.editText1)).perform(typeText(stuUsername), closeSoftKeyboard());
+        onView(withId(R.id.editText2)).perform(typeText(stuPassword), closeSoftKeyboard());
         onView(withId(R.id.button)).perform(click());
         intended(hasComponent(HomeScreenActivity.class.getName()));
     }
 
     @Test
     public void navBarTest() {
-        onView(withId(R.id.editText1)).perform(typeText("stu"), closeSoftKeyboard());
-        onView(withId(R.id.editText2)).perform(typeText("stu"), closeSoftKeyboard());
+        onView(withId(R.id.editText1)).perform(typeText(stuUsername), closeSoftKeyboard());
+        onView(withId(R.id.editText2)).perform(typeText(stuPassword), closeSoftKeyboard());
         onView(withId(R.id.button)).perform(click());
         // goto user fragment
         onView(withId(R.id.navigation_user)).perform(click());
@@ -118,8 +122,8 @@ public class ExampleInstrumentedTest {
     @Test
     public void addCourseTest() {
         /* Login */
-        onView(withId(R.id.editText1)).perform(typeText("stu"), closeSoftKeyboard());
-        onView(withId(R.id.editText2)).perform(typeText("stu"), closeSoftKeyboard());
+        onView(withId(R.id.editText1)).perform(typeText(stuUsername), closeSoftKeyboard());
+        onView(withId(R.id.editText2)).perform(typeText(stuPassword), closeSoftKeyboard());
         onView(withId(R.id.button)).perform(click());
 
         /* Go to user's fragment */
@@ -136,8 +140,8 @@ public class ExampleInstrumentedTest {
     @Test
     public void createCourseTest() {
         /* Login */
-        onView(withId(R.id.editText1)).perform(typeText("dcc"), closeSoftKeyboard());
-        onView(withId(R.id.editText2)).perform(typeText("dcc"), closeSoftKeyboard());
+        onView(withId(R.id.editText1)).perform(typeText(teaUsername), closeSoftKeyboard());
+        onView(withId(R.id.editText2)).perform(typeText(teaPassword), closeSoftKeyboard());
         onView(withId(R.id.button)).perform(click());
 
         /* Go to user's fragment */
@@ -149,8 +153,24 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.edit_course_name)).check(matches(withText(createCourseString)));
     }
 
+    @Test
+    public void listViewTest() {
+        /* Login */
+        onView(withId(R.id.editText1)).perform(typeText(stuUsername), closeSoftKeyboard());
+        onView(withId(R.id.editText2)).perform(typeText(stuPassword), closeSoftKeyboard());
+        onView(withId(R.id.button)).perform(click());
 
-/////////////////////////////////Test for no
+        onData(anything()).inAdapterView(withId(R.id.mobile_list)).atPosition(0).perform(click());
+        intended(hasComponent(queueActivity.class.getName()));
+        onView(withId(R.id.enqueCourseName)).check(matches(isDisplayed()));
+        onView(withId(R.id.officeHourTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.courseWaitTime)).check(matches(isDisplayed()));
+        onView(withId(R.id.enqueButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.dequeButton)).check(matches(isDisplayed()));
+    }
+
+
+    /////////////////////////////////Test for non functional req/////////////////////////////////
     @Test
     public void responseTimeTest() {
         onView(withId(R.id.editText1)).perform(typeText("stu"), closeSoftKeyboard());

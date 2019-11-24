@@ -192,6 +192,7 @@ public class addCourse extends AppCompatActivity {
                 }
 
                 finally{
+                    //MySingletonClass.getInstance().setAllCourseCoordinates(null);
                     navUser();
                 }
             } catch (IOException e) {
