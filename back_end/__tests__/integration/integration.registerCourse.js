@@ -102,7 +102,7 @@ describe("course integration testing", () =>{
         expect(topic.unsubscribe).toHaveBeenCalledTimes(1); 
     });
 
-    const req_delete = mockRequest({params: {id: course.id}});
+    const req_delete = mockRequest({params: {id: "5dd73008cbca511a742b65b7"}});
     var res_delete = mockResponse();
     const next_delete = jest.fn();
 
