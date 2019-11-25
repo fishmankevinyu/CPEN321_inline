@@ -23,11 +23,12 @@ async function newCourseTime(coursename,aa){
   }).then((x) => x).catch((err) => console.log(err));
 }
 
-async function updateAHT(coursename,aht){
+async function updateAHT(coursename,origin_pos,aht_sum){
   var oldAht;
   var count;
-
+  console.log(origin_pos);
   var est = await ests.findOne({coursename});
+  var aht = aht_sum / (origin_pos + 1);
 
   oldAht = est.AHT;
   count = est.count;

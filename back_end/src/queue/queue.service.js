@@ -56,18 +56,24 @@ async function enque(req,res,next){
 
   if(user == null && await enqueCheck(req.body.username,req.body.coursename).then((x) => x)){
     console.log("going to enque"); 
-    await db.collection(req.body.coursename).insertOne({
+    result = await db.collection(req.body.coursename).insertOne({
       username:req.body.username,
       entime: Date.now(),
       start: true,
-      estime: 0})
-    .then( function(queue){return queue;});
-
+      estime: 0,
+      origin_pos: 0
+    });
+    
     var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime; });
 
     console.log("enque/ESTim  e: " + ESTime);
 
-    var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
+    var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{
+      $set: {
+        estime: ESTime,
+        origin_pos: result.insertedCount
+      }
+    })
     .then(function(newUser){
       console.log("been in 3rd fulfilled");
       res.status(200).json({success:"you are in queue", EST: ESTime});
@@ -105,7 +111,7 @@ async function deque(req,res,next){
       res.status(400).json({failure: "the queue is empty"});
       return false;
     }
-    Est.updateAHT(req.body.coursename, Date.now() - user.entime);
+    Est.updateAHT(req.body.coursename, user.origin_pos, Date.now() - user.entime);
     return true;
   });
 
@@ -115,7 +121,7 @@ async function deque(req,res,next){
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},
     {sort:{entime: 1}})
-    .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
+  .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
 }
 
 /*
@@ -202,10 +208,10 @@ async function newQueue2(req,res,next){
 }
 
 /*private*/
-function checkIndex(coursename,username){
-  var count = db.collection(coursename).findOne({username})
-  .then(function(user){
-    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
+async function checkIndex(coursename,username){
+  var count = await db.collection(coursename).findOne({username})
+  .then( async function(user){
+    var count = await db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
     return count;
   });
 
