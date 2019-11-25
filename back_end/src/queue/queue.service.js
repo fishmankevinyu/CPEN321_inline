@@ -66,12 +66,13 @@ async function enque(req,res,next){
     
     var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime; });
 
-    console.log("enque/ESTim  e: " + ESTime);
-
+    console.log("enque/ESTime: " + ESTime);
+    var pos = await checkIndex(req.body.coursename,req.body.username) + 1;
+    console.log("pos: " + pos);
     var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{
       $set: {
         estime: ESTime,
-        origin_pos: result.insertedCount
+        origin_pos: pos
       }
     })
     .then(function(newUser){

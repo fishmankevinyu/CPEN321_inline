@@ -26,7 +26,7 @@ async function newCourseTime(coursename,aa){
 async function updateAHT(coursename,origin_pos,aht_sum){
   var oldAht;
   var count;
-  console.log(origin_pos);
+  console.log("origin_pos: " + origin_pos);
   var est = await ests.findOne({coursename});
   var aht = aht_sum / (origin_pos);
 
