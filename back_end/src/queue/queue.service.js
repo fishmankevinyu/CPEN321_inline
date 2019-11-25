@@ -209,7 +209,7 @@ function checkIndex(coursename,username){
     return count;
   });
 
-  return count;
+  return count - 1;
 }
 
 
