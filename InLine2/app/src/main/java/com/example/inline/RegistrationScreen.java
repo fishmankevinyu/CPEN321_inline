@@ -14,6 +14,7 @@ import okhttp3.Request;
 
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import xdroid.toaster.Toaster;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +85,7 @@ public class RegistrationScreen extends AppCompatActivity {
                 //  .url("https://reqres.in/api/users")
                 //https://reqres.in/ for testing
                 new MyAsyncTask().execute(request);
-                navLogin();
+                //navLogin();
             }
         });
     }
@@ -105,22 +107,21 @@ public class RegistrationScreen extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Response response) {
-            //super.onPostExecute(response); what does this line do
-            //TODO have a spinner when waiting for asynch wait
+
             try {
                 if(response == null) throw new IOException("Unexpected code " + response);
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                if (!response.isSuccessful()) {
+                    Toaster.toast("Registration unsuccessful");
+                    throw new IOException("Unexpected code " + response);
+                }
 
                 Log.i("idf", "Response is successful");
 
                 Log.i("idf", response.body().string());
 
-                /* Extra code for debugging
-                Headers responseHeaders = response.headers();
-                for (int i = 0; i < responseHeaders.size(); i++) {
-                    System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    Log.i("idf", responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                }*/
+                Toaster.toast("Account successfully created");
+                navLogin();
+
             } catch (IOException e) {
                e.printStackTrace();
                 Log.i("idf", e.getLocalizedMessage());
