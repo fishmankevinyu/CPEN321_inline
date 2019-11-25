@@ -172,3 +172,48 @@ describe("deleteLocation",()=>{
         done();
     })
 });
+
+describe("getAllLocation", ()=>{
+    test("get all location of kevin", async(done)=>{
+        let req = {
+            params: {
+                username: "kevin"
+            }
+        };
+        let res = mock.mockResponse();
+        let next = jest.fn();
+        await location.getAllLocation(req,res,next);
+        expect(res.json).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+        done();
+    });
+
+    test("get all location of non existed user", async(done)=>{
+        let req = {
+            params: {
+                username: "notpassable name lkasdflasjkdf"
+            }
+        };
+        let res = mock.mockResponse();
+        let next = jest.fn();
+        await location.getAllLocation(req,res,next);
+        expect(res.json).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        done();
+    });
+
+    test("get all location of null", async(done)=>{
+        let req = {
+            params: {
+                username: null
+            }
+        };
+        let res = mock.mockResponse();
+        let next = jest.fn();
+        await location.getAllLocation(req,res,next);
+        expect(res.json).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        done();
+    });
+
+});
