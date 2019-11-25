@@ -133,18 +133,29 @@ need json {"coursename":"", "username":""}
 */
 
 async function selfDeque(req,res,next){
+  var user = await db.collection(req.body.coursename).findOne({username: req.body.username}).then((result)=>{
+    return result;
+  });
+  if(user == null){
+    res.status(400).json({failure: "can not find username"});
+    return null;
+  }
+  var current_pos =  await checkIndex(req.body.coursename, req.body.username) + 1;
+  var origin_pos = user.origin_pos;
+  var entime = user.entime;
   await db.collection(req.body.coursename).findOneAndDelete(
     {username:req.body.username},
     {sort:{entime: 1}})
-    .then( (user) => {
-      console.log(user);
-      if(user.value != null){
-        res.status(200).json({messge:"dequed"});
-      }
-      else{
-        res.status(400).json({failure: "can not find username"});
-      }
-    });
+  .then( (user) => {
+    console.log(user);
+    if(user.value != null){
+      res.status(200).json({messge:"dequed"});
+    }
+    else{
+      res.status(400).json({failure: "can not find username"});
+    }
+  });
+  await Est.updateAHT(req.body.coursename, origin_pos - current_pos, Date.now() - entime);
 }
 
 async function updateEST(req, res, next){

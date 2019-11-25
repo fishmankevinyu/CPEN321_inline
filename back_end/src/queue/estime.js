@@ -23,15 +23,19 @@ async function newCourseTime(coursename,aa){
   }).then((x) => x).catch((err) => console.log(err));
 }
 
-async function updateAHT(coursename,origin_pos,aht_sum){
+async function updateAHT(coursename, moved_inx, aht_sum){
   var oldAht;
   var count;
-  console.log("origin_pos: " + origin_pos);
-  var est = await ests.findOne({coursename});
-  var aht = aht_sum / (origin_pos);
+  if(moved_inx == 0){
+    console.log("not gonna update cuz it doesnt move");
+    return null;
+  }
 
+  console.log("moved_inx: " + moved_inx);
+  var est = await ests.findOne({coursename});
   oldAht = est.AHT;
   count = est.count;
+  var aht = aht_sum / moved_inx;
   console.log(typeof oldAht);
   console.log(typeof count);
   var newAht;
@@ -42,8 +46,7 @@ async function updateAHT(coursename,origin_pos,aht_sum){
   }
   else{
     newAht = (oldAht*count + aht)/(count+1);
-    console.log(count);
-
+    console.log(newAht);
   }
   await ests.findOneAndUpdate({coursename},{$set: {AHT:newAht}, $inc: {count: 1}}).then((result)=>{
     return result;
