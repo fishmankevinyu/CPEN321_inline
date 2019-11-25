@@ -31,43 +31,28 @@ describe("enque then deque", ()=>{
 
     test("enque then deque",async ()=>{
 
-        const req1 = mock.mockRequest({
-            coursename: "TEST789",
-            teachers: ["TEST TEACHER"],
-            AA: 1
-        });
-        var req2 = {
-            body:{},
-            params:{id: 0}
-        };
-        var res = {
-            status: jest.fn(),
-            json: jest.fn((course)=>{return course}),
+        req = mock.mockRequest({
+            coursename: "CPEN433",
+            username: "kevin"
+        })
 
-        };
-        var next = jest.fn();
+        res = mock.mockResponse();
 
-        await course_service.newCourse(req1, res, next);
+        next = jest.fn();
+
+        await queue_service.enque(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        await queue_service.selfDeque(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        await queue_service.enque(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(200);
+
+        await queue_service.deque(req, res, next);
         expect(res.status).toHaveBeenCalledWith(200);
 
 
-        let admin = {
-            messaging: jest.fn(
-                ()=>{
-                    return {
-                        subscribetotopic: jest.fn()
-                    } 
-                }
-            )
-        };
-
-        // await queue_service.enque(req, res, next).then((x)=>{
-        //     expect(res.status).toHaveBeenCalledWith(200);
-
-        //     return queue_service.deque(req, res, next);
-        // }).then((result)=>{
-        //     expect(res.status).toHaveBeenCalledWith(200);
-        // });
     });
 
 
