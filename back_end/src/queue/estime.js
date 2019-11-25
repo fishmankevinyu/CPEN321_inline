@@ -26,7 +26,7 @@ async function newCourseTime(coursename,aa){
 async function updateAHT(coursename, moved_inx, aht_sum){
   var oldAht;
   var count;
-  if(moved_inx == 0){
+  if(moved_inx === 0){
     console.log("not gonna update cuz it doesnt move");
     return null;
   }
