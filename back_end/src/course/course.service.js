@@ -68,11 +68,25 @@ async function newCourse(req, res ,next){
   }
   else{
     //console.log("before call queue"); 
-    var queue = await queues.newQueue(req.body.coursename,req.body.AA);
+    var queue = await queues.newQueue(req.body.coursename,req.body.AA); 
     //console.log("after calling queue"); 
     var course = new Course(req.body);
-    res.status(200).json(course);
     await course.save();
+    //console.log("course: " + course); 
+
+    //console.log("username: " + course.teacher[0]); 
+
+    var userTeacher = await User.findOne({username: course.teachers[0]}); 
+    //console.log("teacher: " + userTeacher); 
+
+    await userTeacher.updateOne({$addToSet: {"courses": course.coursename}})
+    .catch((err) => next(err));
+
+    await course.save();
+    await userTeacher.save();
+
+    res.status(200).json(course);
+
     //console.log(course.coursename);
   }
 }
@@ -139,10 +153,11 @@ async function deleteHelper(course){
 
   var i; 
   //console.log(course.students + " in " + course.coursename); 
-  console.log(course.students[0]); 
+  //console.log(course.students[0]); 
+  if(course.students != null){
   for(i = 0; course.students[i] != null; i++){
     user = await User.findOne({username: course.students[i]}); 
-    //console.log(user.username); 
+    console.log(user); 
     var token = await regToken.getToken(user.username);
     console.log("before update one"); 
     user.updateOne({$pull: {"courses": course.coursename}})
@@ -152,12 +167,24 @@ async function deleteHelper(course){
     await user.save(); 
 
   }
+}
+//console.log("course: " + course); 
 
-  console.log("delete the course in user database"); 
+if(course.teachers != null){
+  teacherUser = await User.findOne({username: course.teachers[0]}); 
+  //console.log(teacherUser.username); 
+  teacherUser.updateOne({$pull: {"courses": course.coursename}})
+  .catch((err) => next(err));
+  //console.log("updated"); 
+  await teacherUser.save();
+}
+ 
+
+  //console.log("delete the course in user database"); 
 
   var timeArray = await times.getTimeService(course.coursename); 
 
-  console.log(timeArray); 
+  //console.log(timeArray); 
   if(timeArray[0]!=null){
     //console.log("time found"); 
     await schedule.deleteSchedule(timeArray[0], course.coursename); 
@@ -174,6 +201,7 @@ delete a specific course
 */
 async function deleteCourse(req,res,next){
   var course = await Course.findById(mongoose.Types.ObjectId(req.params.id)); 
+  console.log(course); 
   await deleteHelper(course)
   .then(() => {res.json({message:"deleted"}); })
   .catch((err) => next(err));

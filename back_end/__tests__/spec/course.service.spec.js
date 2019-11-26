@@ -32,6 +32,69 @@ describe("course service testing", () =>{
            //db = await connection.db(global.__MONGO_DB_NAME__);
            mongoose.Promise = global.Promise;
          });
+
+         test("deleteCourse - normal response ", async ()=>{
+
+            Queue.newQueue = jest.fn(()=>{return new Promise((resolve,reject)=>{
+                resolve(0);
+            });
+        });
+            const req_ = mockRequest({body: {
+                                    coursename: "abcde",
+                                    teachers: "12321"
+                                    }
+             });
+             var res_ = mockResponse();
+             const next_ = jest.fn();
+        
+        
+             await courseService.newCourse(req_, res_, next_); 
+            var course = await Course.findOne({coursename: "abcde"});
+            // await course.updateOne({$push: {"students": "hahaha"}}); 
+            // //console.log(course.students); 
+            // await course.save(); 
+        
+            regToken.getToken = jest.fn(()=>{return new Promise((resolve,reject)=>{
+                resolve(0);
+            });
+        });
+        
+        time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
+            resolve(0);
+        });
+        });
+        
+        topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
+            resolve(0);
+        });
+        });
+        
+        const req = mockRequest({params: {id: course.id}}); 
+        console.log(req.params.id); 
+        const res = mockResponse(); 
+        const next = jest.fn(); 
+        
+            const helper = {
+            
+               async test(req, res, next){
+                   await courseService.deleteCourse(req, res, next);
+               },
+            
+            async find(course){
+               return await Course.findOne({coursename: course.coursename});
+            }
+            };
+        
+           const spyTest = jest.spyOn(helper, 'test');
+        
+           //await helper.test(req, res, next);
+           await helper.test(req, res, next); 
+            const spy = jest.spyOn(helper, 'find');
+            const after = await helper.find(course);
+            
+            await expect(spyTest).toHaveBeenCalledWith(req, res,next);
+            await expect(after).toBe(null);
+         });  
          
          
     test("newCourse", async ()=>{
@@ -41,7 +104,7 @@ describe("course service testing", () =>{
     });
         const req = mockRequest({body: {
                                 coursename: "123",
-                                teachers: "123"
+                                teachers: "create"
                                 }
          });
          var res = mockResponse();
@@ -79,7 +142,7 @@ describe("course service testing", () =>{
                             
               const req = mockRequest({params: {id: course.id}, body: {
                                       coursename: "123",
-                                      teachers: "4321"
+                                      teachers: "create"
                                       }});
               var res = mockResponse();
               const next = jest.fn();
@@ -104,7 +167,7 @@ describe("course service testing", () =>{
               await expect(spyTest).toHaveBeenCalledWith(req, res, next);
               await expect(res.json).toHaveBeenCalledTimes(1);
               //await expect(after).toBe(null);
-              await expect(updated.teachers[0]).toBe("4321");
+              await expect(updated.teachers[0]).toBe("create");
          });
          
          
@@ -495,23 +558,8 @@ test("deleteHelper", async ()=>{
               
     var course = await Course.findOne({coursename: "123"});
     await course.updateOne({$push: {"students": "hahaha"}}); 
-    //console.log(course); 
+    console.log(course.students); 
     await course.save(); 
-    
-    //console.log(courseReal);
-    //var course = {students: [{username: "hahaha"}], coursename: "123", _id: courseReal._id}; 
-
-    User.findOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
-});
-
-    var i = 0; 
-    var user = User.findOne({username: course.students[i]}); 
-    user.updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
-});
 
     regToken.getToken = jest.fn(()=>{return new Promise((resolve,reject)=>{
         resolve(0);
@@ -553,7 +601,7 @@ test("deleteCourse - catch error ", async ()=>{
 
     const req_ = mockRequest({body: {
         coursename: "4321",
-        teachers: "123", 
+        teachers: "testtest", 
         students: "hahaha"
         }
     });
@@ -585,6 +633,11 @@ test("deleteCourse - catch error ", async ()=>{
     });
 });
 
+User.findOne({username: course.teachers[0]}).updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
+    resolve(0);
+});
+});
+
     regToken.getToken = jest.fn(()=>{return new Promise((resolve,reject)=>{
         resolve(0);
     });
@@ -607,64 +660,7 @@ await courseService.deleteCourse(req, res, next).then((x)=>{
 });
  });
 
- test("deleteCourse - normal response ", async ()=>{
-
-    const req_ = mockRequest({body: {
-        coursename: "abcde",
-        teachers: "123"
-        }
-    });
-    var res_ = mockResponse();
-    const next_ = jest.fn();
-
-    
-
-    await courseService.newCourse(req_, res_, next_)
-
-    
-      
-      var course = await Course.findOne({coursename: "abcde"});
-      
-      console.log(course);
-      
-      const req = mockRequest({params: {id: course.id}});
-      var res = mockResponse();
-      const next = jest.fn();
-
-      User.findOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
-});
-
-    var i = 0; 
-    User.findOne({username: course.students[i]}).updateOne = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
-});
-
-    regToken.getToken = jest.fn(()=>{return new Promise((resolve,reject)=>{
-        resolve(0);
-    });
-});
-
-time.getTimeService = jest.fn(()=>{return new Promise((resolve,reject)=>{
-    resolve(0);
-});
-});
-schedule.deleteSchedule = jest.fn(); 
-
-
-topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
-    resolve(0);
-});
-});
-
-await courseService.deleteCourse(req, res, next).then((x)=>{
-    
-    expect(res.json).toHaveBeenCalledTimes(1);
-    expect(res.json).toHaveBeenCalledWith({message:"deleted"}); 
-});
- });     
+ 
 
          
          test("getAllCourses", async ()=>{
@@ -696,5 +692,10 @@ await courseService.deleteCourse(req, res, next).then((x)=>{
              await expect(res.json).toHaveBeenCalledWith(courses);
          });
 
+         
+
         
 });
+
+
+
