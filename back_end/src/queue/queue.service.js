@@ -56,18 +56,25 @@ async function enque(req,res,next){
 
   if(user == null && await enqueCheck(req.body.username,req.body.coursename).then((x) => x)){
     console.log("going to enque"); 
-    await db.collection(req.body.coursename).insertOne({
+    result = await db.collection(req.body.coursename).insertOne({
       username:req.body.username,
       entime: Date.now(),
       start: true,
-      estime: 0})
-    .then( function(queue){return queue;});
-
+      estime: 0,
+      origin_pos: 0
+    });
+    
     var ESTime = await Est.calEST(req.body.coursename, req.body.username).then(function(ESTime){return ESTime; });
 
-    console.log("enque/ESTim  e: " + ESTime);
-
-    var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{$set: {estime: ESTime}})
+    console.log("enque/ESTime: " + ESTime);
+    var pos = await checkIndex(req.body.coursename,req.body.username) + 1;
+    console.log("pos: " + pos);
+    var user2 = await db.collection(req.body.coursename).findOneAndUpdate({username: req.body.username},{
+      $set: {
+        estime: ESTime,
+        origin_pos: pos
+      }
+    })
     .then(function(newUser){
       console.log("been in 3rd fulfilled");
       res.status(200).json({success:"you are in queue", EST: ESTime});
@@ -105,7 +112,7 @@ async function deque(req,res,next){
       res.status(400).json({failure: "the queue is empty"});
       return false;
     }
-    Est.updateAHT(req.body.coursename, Date.now() - user.entime);
+    Est.updateAHT(req.body.coursename, user.origin_pos, Date.now() - user.entime);
     return true;
   });
 
@@ -115,7 +122,7 @@ async function deque(req,res,next){
   await db.collection(req.body.coursename).findOneAndDelete(
     {start:true},
     {sort:{entime: 1}})
-    .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
+  .then( (queue) => queue ? res.status(200).json({messge:"dequed"}):res.status(400));
 }
 
 /*
@@ -126,18 +133,29 @@ need json {"coursename":"", "username":""}
 */
 
 async function selfDeque(req,res,next){
+  var user = await db.collection(req.body.coursename).findOne({username: req.body.username}).then((result)=>{
+    return result;
+  });
+  if(user == null){
+    res.status(400).json({failure: "can not find username"});
+    return null;
+  }
+  var current_pos =  await checkIndex(req.body.coursename, req.body.username) + 1;
+  var origin_pos = user.origin_pos;
+  var entime = user.entime;
   await db.collection(req.body.coursename).findOneAndDelete(
     {username:req.body.username},
     {sort:{entime: 1}})
-    .then( (user) => {
-      console.log(user);
-      if(user.value != null){
-        res.status(200).json({messge:"dequed"});
-      }
-      else{
-        res.status(400).json({failure: "can not find username"});
-      }
-    });
+  .then( (user) => {
+    console.log(user);
+    if(user.value != null){
+      res.status(200).json({messge:"dequed"});
+    }
+    else{
+      res.status(400).json({failure: "can not find username"});
+    }
+  });
+  await Est.updateAHT(req.body.coursename, origin_pos - current_pos, Date.now() - entime);
 }
 
 async function updateEST(req, res, next){
@@ -202,14 +220,14 @@ async function newQueue2(req,res,next){
 }
 
 /*private*/
-function checkIndex(coursename,username){
-  var count = db.collection(coursename).findOne({username})
-  .then(function(user){
-    var count = db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
+async function checkIndex(coursename,username){
+  var count = await db.collection(coursename).findOne({username})
+  .then( async function(user){
+    var count = await db.collection(coursename).countDocuments({entime: {$lte : user.entime}}).then((newCount) => newCount);
     return count;
   });
 
-  return count;
+  return count - 1;
 }
 
 
