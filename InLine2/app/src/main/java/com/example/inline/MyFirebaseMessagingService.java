@@ -73,27 +73,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendRegistrationToServer(String token) {
-        String a = token;
-        /*
-        MediaType MEDIA_TYPE = MediaType.parse("application/json");
-
-        JSONObject postdata = new JSONObject();
-        try {
-            postdata.put("username", MySingletonClass.getInstance().getText().toString());
-            postdata.put("password", password.getText().toString());
-            postdata.put("registrationToken", MySingletonClass.getInstance().getmToken());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
-
-        Request request = new Request.Builder()
-                .url("http://40.117.195.60:4000/users/authenticate")
-                .post(body)
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/json")
-                .build();
-        new MainActivity.MyAsyncTaskMain().execute(request); */
+        Log.i("idf",token);
     }
 }

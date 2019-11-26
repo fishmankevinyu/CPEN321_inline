@@ -26,7 +26,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class setOfficeTime extends AppCompatActivity {
+public class SetOfficeTime extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private String coursename;
     private Spinner spinner;
@@ -108,7 +108,7 @@ public class setOfficeTime extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.e("setOfficeTime","After Set String");
+                Log.e("SetOfficeTime","After Set String");
 
                 RequestBody body = RequestBody.create(MEDIA_TYPE, postdata1.toString());
 
@@ -120,7 +120,7 @@ public class setOfficeTime extends AppCompatActivity {
                         .header("Content-Type", "application/json")
                         .build();
 
-                Log.i("setOfficeTime","Response setOfficeHour");
+                Log.i("SetOfficeTime","Response setOfficeHour");
                 new MyAsyncTask().execute(request);
                 //navUser();
             }
@@ -171,7 +171,7 @@ public class setOfficeTime extends AppCompatActivity {
                         .header("Accept", "application/json")
                         .header("Content-Type", "application/json")
                         .build();
-                new setCourseLocation().execute(request);
+                new SetCourseLocation().execute(request);
 
             }
             catch (IOException e) {
@@ -181,7 +181,7 @@ public class setOfficeTime extends AppCompatActivity {
         }
     }
 
-    public class setCourseLocation extends OkHTTPService {
+    public class SetCourseLocation extends OkHTTPService {
 
         @Override
         protected void onPostExecute(Response Aresponse) {

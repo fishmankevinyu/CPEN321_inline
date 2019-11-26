@@ -98,7 +98,7 @@ public class CreateCourse extends AppCompatActivity {
 
     public void navCreateCourse() {
         MySingletonClass.getInstance().setCourseSettime(coursename.getText().toString());
-        Intent intent = new Intent(this, setOfficeTime.class);
+        Intent intent = new Intent(this, SetOfficeTime.class);
         startActivity(intent);
     }
 
