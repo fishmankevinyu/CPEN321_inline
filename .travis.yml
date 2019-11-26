@@ -1,19 +1,28 @@
 matrix:
  include:
-  -language: node_js
+  - language: node_js
    node_js:
      - "stable"
    cache:
      directories:
        - "back_end/node_modules"
-   script:
-     - cd back_end
-     -npm run test
-  
-  -language: android
-   dist: trusty
-   android:
-     components:
-      - build-tools-26.0.2
-      - android-26
+    before_script:
+      - cd back_end
+    script:
+      - npm test
+
+  - language: android
+    dist: trusty
+    android:
+      components:
+        - build-tools-26.0.2
+        - android-26
+    before_script:
+      - cd android/InLine2
+    script:
+      - ./gradlew build connectedCheck
+
+notifications:
+  email:
+    - kaikailongwang3@gmail.com
 
