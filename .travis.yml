@@ -1,26 +1,44 @@
+# matrix:
+#  include:
+#   - language: node_js
+#    node_js:
+#      - "stable"
+#    cache:
+#      directories:
+#        - "back_end/node_modules"
+#     before_script:
+#       - cd back_end
+#     script:
+#       - npm test
+
+language: node_js
+
 matrix:
- include:
-  - language: node_js
-   node_js:
-     - "stable"
-   cache:
-     directories:
-       - "back_end/node_modules"
-    before_script:
+  include:
+    - node_js: 10.16.3
+    - node_js: 10.16.3
+      env: SAUCE=true
+    - node_js: 10.16.3
+      env: INTEGRATION=true
+cache:
+  directories:
+    - node_modules
+    
+before_script:
       - cd back_end
-    script:
+script:
       - npm test
 
-  - language: android
-    dist: trusty
-    android:
-      components:
-        - build-tools-26.0.2
-        - android-26
-    before_script:
-      - cd android/InLine2
-    script:
-      - ./gradlew build connectedCheck
+#   - language: android
+#     dist: trusty
+#     android:
+#       components:
+#         - build-tools-26.0.2
+#         - android-26
+#     before_script:
+#       - cd android/InLine2
+#     script:
+#       - ./gradlew build connectedCheck
 
 notifications:
   email:
