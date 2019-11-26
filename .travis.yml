@@ -1,6 +1,8 @@
 matrix:
  include:
   -language: node_js
+  before_install:
+        - cd back_end/
    node_js:
      - "stable"
    cache:
@@ -11,6 +13,8 @@ matrix:
      -npm run test
   
   -language: android
+  before_install:
+        - cd InLine2/
    dist: trusty
    android:
      components:
