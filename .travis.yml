@@ -28,6 +28,8 @@ before_script:
       - cd back_end
 script:
       - npm test
+      
+services: mongodb
 
 #   - language: android
 #     dist: trusty
