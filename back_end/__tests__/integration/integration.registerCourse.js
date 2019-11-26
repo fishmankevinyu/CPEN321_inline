@@ -70,7 +70,7 @@ describe("course integration testing", () =>{
 
 
 
-        var courseTemp = await Course.findOne({coursename: "123"}); 
+        var courseTemp = await Course.findOne({coursename: "abcde"}); 
         const req_add = mockRequest({params: {userid: "5ddb1a23c3da4a78055fe30b", courseid: courseTemp.id}});
         var res_add = mockResponse();
         const next_add = jest.fn();
@@ -87,9 +87,6 @@ topic.subscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
     });
 
 
-
-
-
     const req_drop = mockRequest({params: {userid: "5ddb1a23c3da4a78055fe30b", courseid: courseTemp.id}});
     var res_drop = mockResponse();
     const next_drop = jest.fn();
@@ -104,12 +101,6 @@ topic.unsubscribe = jest.fn(()=>{return new Promise((resolve,reject)=>{
     await courseService.dropCourse(req_drop, res_drop, next_drop).then((x)=>{
         expect(topic.unsubscribe).toHaveBeenCalledTimes(1); 
     });
-
-
-
-
-
-
 
 
 const req = mockRequest({params: {id: course.id}}); 
@@ -149,8 +140,3 @@ const next = jest.fn();
 
     
  });    
-
-
-
-        
-
