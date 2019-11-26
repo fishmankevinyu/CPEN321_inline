@@ -23,7 +23,7 @@ import okhttp3.Response;
 import xdroid.toaster.Toaster;
 import java.util.Calendar;
 
-public class queueActivity extends AppCompatActivity {
+public class QueueActivity extends AppCompatActivity {
 
     private OkHttpClient client = new OkHttpClient();
     private Button enqueCourseButton;
@@ -128,7 +128,7 @@ public class queueActivity extends AppCompatActivity {
                         .header("Content-Type", "application/json")
                         .build();
 
-                new queueActivity.DeleteAsyncTask().execute(request);
+                new QueueActivity.DeleteAsyncTask().execute(request);
             }
         });
     }
@@ -230,7 +230,7 @@ public class queueActivity extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-                    new queueActivity.deleteCourseAsyncTask().execute(delete_request);
+                    new QueueActivity.deleteCourseAsyncTask().execute(delete_request);
                     ///////////////////////////////////////////
                 }
                 catch(Exception e){

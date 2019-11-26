@@ -113,7 +113,7 @@ public class CourseListFragment extends Fragment {
 
 
                 /*
-                Intent intent = new Intent(CourseListFragment.this.getActivity(), queueActivity.class);
+                Intent intent = new Intent(CourseListFragment.this.getActivity(), QueueActivity.class);
                 startActivity(intent);*/
 
                 //String coursename = getCourseInfo(position);
@@ -207,7 +207,7 @@ public class CourseListFragment extends Fragment {
                 }
 
                 finally{
-                    Intent intent = new Intent(CourseListFragment.this.getActivity(), queueActivity.class);
+                    Intent intent = new Intent(CourseListFragment.this.getActivity(), QueueActivity.class);
                     startActivity(intent);
                 }
             }

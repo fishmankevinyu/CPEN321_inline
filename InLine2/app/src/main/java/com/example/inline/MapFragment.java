@@ -103,7 +103,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap.addMarker(new MarkerOptions().position(CHEM200).title("CHEM200").snippet("CHEM"));
         */
 
-        ArrayList<courseCoordinates> courseList = MySingletonClass.getInstance().getAllCourseCoordinates();
+        ArrayList<CourseCoordinates> courseList = MySingletonClass.getInstance().getAllCourseCoordinates();
 
         if (courseList != null){
 
@@ -177,7 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 Log.i("idf", jsonData);
                 //String jsonData = Aresponse.body().string();
 
-                ArrayList<courseCoordinates> courseList = new ArrayList<courseCoordinates>();
+                ArrayList<CourseCoordinates> courseList = new ArrayList<CourseCoordinates>();
 
                 try {
                         JSONObject Jobject = new JSONObject(jsonData);
@@ -194,7 +194,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                                 Double longitude = arrayOfClassInfo.getJSONObject(i).getDouble("lng");
                                 String courseName = arrayOfClassInfo.getJSONObject(i).getString("coursename");
 
-                                courseCoordinates temp = new courseCoordinates(latitude, longitude, courseName);
+                                CourseCoordinates temp = new CourseCoordinates(latitude, longitude, courseName);
 
                                 courseList.add(temp);
                             }

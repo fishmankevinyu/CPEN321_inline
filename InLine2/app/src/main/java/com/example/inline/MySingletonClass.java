@@ -15,7 +15,7 @@ public class MySingletonClass {
     private boolean isteacher;
     private String userId;
     private HashMap<String,String> courseHashMap;
-    private ArrayList<courseCoordinates> courseListCoord;
+    private ArrayList<CourseCoordinates> courseListCoord;
     private String coursename_settime;
 
 
@@ -61,6 +61,6 @@ public class MySingletonClass {
     public void setAllClassHashMap(HashMap<String,String> courseHashMap){ this.courseHashMap = courseHashMap;}
     public HashMap<String,String> getAllClassHashMap(){return this.courseHashMap;}
 
-    public void setAllCourseCoordinates(ArrayList<courseCoordinates> courseList){ this.courseListCoord = courseList;}
-    public ArrayList<courseCoordinates> getAllCourseCoordinates(){return this.courseListCoord;}
+    public void setAllCourseCoordinates(ArrayList<CourseCoordinates> courseList){ this.courseListCoord = courseList;}
+    public ArrayList<CourseCoordinates> getAllCourseCoordinates(){return this.courseListCoord;}
 }

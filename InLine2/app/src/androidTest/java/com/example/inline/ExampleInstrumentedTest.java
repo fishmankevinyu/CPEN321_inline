@@ -164,7 +164,7 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.button)).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.mobile_list)).atPosition(0).perform(click());
-        intended(hasComponent(queueActivity.class.getName()));
+        intended(hasComponent(QueueActivity.class.getName()));
         onView(withId(R.id.enqueCourseName)).check(matches(isDisplayed()));
         onView(withId(R.id.officeHourTime)).check(matches(isDisplayed()));
         onView(withId(R.id.courseWaitTime)).check(matches(isDisplayed()));
