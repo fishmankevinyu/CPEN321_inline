@@ -20,6 +20,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import xdroid.toaster.Toaster;
 
 public class CreateCourse extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
@@ -101,6 +102,7 @@ public class CreateCourse extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     class MyAsyncTask extends AsyncTask<Request, Void, Response> {
 
         @Override
@@ -175,6 +177,7 @@ public class CreateCourse extends AppCompatActivity {
                         .header("Content-Type", "application/json")
                         .build();
                     new MyAsyncTask().execute(delete_request);
+                    Toaster.toast("Course deleted successfully");
                     ///////////////////////////////////////////
                 }
                 catch(Exception e){
