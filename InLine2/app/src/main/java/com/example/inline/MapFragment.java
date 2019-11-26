@@ -43,7 +43,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
 
         //if(MySingletonClass.getInstance().getAllCourseCoordinates() == null) {
-        getCourseLocations();
+        GetCourseLocations();
         //}
         // inflat and return the layout
         View v = inflater.inflate(R.layout.fragment_map, container, false);
@@ -145,7 +145,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMapView.onLowMemory();
     }
 
-    protected void getCourseLocations(){
+    protected void GetCourseLocations(){
 
         Request request = new Request.Builder()
                 .get()
@@ -156,11 +156,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .build();
 
 
-        new getCourseLocations().execute(request);
+        new GetCourseLocations().execute(request);
 
     }
 
-    public class getCourseLocations extends OkHTTPService {
+    public class GetCourseLocations extends OkHTTPService {
 
         @Override
         protected void onPostExecute(Response Aresponse) {
