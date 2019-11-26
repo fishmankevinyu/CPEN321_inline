@@ -65,7 +65,7 @@ public class QueueActivity extends AppCompatActivity {
                             .header("Content-Type", "application/json")
                             .build();
 
-                    new enqueCourseService().execute(request);
+                    new EnqueCourseService().execute(request);
                 }
 
         });
@@ -99,7 +99,7 @@ public class QueueActivity extends AppCompatActivity {
                         .header("Content-Type", "application/json")
                         .build();
 
-                new dequeCourseService().execute(request);
+                new DequeCourseService().execute(request);
             }
 
         });
@@ -135,7 +135,7 @@ public class QueueActivity extends AppCompatActivity {
 
     //No need to parse response body after registering for course
     //Maybe show success message here
-    public class enqueCourseService extends OkHTTPService {
+    public class EnqueCourseService extends OkHTTPService {
 
         @Override
         protected void onPostExecute(Response response) {
@@ -165,7 +165,7 @@ public class QueueActivity extends AppCompatActivity {
 
     //No need to parse response body after registering for course
     //Maybe show success message here
-    public class dequeCourseService extends OkHTTPService {
+    public class DequeCourseService extends OkHTTPService {
 
         @Override
         protected void onPostExecute(Response response) {
@@ -230,7 +230,7 @@ public class QueueActivity extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-                    new QueueActivity.deleteCourseAsyncTask().execute(delete_request);
+                    new QueueActivity.DeleteCourseAsyncTask().execute(delete_request);
                     ///////////////////////////////////////////
                 }
                 catch(Exception e){
@@ -245,7 +245,7 @@ public class QueueActivity extends AppCompatActivity {
 
     }
 
-    class deleteCourseAsyncTask extends AsyncTask<Request, Void, Response> {
+    class DeleteCourseAsyncTask extends AsyncTask<Request, Void, Response> {
 
         @Override
         protected Response doInBackground(Request... requests) {
