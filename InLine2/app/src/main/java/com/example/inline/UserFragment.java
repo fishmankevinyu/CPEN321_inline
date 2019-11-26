@@ -61,7 +61,7 @@ public class UserFragment extends Fragment {
 
 
     public void navRegisterCourse() {
-        Intent intent = new Intent(getActivity(), addCourse.class);
+        Intent intent = new Intent(getActivity(), AddCourse.class);
         startActivity(intent);
     }
 

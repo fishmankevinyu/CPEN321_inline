@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-public class addCourse extends AppCompatActivity {
+public class AddCourse extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class addCourse extends AppCompatActivity {
                             .header("Accept", "application/json")
                             .header("Content-Type", "application/json")
                             .build();
-                    new registerCourseService().execute(request);
+                    new RegisterCourseService().execute(request);
                 }
             }
         });
@@ -84,7 +84,7 @@ public class addCourse extends AppCompatActivity {
 
     //No need to parse response body after registering for course
     //Maybe show success message here
-    public class registerCourseService extends OkHTTPService {
+    public class RegisterCourseService extends OkHTTPService {
         @Override
         protected void onPostExecute(Response response) {
             try {
