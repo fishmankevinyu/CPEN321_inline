@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
                     postdata.put("password", password.getText().toString());
                     Log.i("idf", "This is the firebase token " + MySingletonClass.getInstance().getmToken());
                     postdata.put("registrationToken", MySingletonClass.getInstance().getmToken());
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                             .build();
 
 
-                    new getCourseServiceForHomeScreen().execute(request);
+                    new GetCourseServiceForHomeScreen().execute(request);
                 }
 
             } catch (IOException e) {
@@ -212,11 +210,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
 
-        new getCourseServiceForHomeScreen().execute(request);
+        new GetCourseServiceForHomeScreen().execute(request);
 
     }
 
-    public class getCourseServiceForHomeScreen extends OkHTTPService {
+    public class GetCourseServiceForHomeScreen extends OkHTTPService {
 
         @Override
         protected void onPostExecute(Response Aresponse) {
