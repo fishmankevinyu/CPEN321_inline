@@ -10,11 +10,16 @@ matrix:
      - cd back_end
      -npm run test
   
-  -language: android
-  before_install:
+  language: android
+      dist: trusty
+      jdk: oraclejdk8
+      android:
+        components:
+          - tools
+          - android-25
+          - build-tools-25.0.3
+      before_script:
         - cd InLine2/
-   dist: trusty
-   android:
-     components:
-       - build-tools-26.0.2
-       - android-26
+      script:
+        - ./gradlew build connectedCheck
+
