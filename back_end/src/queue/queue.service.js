@@ -235,7 +235,7 @@ router.post("/enque",enque);
 router.put("/deque",deque);
 router.put("/selfdeque", selfDeque);
 router.get("/top", top);
-router.get("/estime", updateEST);
+router.post("/estime", updateEST);
 router.post("/new", newQueue2);
 router.delete("/", queueDelete);
 
