@@ -58,7 +58,7 @@ describe("estime", () =>{
             return result.AHT;
         });
 
-        await estime.updateAHT("update_aht", 4).then((x)=>{
+        await estime.updateAHT("update_aht", 1, 4).then((x)=>{
             return estime.ests.findOne({coursename: "update_aht"});
         })
         .then((result)=>{
