@@ -43,6 +43,8 @@ public class QueueActivity extends AppCompatActivity {
 
         onCreateInitialization();
 
+        checkIfUserIsQueued();
+
         enqueCourseButton = (Button) findViewById(R.id.enqueButton);
         enqueCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,6 +323,87 @@ public class QueueActivity extends AppCompatActivity {
 
         if (!dayOfWeek.equals(CourseSingletonClass.getInstance().getdayOfWeek()) || time < ep_time || time > ep_time + 60) {
             enqueCourseButton.setEnabled(false);
+        }
+
+    }
+
+    public void checkIfUserIsQueued(){
+
+        JSONObject postdata3 = new JSONObject();
+        try {
+            postdata3.put("coursename", CourseSingletonClass.getInstance().getCourse() );
+            postdata3.put("username", MySingletonClass.getInstance().getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MediaType MEDIA_TYPE = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata3.toString());
+
+        /* Send a request to get course id first */
+        Request request = new Request.Builder()
+                .url("http://40.117.195.60:4000/queue/estime")
+                .addHeader("Authorization", "Bearer " + MySingletonClass.getInstance().getToken())
+                .post(body)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+
+        new checkIfUserIsQueued().execute(request);
+
+    }
+
+    class checkIfUserIsQueued extends AsyncTask<Request, Void, Response> {
+
+        @Override
+        protected Response doInBackground(Request... requests) {
+            Response response = null;
+            try {
+                response = client.newCall(requests[0]).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(Response response) {
+            //super.onPostExecute(response); what does this line do
+
+            //TODO have a spinner when waiting for asynch wait
+            try {
+                if(response == null);
+                if (!response.isSuccessful());
+
+                Log.i("idf", "Response is successful");
+                String jsonData = response.body().string();
+                Log.i("idf", jsonData);
+
+                try{
+
+
+                    JSONObject Jobject = new JSONObject(jsonData);
+                    //String getTime = Jobject.getString("Estime");
+
+                    String estimatedTimeString = String.valueOf(Jobject.getInt("Estime")/60000) + " Min. estimated wait time";
+                    waitTimeTextView.setText(estimatedTimeString);
+                    /*
+                    ArrayList<String> tempClassList = MySingletonClass.getInstance().getClasses();
+                    tempClassList.remove(deleteCourse);
+                    MySingletonClass.getInstance().setClasses(tempClassList);
+                    Toaster.toast("Course deleted successfully");
+                    navUser();*/
+
+                    //waitTimeTextView.setText();
+                }
+                catch(Exception e){
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                Log.i("idf", e.getLocalizedMessage());
+            }
+
         }
 
     }
